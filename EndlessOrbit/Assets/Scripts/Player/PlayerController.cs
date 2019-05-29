@@ -92,6 +92,7 @@ public class PlayerController : MonoBehaviour
         AssignNewAngleAndDirection(newBody);
         BodyToRotateAround = newBody;
         state = PlayerState.Tethered;
+        MainGameManager.instance.AttachedToNewPlanet(newBody);
     }
     #region Assigning The New Direction 
     void AssignNewAngleAndDirection(Transform body)
