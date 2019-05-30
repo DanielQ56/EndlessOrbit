@@ -14,19 +14,4 @@ public class GameOverScript : MonoBehaviour
         gameOverPanel.SetActive(true);
         scoreText.text = score.ToString();
     }
-
-    public void RestartLevel()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
-
-    public void ReturnToMainMenu()
-    {
-        SceneManager.LoadScene("TitleScreen");
-    }
-
-    public void DisplayLeaderboard()
-    {
-        ScoreManager.instance.displayScores();
-    }
 }

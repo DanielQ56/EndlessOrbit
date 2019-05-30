@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float rotationAngle;
     [SerializeField] Transform initialBody;
     [SerializeField] float MaxSpeed;
+    [SerializeField] float angleIncreaseValue;
 
     int direction = 1;
 
@@ -39,6 +40,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        MainGameManager.instance.increaseSpeed.AddListener(IncreaseSpeedListener);
         BodyToRotateAround = initialBody;
         state = PlayerState.Tethered;
     }
@@ -46,8 +48,9 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (stillAlive)
+        if (stillAlive && !MainGameManager.instance.IsMovingCamera())
         {
+            
             if (Input.GetKeyDown(KeyCode.Space) && state == PlayerState.Tethered)
             {
                 Detach();
@@ -75,12 +78,11 @@ public class PlayerController : MonoBehaviour
         state = PlayerState.Free;
         Vector3 relativePosition = new Vector3(this.transform.position.x - BodyToRotateAround.transform.position.x,
             this.transform.position.y - BodyToRotateAround.transform.position.y, 0);
-        float inverseSlope = -1 / (relativePosition.y / relativePosition.x);
-        Debug.Log(inverseSlope);
+        float inverseSlope = (-1f / (relativePosition.y / relativePosition.x)) ;
         float b = relativePosition.y - (relativePosition.x * inverseSlope);
         float x = relativePosition.x - Mathf.Sign(relativePosition.y) * 5;
         posToMoveTowards = new Vector3(x, (inverseSlope * x + b), 0);
-        movementAngle = Mathf.Tan(Mathf.Abs(posToMoveTowards.y / posToMoveTowards.x));
+        movementAngle = Mathf.Tan(Mathf.Abs((posToMoveTowards.y - transform.position.y) / (posToMoveTowards.x-transform.position.x)));
         AssignDirection(posToMoveTowards);
     }
 
@@ -101,6 +103,12 @@ public class PlayerController : MonoBehaviour
         state = PlayerState.Tethered;
         MainGameManager.instance.AttachedToNewPlanet(newBody);
     }
+    
+    public void IncreaseSpeedListener()
+    {
+        Debug.Log("Increased");
+        rotationAngle += angleIncreaseValue;
+    }
 
     private void OnBecameInvisible()
     {
@@ -112,7 +120,6 @@ public class PlayerController : MonoBehaviour
     void AssignNewAngleAndDirection(Transform body)
     {
         float posX = body.position.x - transform.position.x;
-        Debug.Log(Mathf.Abs(Mathf.Rad2Deg * movementAngle) % 90 + " " + horizontal.ToString());
         if(Mathf.Abs(Mathf.Rad2Deg * movementAngle) % 90 < 45f)
         {
             switch(horizontal)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class MainGameManager : MonoBehaviour
 {
@@ -12,13 +13,24 @@ public class MainGameManager : MonoBehaviour
     [SerializeField] List<GameObject> planets;
     [Range(1, 3)] public int maxNumOfPlanets;
     [SerializeField] GameOverScript gameOver;
+    [SerializeField] GameObject PausePanel;
+
+
+    public UnityEvent increaseSpeed;
 
     public static MainGameManager instance;
 
     int currentScore = 0;
 
+    bool movingCamera = false;
+
+    bool playerIsAlive = true;
+
+    bool SpeedIncreased = false;
+
     private void Start()
     {
+        increaseSpeed = new UnityEvent();
         if(instance == null)
         {
             instance = this;
@@ -27,8 +39,29 @@ public class MainGameManager : MonoBehaviour
         updateCameraPosition(startingPlanet);
     }
 
+    private void Update()
+    {
+        if (playerIsAlive)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P))
+            {
+                PauseGame();
+            }
+            IncreasePlayerSpeed();
+        }
+
+    }
+
+
+    public void PauseGame()
+    {
+        Time.timeScale = 1 - Time.timeScale;
+        PausePanel.SetActive(!PausePanel.activeInHierarchy);
+    }
+
     public void GameOver()
     {
+        playerIsAlive = false;
         gameOver.GameOver(currentScore);
         ScoreManager.instance.SaveScore(currentScore);
     }
@@ -39,10 +72,25 @@ public class MainGameManager : MonoBehaviour
         UpdateScore(100);
     }
 
+    public bool IsMovingCamera()
+    {
+        return movingCamera;
+    }
+
+    void IncreasePlayerSpeed()
+    {
+        if(!SpeedIncreased && currentScore > 0 && currentScore % 1000 == 0)
+        {
+            increaseSpeed.Invoke();
+            SpeedIncreased = true;
+        }
+    }
+
     void UpdateScore(int value)
     {
         currentScore += value;
         scoreText.text = currentScore.ToString();
+        SpeedIncreased = false;
     }
 
     void updateCameraPosition(Transform newPlanet)
@@ -69,6 +117,7 @@ public class MainGameManager : MonoBehaviour
 
     IEnumerator UpdateCamPos(Transform newPlanet)
     {
+        movingCamera = true;
         Vector3 pos = new Vector3(0, newPlanet.position.y + mainCam.orthographicSize, -10);
         while (Mathf.Abs(mainCam.transform.position.y - pos.y) > 3)
         {
@@ -76,6 +125,7 @@ public class MainGameManager : MonoBehaviour
             yield return null;
         }
         GenerateNextPlanet(newPlanet);
+        movingCamera = false;
 
     }
 
