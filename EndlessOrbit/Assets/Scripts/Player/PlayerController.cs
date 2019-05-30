@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour
 
     int direction = 1;
 
+    float movementAngle;
+
     bool tethered = true;
 
     Transform BodyToRotateAround;
@@ -30,9 +32,9 @@ public class PlayerController : MonoBehaviour
     Vector3 posToMoveTowards;
 
     PlayerState state;
-
     Direction horizontal;
-    Direction vertical;
+
+    bool stillAlive = true;
 
     // Start is called before the first frame update
     void Start()
@@ -44,11 +46,14 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && state == PlayerState.Tethered)
+        if (stillAlive)
         {
-            Detach();
+            if (Input.GetKeyDown(KeyCode.Space) && state == PlayerState.Tethered)
+            {
+                Detach();
+            }
+            Move();
         }
-        Move();
     }
 
     void Move()
@@ -71,9 +76,11 @@ public class PlayerController : MonoBehaviour
         Vector3 relativePosition = new Vector3(this.transform.position.x - BodyToRotateAround.transform.position.x,
             this.transform.position.y - BodyToRotateAround.transform.position.y, 0);
         float inverseSlope = -1 / (relativePosition.y / relativePosition.x);
+        Debug.Log(inverseSlope);
         float b = relativePosition.y - (relativePosition.x * inverseSlope);
-        float x = relativePosition.x - Mathf.Sign(relativePosition.y) * velocity;
+        float x = relativePosition.x - Mathf.Sign(relativePosition.y) * 5;
         posToMoveTowards = new Vector3(x, (inverseSlope * x + b), 0);
+        movementAngle = Mathf.Tan(Mathf.Abs(posToMoveTowards.y / posToMoveTowards.x));
         AssignDirection(posToMoveTowards);
     }
 
@@ -94,74 +101,74 @@ public class PlayerController : MonoBehaviour
         state = PlayerState.Tethered;
         MainGameManager.instance.AttachedToNewPlanet(newBody);
     }
+
+    private void OnBecameInvisible()
+    {
+        stillAlive = false;
+        MainGameManager.instance.GameOver();
+    }
+
     #region Assigning The New Direction 
     void AssignNewAngleAndDirection(Transform body)
     {
-        float distX = Mathf.Abs(transform.position.x - body.position.x);
-        float distY = Mathf.Abs(transform.position.y - body.position.y);
-        if(distX < distY)
+        float posX = body.position.x - transform.position.x;
+        Debug.Log(Mathf.Abs(Mathf.Rad2Deg * movementAngle) % 90 + " " + horizontal.ToString());
+        if(Mathf.Abs(Mathf.Rad2Deg * movementAngle) % 90 < 45f)
         {
             switch(horizontal)
             {
                 case Direction.Left:
-                    switch (vertical)
+                    if (posX < 0)
                     {
-
-                        case Direction.Up:
-                            direction = -1;
-                            break;
-                        case Direction.Down:
-                            direction = 1;
-                            break;
+                        direction = 1;
+                    }
+                    else
+                    {
+                        direction = -1;
                     }
                     break;
                 
                 case Direction.Right:
-                    switch (vertical)
-                    { 
-                        case Direction.Up:
-                            direction = 1;
-                            break;
-                        case Direction.Down:
-                            direction = -1;
-                            break;
+                    if (posX < 0)
+                    {
+                        direction = 1;
+                    }
+                    else
+                    {
+                        direction = -1;
                     }
                     break;
             }
         }
         else
         {
-            switch(vertical)
+            switch (horizontal)
             {
-                case Direction.Up:
-                    switch(horizontal)
+                case Direction.Left:
+                    if (posX < 0)
                     {
-                        case Direction.Right:
-                            direction = -1;
-                            break;
-                        case Direction.Left:
-                            direction = 1;
-                            break;
+                        direction = 1;
+                    }
+                    else
+                    {
+                        direction = -1;
                     }
                     break;
-                case Direction.Down:
-                    switch (horizontal)
+
+                case Direction.Right:
+                    if (posX < 0)
                     {
-                        case Direction.Right:
-                            direction = 1;
-                            break;
-                        case Direction.Left:
-                            direction = -1;
-                            break;
+                        direction = 1;
+                    }
+                    else
+                    {
+                        direction = -1;
                     }
                     break;
             }
         }
         rotationAngle = Mathf.Abs(rotationAngle) * direction;
-        Debug.Log(rotationAngle + " " + horizontal.ToString() + " " + vertical.ToString());
     }
-
-    #endregion
 
     void AssignDirection(Vector3 pos)
     {
@@ -176,13 +183,6 @@ public class PlayerController : MonoBehaviour
         {
             horizontal = Direction.Right;
         }
-        if (posY < 0)
-        {
-            vertical = Direction.Down;
-        }
-        else
-        {
-            vertical = Direction.Up;
-        }
     }
+    #endregion
 }

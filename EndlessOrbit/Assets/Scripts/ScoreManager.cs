@@ -8,37 +8,30 @@ using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour
 {
-    public static ScoreManager scoreManager;
+    public static ScoreManager instance = null;
+
+    [SerializeField] Leaderboard leader;
+
+
 
     int[] scores = new int[10];
+
+    List<int> tempScores = new List<int>();
     
     void Awake()
     {
-        if (scoreManager == null)
+        //DeleteAllData();
+        if (instance== null)
         {
             DontDestroyOnLoad(gameObject);
-            scoreManager = this;
+            instance = this;
         }
-        else if (scoreManager != this)
+        else
         {
             Destroy(gameObject);
         }
         LoadScores();
 
-        // temp
-        /*scores[0] = 20;
-        scores[1] = 5;
-        scores[2] = 100;
-        scores[3] = 50;
-        scores[4] = 5;
-        scores[5] = 500;
-        scores[6] = 550;
-        scores[7] = 300;
-        scores[8] = 80;
-        scores[9] = 25;
-        Array.Sort(scores);*/
-
-        Debug.Log(Application.persistentDataPath);
     }
 
     void LoadScores()
@@ -46,7 +39,7 @@ public class ScoreManager : MonoBehaviour
         if(File.Exists(Application.persistentDataPath + "/scores.dat"))
         {
             BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Open(Application.persistentDataPath + "scores.dat", FileMode.Open);
+            FileStream file = File.Open(Application.persistentDataPath + "/scores.dat", FileMode.Open);
 
             Scores topScores = (Scores)bf.Deserialize(file);
             file.Close();
@@ -57,6 +50,7 @@ public class ScoreManager : MonoBehaviour
 
     public void SaveScore(int score)
     {
+        Debug.Log("Saving");
         if (score <= scores[0])
         {
             return;
@@ -75,20 +69,26 @@ public class ScoreManager : MonoBehaviour
         file.Close();
     }
 
-    public void displayScores(Text scoreText)
+    public void displayScores()
     {
-        String s = "";
-        for (int i = 9; i >= 0; i--)
-        {
-            s += $"{(10 - i)} -- {scores[i]}\n\n";
-        }
+        tempScores.Clear();
+        tempScores.AddRange(scores);
+        tempScores.Reverse();
+        leader.ActivateLeaderboard(tempScores);
+    }
 
-        scoreText.text = s;
+    public void DeleteAllData()
+    {
+        string path = Application.persistentDataPath + "/scores.dat";
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
     }
 }
 
 [Serializable]
 class Scores
 {
-    public int[] scores = new int[10];
+    public int[] scores;
 }
