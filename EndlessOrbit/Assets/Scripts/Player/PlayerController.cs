@@ -78,7 +78,7 @@ public class PlayerController : MonoBehaviour
         state = PlayerState.Free;
         Vector3 relativePosition = new Vector3(this.transform.position.x - BodyToRotateAround.transform.position.x,
             this.transform.position.y - BodyToRotateAround.transform.position.y, 0);
-        float inverseSlope = (-1f / (relativePosition.y / relativePosition.x)) ;
+        float inverseSlope = (-1f / ((relativePosition.y / relativePosition.x) * 6 / 5));
         float b = relativePosition.y - (relativePosition.x * inverseSlope);
         float x = relativePosition.x - Mathf.Sign(relativePosition.y) * 5;
         posToMoveTowards = new Vector3(x, (inverseSlope * x + b), 0);
