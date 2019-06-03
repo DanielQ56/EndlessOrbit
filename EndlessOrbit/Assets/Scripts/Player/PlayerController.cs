@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 public enum PlayerState
 {
@@ -50,12 +51,17 @@ public class PlayerController : MonoBehaviour
     {
         if (stillAlive && !MainGameManager.instance.IsMovingCamera())
         {
-            
-            if ((Input.GetKeyDown(KeyCode.Space)||Input.touches.Length > 0 || Input.GetKeyDown(KeyCode.Mouse0)) && state == PlayerState.Tethered)
-            {
-                Detach();
-            }
+            CheckDetach();
             Move();
+        }
+    }
+
+    void CheckDetach()
+    {
+        if ((Input.GetKeyDown(KeyCode.Space) || Input.touches.Length > 0 || Input.GetKeyDown(KeyCode.Mouse0)) && state == PlayerState.Tethered)
+        {
+            if (EventSystem.current != null && !EventSystem.current.IsPointerOverGameObject())
+                Detach();
         }
     }
 
