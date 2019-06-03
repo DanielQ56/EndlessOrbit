@@ -151,9 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1933128bf6cd0174fbbccafd5c7bd305, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minRadius: 0.3
-  maxRadius: 0.8
-  sprites: []
+  isStartingBody: 0
 --- !u!212 &71200694
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -341,9 +339,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1933128bf6cd0174fbbccafd5c7bd305, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minRadius: 0.5
-  maxRadius: 0.5
-  sprites: []
+  isStartingBody: 0
 --- !u!1 &279398102
 GameObject:
   m_ObjectHideFlags: 0
@@ -646,9 +642,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1933128bf6cd0174fbbccafd5c7bd305, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minRadius: 0.3
-  maxRadius: 0.8
-  sprites: []
+  isStartingBody: 0
 --- !u!212 &568648637
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -954,9 +948,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1933128bf6cd0174fbbccafd5c7bd305, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minRadius: 0.3
-  maxRadius: 0.8
-  sprites: []
+  isStartingBody: 0
 --- !u!212 &924193468
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1302,6 +1294,7 @@ MonoBehaviour:
   rotationAngle: 120
   initialBody: {fileID: 236341213}
   MaxSpeed: 10
+  angleIncreaseValue: 0
 --- !u!50 &1261324028
 Rigidbody2D:
   serializedVersion: 4
@@ -1577,9 +1570,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1933128bf6cd0174fbbccafd5c7bd305, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minRadius: 0.3
-  maxRadius: 0.8
-  sprites: []
+  isStartingBody: 0
 --- !u!212 &1551044862
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1676,7 +1667,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1920518097
 MonoBehaviour:
   m_ObjectHideFlags: 0

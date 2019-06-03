@@ -195,7 +195,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -1509,9 +1509,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'CONTROLS:
-
-    Press __ to ____.'
+  m_Text: "'Press space to let the object go out of orbit'\r\n'keep in mind that this
+    game is hard as fuck and doesn't really make sense at first'\r\n'like you would
+    think it goes straight but NAW'"
 --- !u!222 &1332226142
 CanvasRenderer:
   m_ObjectHideFlags: 0
