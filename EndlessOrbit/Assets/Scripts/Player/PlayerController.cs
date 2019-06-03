@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
         if (stillAlive && !MainGameManager.instance.IsMovingCamera())
         {
             
-            if (Input.GetKeyDown(KeyCode.Space) && state == PlayerState.Tethered)
+            if ((Input.GetKeyDown(KeyCode.Space)||Input.touches.Length > 0 || Input.GetKeyDown(KeyCode.Mouse0)) && state == PlayerState.Tethered)
             {
                 Detach();
             }
@@ -80,7 +80,7 @@ public class PlayerController : MonoBehaviour
             this.transform.position.y - BodyToRotateAround.transform.position.y, 0);
         float inverseSlope = (-1f / ((relativePosition.y / relativePosition.x) * 6 / 5));
         float b = relativePosition.y - (relativePosition.x * inverseSlope);
-        float x = relativePosition.x - Mathf.Sign(relativePosition.y) * 5;
+        float x = relativePosition.x - Mathf.Sign(relativePosition.y) * 5; 
         posToMoveTowards = new Vector3(x, (inverseSlope * x + b), 0);
         movementAngle = Mathf.Tan(Mathf.Abs((posToMoveTowards.y - transform.position.y) / (posToMoveTowards.x-transform.position.x)));
         AssignDirection(posToMoveTowards);
