@@ -88,6 +88,10 @@ public class PlayerController : MonoBehaviour
 
     void MoveStraight()
     {
+        if(Vector3.Magnitude(posToMoveTowards) < velocity)
+        {
+            posToMoveTowards *= 2;
+        }
          transform.Translate( Vector3.ClampMagnitude(posToMoveTowards, MaxSpeed) * direction * Time.deltaTime, BodyToRotateAround.transform);
     }
 
@@ -107,7 +111,7 @@ public class PlayerController : MonoBehaviour
     public void IncreaseSpeedListener()
     {
         Debug.Log("Increased");
-        rotationAngle += angleIncreaseValue;
+        rotationAngle += (Mathf.Sign(rotationAngle) * angleIncreaseValue);
     }
 
     private void OnBecameInvisible()
