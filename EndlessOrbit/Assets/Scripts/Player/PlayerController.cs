@@ -58,11 +58,27 @@ public class PlayerController : MonoBehaviour
 
     void CheckDetach()
     {
-        if ((Input.GetKeyDown(KeyCode.Space) || Input.touches.Length > 0 || Input.GetKeyDown(KeyCode.Mouse0)) && state == PlayerState.Tethered)
+        if ((Input.GetKeyDown(KeyCode.Space) || Input.touches.Length > 0 || Input.GetKeyDown(KeyCode.Mouse0) ) && state == PlayerState.Tethered)
         {
-            if (EventSystem.current != null && !EventSystem.current.IsPointerOverGameObject())
+            if (EventSystem.current != null && !IsPointerOverObject())
                 Detach();
         }
+    }
+
+    bool IsPointerOverObject()
+    {
+        //check mouse
+        if (EventSystem.current.IsPointerOverGameObject())
+            return true;
+
+        //check touch
+        if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
+        {
+            if (EventSystem.current.IsPointerOverGameObject(Input.touches[0].fingerId))
+                return true;
+        }
+
+        return false;
     }
 
     void Move()
