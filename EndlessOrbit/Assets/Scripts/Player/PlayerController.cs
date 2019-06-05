@@ -97,6 +97,10 @@ public class PlayerController : MonoBehaviour
 
     void Detach()
     {
+        //Audio (can move)
+        if (!AudioManager.instance.muted)
+            AudioManager.instance.Play("Space");
+        
         state = PlayerState.Free;
         Vector3 relativePosition = new Vector3(this.transform.position.x - BodyToRotateAround.transform.position.x,
             this.transform.position.y - BodyToRotateAround.transform.position.y, 0);
@@ -124,6 +128,10 @@ public class PlayerController : MonoBehaviour
 
     public void NewBodyToOrbit(Transform newBody)
     {
+        //AUDIO (can move)
+        if (!AudioManager.instance.muted)
+            AudioManager.instance.Play("Hit");
+
         AssignNewAngleAndDirection(newBody);
         BodyToRotateAround = newBody;
         state = PlayerState.Tethered;
