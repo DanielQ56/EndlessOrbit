@@ -24,4 +24,10 @@ public class ButtonFunctions : MonoBehaviour
     {
         Time.timeScale = 1;
     }
+
+    public void activateScreen(GameObject off, GameObject on)
+    {
+        off.SetActive(!off.activeInHierarchy);
+        on.SetActive(!on.activeInHierarchy);
+    }
 }

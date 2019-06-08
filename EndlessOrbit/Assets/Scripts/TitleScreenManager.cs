@@ -7,26 +7,22 @@ public class TitleScreenManager : MonoBehaviour
 
     [SerializeField] GameObject TitleScreen;
     [SerializeField] GameObject ControlsScreen;
-    [SerializeField] GameObject ScoresScreen;
+    [SerializeField] TutorialPlayer player;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-
+        TitleScreen.SetActive(true);
+        ControlsScreen.SetActive(false);
     }
-    
+
     public void toggleTitleScreen()
     {
-        TitleScreen.SetActive(!TitleScreen.activeSelf);
+        TitleScreen.SetActive(!TitleScreen.activeInHierarchy);
     }
 
     public void toggleControlsScreen()
     {
-        ControlsScreen.SetActive(!ControlsScreen.activeSelf);
-    }
-
-    public void toggleScoresScreen()
-    {
-        ScoresScreen.SetActive(!ScoresScreen.activeSelf);
+        ControlsScreen.SetActive(!ControlsScreen.activeInHierarchy);
+        player.ToggleTesting();
     }
 }
