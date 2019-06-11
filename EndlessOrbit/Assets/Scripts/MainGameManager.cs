@@ -14,6 +14,7 @@ public class MainGameManager : MonoBehaviour
     [Range(1, 3)] public int maxNumOfPlanets;
     [SerializeField] GameOverScript gameOver;
     [SerializeField] GameObject PausePanel;
+    [SerializeField] ParticleSystem playerParticles;
 
 
     public UnityEvent increaseSpeed;
@@ -28,8 +29,11 @@ public class MainGameManager : MonoBehaviour
 
     bool SpeedIncreased = false;
 
+    GameObject player;
+
     private void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
         increaseSpeed = new UnityEvent();
         if(instance == null)
         {
@@ -47,7 +51,6 @@ public class MainGameManager : MonoBehaviour
             {
                 PauseGame();
             }
-            IncreasePlayerSpeed();
         }
 
     }
@@ -71,6 +74,7 @@ public class MainGameManager : MonoBehaviour
         Debug.Log("attached");
         updateCameraPosition(newPlanet);
         UpdateScore(100);
+        IncreasePlayerSpeed();
     }
 
     public bool IsMovingCamera()
@@ -80,10 +84,13 @@ public class MainGameManager : MonoBehaviour
 
     void IncreasePlayerSpeed()
     {
-        if(!SpeedIncreased && currentScore > 0 && currentScore % 1000 == 0)
+        if(currentScore > 0 && currentScore % 1000 == 0)
         {
             increaseSpeed.Invoke();
-            SpeedIncreased = true;
+            playerParticles.gameObject.transform.position = player.transform.position - new Vector3(0, 0.2f, 0);
+            ParticleSystem.MainModule main = playerParticles.main;
+            main.startColor = new Color(Random.Range(0.5f, 1f), Random.Range(0.5f, 1f), Random.Range(0f, 1f));
+            playerParticles.Play();
         }
     }
 

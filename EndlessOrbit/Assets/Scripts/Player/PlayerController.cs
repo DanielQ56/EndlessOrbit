@@ -158,6 +158,7 @@ public class PlayerController : MonoBehaviour
     private void OnBecameInvisible()
     {
         stillAlive = false;
+        Debug.Log("dead");
         MainGameManager.instance.GameOver();
     }
 
