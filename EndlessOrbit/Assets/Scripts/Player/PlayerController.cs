@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] int velocity;
     [SerializeField] float rotationAngle;
+    [SerializeField] float spinAngle;
     [SerializeField] Transform initialBody;
     [SerializeField] float MaxSpeed;
     [SerializeField] float angleIncreaseValue;
@@ -54,6 +55,7 @@ public class PlayerController : MonoBehaviour
             CheckDetach();
             Move();
         }
+        Rotate();
     }
 
     void CheckDetach()
@@ -79,6 +81,11 @@ public class PlayerController : MonoBehaviour
         }
 
         return false;
+    }
+    
+    void Rotate()
+    {
+        transform.Rotate(Vector3.forward, spinAngle * direction * Time.deltaTime);
     }
 
     void Move()

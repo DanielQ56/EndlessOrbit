@@ -60,7 +60,7 @@ public class CelestialBody : MonoBehaviour
     void OnDrawGizmos()
 	{
 		Gizmos.color = Color.white;
-        Gizmos.DrawWireSphere(transform.position, m_collider.radius*transform.localScale.x);
+        //Gizmos.DrawWireSphere(transform.position, m_collider.radius*transform.localScale.x);
 	}
 #endif
 }

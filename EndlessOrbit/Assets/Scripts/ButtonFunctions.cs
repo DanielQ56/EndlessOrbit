@@ -25,9 +25,8 @@ public class ButtonFunctions : MonoBehaviour
         Time.timeScale = 1;
     }
 
-    public void activateScreen(GameObject off, GameObject on)
+    public void togglePanel(GameObject panel)
     {
-        off.SetActive(!off.activeInHierarchy);
-        on.SetActive(!on.activeInHierarchy);
+        panel.SetActive(!panel.activeInHierarchy);
     }
 }

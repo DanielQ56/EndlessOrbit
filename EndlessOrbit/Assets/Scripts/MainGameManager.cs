@@ -68,6 +68,7 @@ public class MainGameManager : MonoBehaviour
 
     public void AttachedToNewPlanet(Transform newPlanet)
     {
+        Debug.Log("attached");
         updateCameraPosition(newPlanet);
         UpdateScore(100);
     }
