@@ -45,6 +45,10 @@ public class PlayerController : MonoBehaviour
         MainGameManager.instance.increaseSpeed.AddListener(IncreaseSpeedListener);
         BodyToRotateAround = initialBody;
         state = PlayerState.Tethered;
+        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+        sprite.sprite = PlayerCustomization.instance.playerSprite;
+        sprite.color = PlayerCustomization.instance.playerColor;
+
     }
 
     // Update is called once per frame
@@ -54,8 +58,8 @@ public class PlayerController : MonoBehaviour
         {
             CheckDetach();
             Move();
+            Rotate();
         }
-        Rotate();
     }
 
     void CheckDetach()

@@ -7,16 +7,14 @@ public class CustomizationManager : MonoBehaviour
 {
     [SerializeField] GameObject panel;
     [SerializeField] List<SliderScript> sliders;
-    [SerializeField] GameObject player;
     [SerializeField] Image previewPlayer;
 
     SpriteRenderer playerSprite;
 
     private void Start()
     {
-        playerSprite = player.GetComponent<SpriteRenderer>();
-        previewPlayer.color = playerSprite.color;
-        previewPlayer.sprite = playerSprite.sprite;
+        previewPlayer.color = PlayerCustomization.instance.playerColor;
+        previewPlayer.sprite = PlayerCustomization.instance.playerSprite;
         
         foreach(SliderScript s in sliders)
         {
@@ -28,29 +26,18 @@ public class CustomizationManager : MonoBehaviour
     public void TogglePanel()
     {
         panel.SetActive(!panel.activeInHierarchy);
-        StartCoroutine(ToggleSliders());
     }
     
-    IEnumerator ToggleSliders()
-    {
-        yield return new WaitForEndOfFrame();
-        if (panel.activeInHierarchy)
-        {
-            sliders[0].ActivatePanel(playerSprite.color.r);
-            sliders[1].ActivatePanel(playerSprite.color.g);
-            sliders[2].ActivatePanel(playerSprite.color.b);
-        }
-        else
-        {
-            playerSprite.color = previewPlayer.color;
-            playerSprite.sprite = previewPlayer.sprite;
-        }
-
-    }
 
     public void ChangeImage(Sprite s)
     {
         previewPlayer.sprite = s;
+    }
+
+    public void SaveChanges()
+    {
+        PlayerCustomization.instance.playerSprite = previewPlayer.sprite;
+        PlayerCustomization.instance.playerColor = previewPlayer.color;
     }
 
     void UpdateColorListener()
