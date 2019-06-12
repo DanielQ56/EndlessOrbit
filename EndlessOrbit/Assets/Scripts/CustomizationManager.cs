@@ -54,13 +54,25 @@ public class CustomizationManager : MonoBehaviour
 
     void UpdateColorListener(int index)
     {
-        StartCoroutine(ChangeColor(index));
+        previewPlayer.DisableSpriteOptimizations();
+        //StartCoroutine(ChangeColor(index));
+        switch (index)
+        {
+            case 0:
+                previewPlayer.color = new Color(sliders[0].getValue(), previewPlayer.color.g, previewPlayer.color.b);
+                break;
+            case 1:
+                previewPlayer.color = new Color(previewPlayer.color.r, sliders[1].getValue(), previewPlayer.color.b);
+                break;
+            case 2:
+                previewPlayer.color = new Color(previewPlayer.color.r, previewPlayer.color.g, sliders[2].getValue());
+                break;
+        }
     }
 
     IEnumerator ChangeColor(int index)
     {
         yield return new WaitForEndOfFrame();
-        Debug.Log("Changing");
         switch (index)
         {
             case 0:

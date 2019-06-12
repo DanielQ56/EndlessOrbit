@@ -73,9 +73,9 @@ public class SliderScript : MonoBehaviour
 
     public void UpdateSlider()
     {
-        Debug.Log("updating");
         float value = (slider.value * 255);
         inputField.text = value.ToString();
+        Debug.Log(slider.value);
         switch (index)
         {
             case 0:
