@@ -6,6 +6,9 @@ using TMPro;
 using UnityEngine.Events;
 
 
+public class IndexEvent: UnityEvent<int>
+{ }
+
 public class SliderScript : MonoBehaviour
 {
     [SerializeField] Image fillArea;
@@ -15,25 +18,29 @@ public class SliderScript : MonoBehaviour
 
     char[] trimChars = new char[] { ' ' };
 
-    public UnityEvent UpdatedColor;
+    public IndexEvent UpdatedColor;
 
     private void Awake()
     {
-        UpdatedColor = new UnityEvent();
+        UpdatedColor = new IndexEvent();
     }
 
     public void ActivatePanel(float val)
     {
         slider.value = val;
+        Debug.Log(val);
         switch (index)
         {
             case 0:
+                Debug.Log("0");
                 fillArea.color = new Color(1f, 1f - val, 1f - val) ;
                 break;
             case 1:
+                Debug.Log("1");
                 fillArea.color = new Color(1f - val, 1f, 1f - val);
                 break;
             case 2:
+                Debug.Log("2");
                 fillArea.color = new Color(1f - val, 1f - val, 1f);
                 break;
         }
@@ -59,8 +66,8 @@ public class SliderScript : MonoBehaviour
                     fillArea.color = new Color(1f - val, 1f - val, 1f);
                     break;
             }
+            UpdatedColor.Invoke(index);
         }
-        UpdatedColor.Invoke();
     }
 
     public void UpdateSlider()
@@ -79,11 +86,16 @@ public class SliderScript : MonoBehaviour
                 fillArea.color = new Color(1f - slider.value, 1f - slider.value, 1f);
                 break;
         }
-        UpdatedColor.Invoke();
+        UpdatedColor.Invoke(index);
     }
 
     public float getValue()
     {
         return slider.value;
+    }
+
+    public int getIndex()
+    {
+        return index;
     }
 }

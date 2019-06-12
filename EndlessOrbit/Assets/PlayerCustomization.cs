@@ -19,6 +19,7 @@ public class PlayerCustomization : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        playerColor = Color.white;
         
     }
 }
