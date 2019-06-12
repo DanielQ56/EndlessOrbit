@@ -1530,7 +1530,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 253}
-  m_SizeDelta: {x: 600, y: 100}
+  m_SizeDelta: {x: 675, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &362850078
 MonoBehaviour:
@@ -1553,11 +1553,11 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 90
+    m_Font: {fileID: 12800000, guid: 8c7edfae3dd8166469a0256bc1da540d, type: 3}
+    m_FontSize: 60
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 9
+    m_MinSize: 0
     m_MaxSize: 90
     m_Alignment: 1
     m_AlignByGeometry: 0
@@ -2582,7 +2582,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &678996626
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4434,11 +4434,6 @@ MonoBehaviour:
   inputField: {fileID: 234538927}
   slider: {fileID: 1563959195}
   index: 1
-  UpdatedColor:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!224 &1016753259
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4915,11 +4910,6 @@ MonoBehaviour:
   inputField: {fileID: 2015896986}
   slider: {fileID: 1125295944}
   index: 2
-  UpdatedColor:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!224 &1080718037
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5686,8 +5676,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -86.949974}
-  m_SizeDelta: {x: 450, y: 538.1}
+  m_AnchoredPosition: {x: -0.000034332, y: 51}
+  m_SizeDelta: {x: 800, y: 439.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1332226141
 MonoBehaviour:
@@ -5710,8 +5700,8 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 45
+    m_Font: {fileID: 12800000, guid: 8c7edfae3dd8166469a0256bc1da540d, type: 3}
+    m_FontSize: 30
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -5722,9 +5712,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "'Press space to let the object go out of orbit'\r\n\n'keep in mind that
-    this game is hard as fuck and doesn't really make sense at first'\r\n\n'like you
-    would think it goes straight but NAW'"
+  m_Text: "   Release the satellite by:\n\n     - tapping the screen\n\n     - left
+    clicking with a mouse\n\n     - pressing space bar. \n\n\n        Go for the highest
+    score!"
 --- !u!222 &1332226142
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6822,11 +6812,6 @@ MonoBehaviour:
   inputField: {fileID: 2030680425}
   slider: {fileID: 480747883}
   index: 0
-  UpdatedColor:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!224 &1624503981
 RectTransform:
   m_ObjectHideFlags: 0

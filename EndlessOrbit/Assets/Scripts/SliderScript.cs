@@ -48,6 +48,7 @@ public class SliderScript : MonoBehaviour
 
     public void UpdatedInputField()
     {
+        Debug.Log("updating");
         string text = inputField.text.Trim(trimChars);
         if (text.Length > 0)
         {
@@ -72,6 +73,7 @@ public class SliderScript : MonoBehaviour
 
     public void UpdateSlider()
     {
+        Debug.Log("updating");
         float value = (slider.value * 255);
         inputField.text = value.ToString();
         switch (index)
