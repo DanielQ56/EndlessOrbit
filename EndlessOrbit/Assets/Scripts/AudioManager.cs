@@ -8,8 +8,8 @@ using System.Linq;
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance = null;
-    public Sound[] sfx;
-    public Sound currentEffect = null;
+    [SerializeField] Sound[] sfx;
+    [SerializeField] Sound currentEffect = null;
     public bool muted = false;
 
     void Awake()
@@ -31,6 +31,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+
     public void Play(string name)
     {
         Sound s = Array.Find(sfx, sound => sound.name == name);
@@ -41,8 +42,16 @@ public class AudioManager : MonoBehaviour
             Debug.Log("ERROR: Sound not found");
             return;
         }
-        s.source.Play();
+
+        if (!muted)
+            s.source.Play();
     }
+
+    public void ToggleSound()
+    {
+        muted = !muted;
+    }
+
 }
 
 [System.Serializable]
