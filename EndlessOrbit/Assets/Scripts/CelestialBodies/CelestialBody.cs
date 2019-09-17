@@ -8,6 +8,7 @@ public class CelestialBody : MonoBehaviour
 
     CircleCollider2D m_collider;
     // Start is called before the first frame update
+
 	
 	void Awake()
 	{
@@ -47,6 +48,7 @@ public class CelestialBody : MonoBehaviour
         if(collision.CompareTag("Player"))
         {
             collision.gameObject.GetComponent<PlayerController>().NewBodyToOrbit(transform);
+            MainGameManager.instance.PassedHighScore();
         }
     }
 

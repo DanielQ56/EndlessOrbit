@@ -4,13 +4,20 @@ using UnityEngine;
 using UnityEngine.Audio;
 using System;
 using System.Linq;
+using UnityEngine.UI;
 
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance = null;
     [SerializeField] Sound[] sfx;
     [SerializeField] Sound currentEffect = null;
+    [SerializeField] Sprite Enabled;
+    [SerializeField] Sprite Disabled;
+    [SerializeField] Image AudioImage;
+
     public bool muted = false;
+
+    Dictionary<bool, Sprite> AudioActive;
 
     void Awake()
     {
@@ -29,6 +36,9 @@ public class AudioManager : MonoBehaviour
             track.source.clip = track.clip;
             track.source.volume = track.volume;
         }
+        AudioActive = new Dictionary<bool, Sprite>();
+        AudioActive.Add(true, Enabled);
+        AudioActive.Add(false, Disabled);
     }
 
 
@@ -50,6 +60,7 @@ public class AudioManager : MonoBehaviour
     public void ToggleSound()
     {
         muted = !muted;
+        AudioImage.sprite = AudioActive[muted];
     }
 
 }

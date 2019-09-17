@@ -11,8 +11,8 @@ public class TitleScreenManager : MonoBehaviour
 
     private void Start()
     {
-        TitleScreen.SetActive(true);
         ControlsScreen.SetActive(false);
+        TitleScreen.SetActive(true);
     }
 
     public void toggleTitleScreen()

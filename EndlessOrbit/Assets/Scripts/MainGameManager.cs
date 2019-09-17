@@ -15,6 +15,7 @@ public class MainGameManager : MonoBehaviour
     [SerializeField] GameOverScript gameOver;
     [SerializeField] GameObject PausePanel;
     [SerializeField] ParticleSystem playerParticles;
+    [SerializeField] HighScoreLine score;
 
 
     public UnityEvent increaseSpeed;
@@ -28,6 +29,8 @@ public class MainGameManager : MonoBehaviour
     bool playerIsAlive = true;
 
     bool SpeedIncreased = false;
+
+    bool displayHighScoreLine = false;
 
     GameObject player;
 
@@ -89,7 +92,7 @@ public class MainGameManager : MonoBehaviour
             increaseSpeed.Invoke();
             playerParticles.gameObject.transform.position = player.transform.position - new Vector3(0, 0.2f, 0);
             ParticleSystem.MainModule main = playerParticles.main;
-            main.startColor = new Color(Random.Range(0.5f, 1f), Random.Range(0.5f, 1f), Random.Range(0f, 1f));
+            main.startColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
             playerParticles.Play();
         }
     }
@@ -98,6 +101,8 @@ public class MainGameManager : MonoBehaviour
     {
         currentScore += value;
         scoreText.text = currentScore.ToString();
+        if (currentScore == ScoreManager.instance.GetHighScore() && currentScore > 0)
+            displayHighScoreLine = true;
         SpeedIncreased = false;
     }
 
@@ -123,6 +128,7 @@ public class MainGameManager : MonoBehaviour
         }
     }
 
+
     IEnumerator UpdateCamPos(Transform newPlanet)
     {
         movingCamera = true;
@@ -134,7 +140,21 @@ public class MainGameManager : MonoBehaviour
         }
         GenerateNextPlanet(newPlanet);
         movingCamera = false;
+        if(displayHighScoreLine)
+        {
+            score.gameObject.SetActive(true);
+            displayHighScoreLine = false;
+        }
 
+    }
+
+
+    public void PassedHighScore()
+    {
+        if(score.gameObject.activeInHierarchy)
+        {
+            score.HighScore();
+        }
     }
 
 

@@ -77,6 +77,12 @@ public class ScoreManager : MonoBehaviour
         leader.ActivateLeaderboard(tempScores);
     }
 
+    public int GetHighScore()
+    {
+        Debug.Log(scores[scores.Length - 1]);
+        return scores[scores.Length - 1];
+    }
+
     public void DeleteAllData()
     {
         string path = Application.persistentDataPath + "/scores.dat";
