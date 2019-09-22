@@ -26,4 +26,20 @@ public class Leaderboard : MonoBehaviour
         }
         leaderboardPanel.SetActive(false);
     }
+
+    public void ClearLeaderboard()
+    {
+        StartCoroutine(ClearBoard());
+    }
+    
+    IEnumerator ClearBoard()
+    {
+        foreach (Transform t in board.transform)
+        {
+            Destroy(t.gameObject);
+        }
+        ScoreManager.instance.DeleteAllData();
+        yield return new WaitForSeconds(1f);
+        ScoreManager.instance.displayScores();
+    }
 }
