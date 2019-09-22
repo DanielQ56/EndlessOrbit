@@ -8,6 +8,7 @@ public class GameOverScript : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI scoreText;
     [SerializeField] GameObject gameOverPanel;
+    [SerializeField] GameObject scoreLine;
 
     public void GameOver(int score)
     {
@@ -17,5 +18,6 @@ public class GameOverScript : MonoBehaviour
 
         gameOverPanel.SetActive(true);
         scoreText.text = score.ToString();
+        scoreLine.SetActive(false);
     }
 }

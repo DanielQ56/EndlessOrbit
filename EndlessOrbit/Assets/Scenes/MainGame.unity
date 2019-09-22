@@ -21387,6 +21387,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scoreText: {fileID: 1098285302}
   gameOverPanel: {fileID: 92592421}
+  scoreLine: {fileID: 786615494}
 --- !u!114 &1583387091
 MonoBehaviour:
   m_ObjectHideFlags: 0

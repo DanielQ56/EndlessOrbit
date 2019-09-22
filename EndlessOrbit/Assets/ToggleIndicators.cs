@@ -31,13 +31,11 @@ public class ToggleIndicators : MonoBehaviour, ISelectHandler, IDeselectHandler
     public void OnSelect(BaseEventData data)
     {
         ToggleController.instance.SaveToggle(this.gameObject);
-        Debug.Log(gameObject.name + " Selected");
         Selected();
     }
 
     public void OnDeselect(BaseEventData data)
     {
-        Debug.Log(gameObject.name + " Deselected");
         Deselected();
     }
 

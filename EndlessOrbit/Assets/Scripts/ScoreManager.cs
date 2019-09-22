@@ -12,7 +12,7 @@ public class ScoreManager : MonoBehaviour
 
     [SerializeField] Leaderboard leader;
 
-
+    int mostRecentScore = 0;
 
     int[] scores = new int[10];
 
@@ -45,6 +45,7 @@ public class ScoreManager : MonoBehaviour
             file.Close();
 
             scores = topScores.scores;
+            mostRecentScore = scores[scores.Length - 1];
         }
     }
 
@@ -55,6 +56,8 @@ public class ScoreManager : MonoBehaviour
         {
             return;
         }
+
+        mostRecentScore = score;
 
         scores[0] = score;
         Array.Sort(scores);
@@ -74,7 +77,7 @@ public class ScoreManager : MonoBehaviour
         tempScores.Clear();
         tempScores.AddRange(scores);
         tempScores.Reverse();
-        leader.ActivateLeaderboard(tempScores);
+        leader.ActivateLeaderboard(tempScores, mostRecentScore);
     }
 
     public int GetHighScore()

@@ -18,6 +18,11 @@ public class HighScoreLine : MonoBehaviour
         text.gameObject.SetActive(true);
     }
 
+    private void OnDisable()
+    {
+        text.gameObject.SetActive(false);
+    }
+
     public void HighScore()
     {
         if(!passed)

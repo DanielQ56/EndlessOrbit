@@ -48,13 +48,11 @@ public class ToggleController : MonoBehaviour
         if (savedButtons.Contains(selected))
         {
             justSelected = selected;
-            Debug.Log("SAVING SELECTED BUTTON " + justSelected.name);
         }
     }
 
     public void ToggleSelectedButton()
     {
         justSelected.GetComponent<ToggleIndicators>().SelectButton();
-        Debug.Log("SELECTING SAVED BUTTON " + justSelected.name);
     }
 }

@@ -8,14 +8,22 @@ public class Leaderboard : MonoBehaviour
     [SerializeField] GameObject board;
     [SerializeField] GameObject ScorePrefab;
 
-    public void ActivateLeaderboard(List<int> scores)
+    bool recentScoreIdentified = false;
+
+    public void ActivateLeaderboard(List<int> scores, int recentScore)
     {
+        Debug.Log(recentScore);
         leaderboardPanel.SetActive(true);
         for(int i = 0; i < scores.Count; ++i)
         {
+            bool foundRecentScore = (recentScore > 0 && scores[i] == recentScore && !recentScoreIdentified);
             GameObject clone = Instantiate(ScorePrefab, board.transform);
-            clone.GetComponent<UserScore>().SetVariables(i + 1, (scores[i] > 0 ? scores[i].ToString() : ""));
+            clone.GetComponent<UserScore>().SetVariables(i + 1, (scores[i] > 0 ? scores[i].ToString() : ""), foundRecentScore);
+            if (foundRecentScore)
+                recentScoreIdentified = true;
+
         }
+        recentScoreIdentified = false;
     }
 
     public void DeactivateLeaderboard()
