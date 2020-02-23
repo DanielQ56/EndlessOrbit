@@ -64,7 +64,7 @@ public class PlayerController : MonoBehaviour
 
     void CheckDetach()
     {
-        if ((Input.GetKeyDown(KeyCode.Space) || Input.touches.Length > 0 || Input.GetKeyDown(KeyCode.Mouse0) ) && state == PlayerState.Tethered)
+        if ((Input.touches.Length > 0 || Input.GetKeyDown(KeyCode.Mouse0) ) && state == PlayerState.Tethered)
         {
             if (EventSystem.current != null && !IsPointerOverObject())
                 Detach();
@@ -106,11 +106,28 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void Detach()
+
+    public void Detach()
+    {
+        if (state == PlayerState.Tethered)
+        {
+
+            if (!AudioManager.instance.muted)
+                AudioManager.instance.Play("Space");
+            state = PlayerState.Free;
+            Vector3 relativePosition = new Vector3(this.transform.position.x - BodyToRotateAround.transform.position.x,
+                this.transform.position.y - BodyToRotateAround.transform.position.y, 0);
+            float inverseSlope = (relativePosition.x != 0 ? (-1f / (relativePosition.y / relativePosition.x)) : 0);//(relativePosition.x + (relativePosition.x > 0 ? 0.5f : -0.5f)));
+            float b = relativePosition.y - (relativePosition.x * inverseSlope);
+            float x = relativePosition.x + (direction == 1 ? -1 : 1) * Mathf.Sign(relativePosition.y) * 5;
+            posToMoveTowards = new Vector3(x, (inverseSlope * x + b), 0);
+            movementAngle = Mathf.Tan(Mathf.Abs((posToMoveTowards.y - transform.position.y) / (posToMoveTowards.x - transform.position.x)));
+            AssignDirection(posToMoveTowards);
+        }
+    } 
+    /*void Detach() OLD DETACH JIC WE NEED IT AGAIN
     {
         //Audio (can move)
-        if (!AudioManager.instance.muted)
-            AudioManager.instance.Play("Space");
         
         state = PlayerState.Free;
         Vector3 relativePosition = new Vector3(this.transform.position.x - BodyToRotateAround.transform.position.x,
@@ -118,10 +135,7 @@ public class PlayerController : MonoBehaviour
         float inverseSlope = -1f / (relativePosition.y / (relativePosition.x + (relativePosition.x > 0 ? 0.5f : -0.5f)));
         float b = relativePosition.y - (relativePosition.x * inverseSlope);
         float x = relativePosition.x + (direction == 1 ? -1 : 1) * Mathf.Sign(relativePosition.y) * 5;
-        posToMoveTowards = new Vector3(x, (inverseSlope * x + b), 0);
-        movementAngle = Mathf.Tan(Mathf.Abs((posToMoveTowards.y - transform.position.y) / (posToMoveTowards.x-transform.position.x)));
-        AssignDirection(posToMoveTowards);
-    }
+    }*/
 
     void MoveStraight()
     {

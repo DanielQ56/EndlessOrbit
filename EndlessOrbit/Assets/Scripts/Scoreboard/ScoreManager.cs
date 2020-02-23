@@ -49,9 +49,8 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    public void SaveScore(int score)
+    public void RecordScore(int score)
     {
-        Debug.Log("Saving");
         if (score <= scores[0])
         {
             return;
@@ -61,7 +60,10 @@ public class ScoreManager : MonoBehaviour
 
         scores[0] = score;
         Array.Sort(scores);
+    }
 
+    public void SaveScores()
+    {
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Open(Application.persistentDataPath + "/scores.dat", FileMode.Create);
 
@@ -82,7 +84,6 @@ public class ScoreManager : MonoBehaviour
 
     public int GetHighScore()
     {
-        Debug.Log(scores[scores.Length - 1]);
         return scores[scores.Length - 1];
     }
 
@@ -93,6 +94,13 @@ public class ScoreManager : MonoBehaviour
         {
             File.Delete(path);
         }
+        Array.Clear(scores, 0, 10);
+        mostRecentScore = 0;
+    }
+
+    private void OnApplicationQuit()
+    {
+        SaveScores();
     }
 }
 

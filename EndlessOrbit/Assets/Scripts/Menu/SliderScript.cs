@@ -32,15 +32,12 @@ public class SliderScript : MonoBehaviour
         switch (index)
         {
             case 0:
-                Debug.Log("0");
                 fillArea.color = new Color(1f, 1f - val, 1f - val) ;
                 break;
             case 1:
-                Debug.Log("1");
                 fillArea.color = new Color(1f - val, 1f, 1f - val);
                 break;
             case 2:
-                Debug.Log("2");
                 fillArea.color = new Color(1f - val, 1f - val, 1f);
                 break;
         }
@@ -48,12 +45,11 @@ public class SliderScript : MonoBehaviour
 
     public void UpdatedInputField()
     {
-        Debug.Log("updating");
         string text = inputField.text.Trim(trimChars);
         if (text.Length > 0)
         {
-            float val = float.Parse(inputField.text);
-            val = (val % 256) / 255;
+            float val = float.Parse(text);
+            val = ((val > 256 ? 255 : val) % 256) / 255;
             slider.value = val;
             switch (index)
             {
@@ -75,7 +71,6 @@ public class SliderScript : MonoBehaviour
     {
         float value = (slider.value * 255);
         inputField.text = value.ToString();
-        Debug.Log(slider.value);
         switch (index)
         {
             case 0:

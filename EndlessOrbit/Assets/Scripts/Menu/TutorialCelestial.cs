@@ -4,19 +4,22 @@ using UnityEngine;
 
 public class TutorialCelestial : MonoBehaviour
 {
+    [SerializeField] LineRenderer orbitLine;
+    [SerializeField] float orbitRadius;
+
     CircleCollider2D m_collider;
     // Start is called before the first frame update
     void Start()
     {
         m_collider = GetComponent<CircleCollider2D>();
-        DrawColliderCircle();
+        DrawColliderCircle(m_collider.radius, true);
+        DrawColliderCircle(orbitRadius, false);
     }
 
-    void DrawColliderCircle()
+    void DrawColliderCircle(float radius, bool isCollider)
     {
-        float radius = m_collider.radius;
         int segments = 360;
-        LineRenderer line = gameObject.AddComponent<LineRenderer>();
+        LineRenderer line = (isCollider ? gameObject.AddComponent<LineRenderer>() : orbitLine);
         line.useWorldSpace = false;
         line.startWidth = line.endWidth = 0.03f;
         line.positionCount = segments + 1;
@@ -31,6 +34,13 @@ public class TutorialCelestial : MonoBehaviour
         line.SetPositions(points);
         
     }
+
+    public void UpdateRadius(float rad)
+    {
+        DrawColliderCircle(rad, false);
+    }
+
+
 
     private void OnTriggerExit2D(Collider2D collision)
     {

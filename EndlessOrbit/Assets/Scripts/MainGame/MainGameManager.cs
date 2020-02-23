@@ -69,7 +69,7 @@ public class MainGameManager : MonoBehaviour
     {
         playerIsAlive = false;
         gameOver.GameOver(currentScore);
-        ScoreManager.instance.SaveScore(currentScore);
+        ScoreManager.instance.RecordScore(currentScore);
     }
 
     public void AttachedToNewPlanet(Transform newPlanet)
