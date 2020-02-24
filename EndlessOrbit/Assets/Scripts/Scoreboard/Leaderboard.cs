@@ -6,7 +6,6 @@ public class Leaderboard : MonoBehaviour
 {
     [SerializeField] GameObject leaderboardPanel;
     [SerializeField] GameObject board;
-    [SerializeField] GameObject ScorePrefab;
 
     bool recentScoreIdentified = false;
 
@@ -21,10 +20,18 @@ public class Leaderboard : MonoBehaviour
         recentScoreIdentified = false;
         for (int i = 0; i < scores.Count; ++i)
         {
-            bool foundRecentScore = (recentScore > 0 && scores[i] == recentScore && !recentScoreIdentified);
-            board.transform.GetChild(i).GetComponent<UserScore>().SetVariables(i + 1, (scores[i] > 0 ? scores[i].ToString() : ""), foundRecentScore);
-            if (foundRecentScore)
-                recentScoreIdentified = true;
+            if (scores[i] > 0)
+            {
+                bool foundRecentScore = (recentScore > 0 && scores[i] == recentScore && !recentScoreIdentified);
+                board.transform.GetChild(i).gameObject.SetActive(true);
+                board.transform.GetChild(i).GetComponent<UserScore>().SetVariables(i + 1, (scores[i] > 0 ? scores[i].ToString() : ""), foundRecentScore);
+                if (foundRecentScore)
+                    recentScoreIdentified = true;
+            }
+            else
+            {
+                board.transform.GetChild(i).gameObject.SetActive(false);
+            }
 
         }
     }
@@ -44,6 +51,6 @@ public class Leaderboard : MonoBehaviour
         ScoreManager.instance.DeleteAllData();
         leaderboardPanel.gameObject.SetActive(false);
         yield return null;
-        ScoreManager.instance.displayScores();
+        ScoreManager.instance.displayLocalScores();
     }
 }

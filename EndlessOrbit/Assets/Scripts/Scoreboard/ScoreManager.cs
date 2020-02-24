@@ -5,22 +5,19 @@ using System;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
 public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager instance = null;
 
     [SerializeField] Leaderboard leader;
+    [SerializeField] GlobalLeaderboard globalLeader;
+    [SerializeField] ErrorPanel error;
 
-    int mostRecentScore = 0;
-
-    int[] scores = new int[10];
-
-    List<int> tempScores = new List<int>();
     
     void Awake()
     {
-        //DeleteAllData();
         if (instance== null)
         {
             DontDestroyOnLoad(gameObject);
@@ -33,6 +30,53 @@ public class ScoreManager : MonoBehaviour
         LoadScores();
 
     }
+
+    #region global
+
+    private const string AddScore = "https://endless-orbit.herokuapp.com/add_score";
+    private const string GetScores = "https://endless-orbit.herokuapp.com/scores";
+
+    public void DisplayGlobalScores()
+    {
+        StartCoroutine(DisplayGlobal());
+    }
+
+    IEnumerator DisplayGlobal()
+    {
+        using (UnityWebRequest scores = UnityWebRequest.Get(GetScores))
+        {
+            char[] charsToTrim = new char[] { '[', ']' };
+            scores.chunkedTransfer = false;
+            UnityWebRequestAsyncOperation request = scores.SendWebRequest();
+
+            yield return request;
+
+            if (scores.responseCode == 500)
+            {
+                ErrorOccurred("Could not load leaderboard.");
+            }
+            else
+            {
+                GlobalScores gs = JsonUtility.FromJson<GlobalScores>("{\"result\":" + scores.downloadHandler.text.Trim() + "}");
+                globalLeader.ActivateLeaderboard(gs.result, mostRecentScore);
+            }
+        }
+    }
+
+    void ErrorOccurred(string text)
+    {
+        error.gameObject.SetActive(true);
+        error.SetText(text);
+    }
+
+    #endregion
+
+    #region local
+    int mostRecentScore = 0;
+
+    int[] scores = new int[10];
+
+    List<int> tempScores = new List<int>();
 
     void LoadScores()
     {
@@ -74,7 +118,7 @@ public class ScoreManager : MonoBehaviour
         file.Close();
     }
 
-    public void displayScores()
+    public void displayLocalScores()
     {
         tempScores.Clear();
         tempScores.AddRange(scores);
@@ -102,7 +146,22 @@ public class ScoreManager : MonoBehaviour
     {
         SaveScores();
     }
+    #endregion
 }
+
+[Serializable] 
+public class GlobalScores
+{
+    public Players[] result;
+}
+
+[Serializable]
+public class Players
+{
+    public string username;
+    public int score;
+}
+
 
 [Serializable]
 class Scores

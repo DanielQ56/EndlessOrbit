@@ -12,7 +12,12 @@ public class ButtonFunctions : MonoBehaviour
 
     public void OpenLeaderboard()
     {
-        ScoreManager.instance.displayScores();
+        ScoreManager.instance.displayLocalScores();
+    }
+
+    public void OpenGlobalLeaderboard()
+    {
+        ScoreManager.instance.DisplayGlobalScores();
     }
 
     public void PauseGame()
