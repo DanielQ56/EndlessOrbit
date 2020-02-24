@@ -6,6 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using UnityEngine.UI;
 using UnityEngine.Networking;
+using TMPro;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -13,7 +14,8 @@ public class ScoreManager : MonoBehaviour
 
     [SerializeField] Leaderboard leader;
     [SerializeField] GlobalLeaderboard globalLeader;
-    [SerializeField] ErrorPanel error;
+    [SerializeField] GameObject LoadingPanel;
+    [SerializeField] GameObject error;
 
     
     void Awake()
@@ -28,6 +30,8 @@ public class ScoreManager : MonoBehaviour
             Destroy(gameObject);
         }
         LoadScores();
+        if(!PlayerPrefs.HasKey("Username"))
+            PlayerPrefs.SetString("Username", "");
 
     }
 
@@ -36,38 +40,117 @@ public class ScoreManager : MonoBehaviour
     private const string AddScore = "https://endless-orbit.herokuapp.com/add_score";
     private const string GetScores = "https://endless-orbit.herokuapp.com/scores";
 
-    public void DisplayGlobalScores()
+
+    GlobalScores gs;
+    bool shouldCheckForGlobal;
+
+    bool retrieving = false;
+
+    private void Start()
     {
-        StartCoroutine(DisplayGlobal());
+        shouldCheckForGlobal = (PlayerPrefs.GetString("Username") != "");
     }
 
-    IEnumerator DisplayGlobal()
+    void SaveScoreToGlobal()
     {
+        if(shouldCheckForGlobal)
+        {
+            Debug.Log("Retrieving");
+            StartCoroutine(RetrieveGlobal(false));
+        }
+    }
+
+    void OnGlobalLeaderboard()
+    {
+        Debug.Log("Updated the scores");
+        Players lastScore = gs.result[9];
+        if(mostRecentScore >= lastScore.score && String.Compare(PlayerPrefs.GetString("Username"), lastScore.username) < 0)
+        {
+            StartCoroutine(SaveGlobal());
+        }
+        else
+        {
+            retrieving = false;
+        }
+    }
+
+    IEnumerator SaveGlobal()
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("username", PlayerPrefs.GetString("Username"));
+        form.AddField("score", mostRecentScore);
+        using(UnityWebRequest newScore = UnityWebRequest.Post(AddScore, form))
+        {
+            newScore.chunkedTransfer = false;
+            UnityWebRequestAsyncOperation request = newScore.SendWebRequest();
+            yield return request;
+            if(newScore.responseCode == 500)
+            {
+                error.SetActive(true);
+            }
+            Debug.Log("Success!");
+            retrieving = false;
+        }
+    }
+
+    public void DisplayGlobalScores()
+    {
+        StartCoroutine(RetrieveGlobal(true));
+    }
+
+    IEnumerator RetrieveGlobal(bool display)
+    {
+        while (retrieving)
+            yield return null;
         using (UnityWebRequest scores = UnityWebRequest.Get(GetScores))
         {
+            retrieving = true;
             char[] charsToTrim = new char[] { '[', ']' };
             scores.chunkedTransfer = false;
             UnityWebRequestAsyncOperation request = scores.SendWebRequest();
 
+            LoadingPanel.SetActive(display);
             yield return request;
+            LoadingPanel.SetActive(false);
 
             if (scores.responseCode == 500)
             {
-                ErrorOccurred("Could not load leaderboard.");
+                error.SetActive(true);
             }
             else
             {
-                GlobalScores gs = JsonUtility.FromJson<GlobalScores>("{\"result\":" + scores.downloadHandler.text.Trim() + "}");
-                globalLeader.ActivateLeaderboard(gs.result, mostRecentScore);
+                gs = JsonUtility.FromJson<GlobalScores>("{\"result\":" + scores.downloadHandler.text.Trim() + "}");
+                if (display)
+                {
+                    globalLeader.ActivateLeaderboard(gs.result, mostRecentScore, PlayerPrefs.GetString("Username"));
+                    retrieving = false;
+                }
+                else
+                    OnGlobalLeaderboard();
+
             }
+           
         }
     }
 
-    void ErrorOccurred(string text)
+    public void SetName(string name)
     {
-        error.gameObject.SetActive(true);
-        error.SetText(text);
+        if(name == "")
+        {
+            shouldCheckForGlobal = false;
+        }
+        else
+        {
+            shouldCheckForGlobal = true;
+        }
+        PlayerPrefs.SetString("Username", name);
     }
+
+    public string GetName()
+    {
+        return PlayerPrefs.GetString("Username");
+    }
+
 
     #endregion
 
@@ -95,12 +178,15 @@ public class ScoreManager : MonoBehaviour
 
     public void RecordScore(int score)
     {
+        mostRecentScore = score;
+        SaveScoreToGlobal();
+
         if (score <= scores[0])
         {
             return;
         }
 
-        mostRecentScore = score;
+ 
 
         scores[0] = score;
         Array.Sort(scores);

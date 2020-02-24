@@ -14,7 +14,7 @@ public class GlobalLeaderboard : MonoBehaviour
         leaderboardPanel.SetActive(false);
     }
 
-    public void ActivateLeaderboard(Players[] players, int recentScore)
+    public void ActivateLeaderboard(Players[] players, int recentScore, string playerName)
     {
         leaderboardPanel.SetActive(true);
         Debug.Log(players.Length);
@@ -23,7 +23,7 @@ public class GlobalLeaderboard : MonoBehaviour
         {
             if (i < players.Length && players[i].score > 0)
             {
-                bool foundRecentScore = (recentScore > 0 && players[i].score == recentScore && !recentScoreIdentified);
+                bool foundRecentScore = (recentScore > 0 && players[i].score == recentScore && !recentScoreIdentified && playerName == players[i].username);
                 board.transform.GetChild(i).gameObject.SetActive(true);
                 board.transform.GetChild(i).GetComponent<GlobalScore>().SetVariables(i + 1, players[i].username, players[i].score, foundRecentScore);
                 if (foundRecentScore)
