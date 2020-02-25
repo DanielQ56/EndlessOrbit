@@ -28,7 +28,6 @@ public class SliderScript : MonoBehaviour
     public void ActivatePanel(float val)
     {
         slider.value = val;
-        Debug.Log(val);
         switch (index)
         {
             case 0:

@@ -35,9 +35,9 @@ public class CustomizationManager : MonoBehaviour
         yield return new WaitForEndOfFrame();
         if(panel.activeInHierarchy)
         {
-            sliders[0].ActivatePanel(previewPlayer.color.r);
-            sliders[1].ActivatePanel(previewPlayer.color.g);
-            sliders[2].ActivatePanel(previewPlayer.color.b);
+            sliders[0].ActivatePanel(PlayerCustomization.instance.playerColor.r);
+            sliders[1].ActivatePanel(PlayerCustomization.instance.playerColor.g);
+            sliders[2].ActivatePanel(PlayerCustomization.instance.playerColor.b);
         }
     }
 

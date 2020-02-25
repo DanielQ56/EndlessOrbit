@@ -4,9 +4,7 @@ using UnityEngine;
 using System;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
-using UnityEngine.UI;
 using UnityEngine.Networking;
-using TMPro;
 
 public class ScoreManager : MonoBehaviour
 {

@@ -42,7 +42,7 @@ public class MainGameManager : MonoBehaviour
         {
             instance = this;
         }
-
+        GoogleAds.instance.HideBanner();
         updateCameraPosition(startingPlanet);
     }
 
@@ -70,6 +70,7 @@ public class MainGameManager : MonoBehaviour
         playerIsAlive = false;
         gameOver.GameOver(currentScore);
         ScoreManager.instance.RecordScore(currentScore);
+        GoogleAds.instance.ShowFullScreenAd();
     }
 
     public void AttachedToNewPlanet(Transform newPlanet)
