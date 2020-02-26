@@ -16,6 +16,8 @@ public class MainGameManager : MonoBehaviour
     [SerializeField] GameObject PausePanel;
     [SerializeField] ParticleSystem playerParticles;
     [SerializeField] HighScoreLine score;
+    [SerializeField] float xOffset;
+    [SerializeField] float yOffset;
 
 
     public UnityEvent increaseSpeed;
@@ -32,6 +34,8 @@ public class MainGameManager : MonoBehaviour
 
     bool displayHighScoreLine = false;
 
+    float width, height;
+
     GameObject player;
 
     private void Start()
@@ -42,8 +46,15 @@ public class MainGameManager : MonoBehaviour
         {
             instance = this;
         }
+        SetBounds();
         GoogleAds.instance.HideBanner();
         updateCameraPosition(startingPlanet);
+    }
+
+    void SetBounds()
+    {
+        width = mainCam.ScreenToWorldPoint(new Vector2(mainCam.pixelWidth, mainCam.pixelHeight)).x - mainCam.ScreenToWorldPoint(Vector2.zero).x;
+        height = (mainCam.ScreenToWorldPoint(new Vector2(mainCam.pixelWidth, mainCam.pixelHeight)).y - mainCam.ScreenToWorldPoint(Vector2.zero).y)/2;
     }
 
     private void Update()
@@ -117,15 +128,39 @@ public class MainGameManager : MonoBehaviour
         if (planetParent.childCount == 1)
         {
             int numPlanetsToSpawn = 1;
-            float width = mainCam.orthographicSize * ((float)Screen.width / (float)Screen.height) - 3;
-            float gap = ((width * 2) / numPlanetsToSpawn);
+            Vector3 camPos = mainCam.transform.position;
             for (int i = 0; i < numPlanetsToSpawn; ++i)
             {
                 GameObject clone = Instantiate(planets[Random.Range(0, planets.Count)], planetParent);
-                clone.transform.position = new Vector3(Random.Range(-width + gap * i, -width + gap * (i + 1)),
-                    Random.Range(mainCam.transform.position.y + mainCam.orthographicSize/3, mainCam.transform.position.y + mainCam.orthographicSize -1), 0);
+                DetermineOffset(clone.transform);
+                clone.transform.position = new Vector3(Random.Range((camPos.x - width / 2) + xOffset, (camPos.x + width / 2) - xOffset),
+                    Random.Range(camPos.y + yOffset, camPos.y + height - yOffset), 0);
+                //clone.transform.position = new Vector3(Random.Range(-width + gap * i, -width + gap * (i + 1)),
+                //Random.Range(mainCam.transform.position.y + mainCam.orthographicSize/3, mainCam.transform.position.y + mainCam.orthographicSize -1), 0);
 
             }
+        }
+    }
+
+    void DetermineOffset(Transform planet)
+    {
+        switch (planet.transform.localScale.x)
+        {
+            case 18:
+                xOffset = 2.5f;
+                break;
+            case 16:
+                xOffset = 2.5f;
+                break;
+            case 14:
+                xOffset = 2.3f;
+                break;
+            case 12:
+                xOffset = 2.1f;
+                break;
+            case 8:
+                xOffset = 1.7f;
+                break;
         }
     }
 
@@ -133,7 +168,8 @@ public class MainGameManager : MonoBehaviour
     IEnumerator UpdateCamPos(Transform newPlanet)
     {
         movingCamera = true;
-        Vector3 pos = new Vector3(0, newPlanet.position.y + mainCam.orthographicSize, -10);
+        float botY = mainCam.ScreenToWorldPoint(Vector2.zero).y;
+        Vector3 pos = new Vector3(0, newPlanet.position.y + height, -10);
         while (Mathf.Abs(mainCam.transform.position.y - pos.y) > 3)
         {
             mainCam.transform.position = Vector3.Lerp(mainCam.transform.position, pos, 3 * Time.deltaTime);

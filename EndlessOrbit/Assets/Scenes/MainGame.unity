@@ -5925,6 +5925,8 @@ MonoBehaviour:
   PausePanel: {fileID: 636201262}
   playerParticles: {fileID: 140328978}
   score: {fileID: 786615496}
+  xOffset: 2.5
+  yOffset: 2.5
   increaseSpeed:
     m_PersistentCalls:
       m_Calls: []
