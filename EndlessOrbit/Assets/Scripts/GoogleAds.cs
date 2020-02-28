@@ -10,10 +10,10 @@ public class GoogleAds : MonoBehaviour
     string appID = "ca-app-pub-1176054287451959~9608087394";
 
     private BannerView bannerView;
-    private string bannerID = "	ca-app-pub-3940256099942544/6300978111";
+    private string bannerID = "ca-app-pub-3940256099942544/6300978111";
 
     private InterstitialAd fullScreenAd;
-    private string fullScreenAdID = "	ca-app-pub-3940256099942544/1033173712";
+    private string fullScreenAdID = "ca-app-pub-3940256099942544/1033173712";
 
     private void Awake()
     {
