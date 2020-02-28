@@ -7,7 +7,7 @@ public class GoogleAds : MonoBehaviour
 {
     public static GoogleAds instance;
 
-    string appID = "ca-app-pub-3940256099942544~3347511713";
+    string appID = "ca-app-pub-1176054287451959~9608087394";
 
     private BannerView bannerView;
     private string bannerID = "	ca-app-pub-3940256099942544/6300978111";
@@ -30,6 +30,7 @@ public class GoogleAds : MonoBehaviour
 
     private void Start()
     {
+        MobileAds.Initialize(appID);
         RequestFullScreenAd();
         
     }
@@ -39,10 +40,13 @@ public class GoogleAds : MonoBehaviour
         bannerView = new BannerView(bannerID, AdSize.Banner, AdPosition.Bottom);
 
         AdRequest request = new AdRequest.Builder().Build();
-
+        foreach(string s in request.TestDevices)
+        {
+            Debug.Log(s);
+        }
         bannerView.LoadAd(request);
-        Debug.Log("Here");
         bannerView.Show();
+        Debug.Log("Requesting banner ad");
     }
 
     public void HideBanner()
@@ -66,10 +70,12 @@ public class GoogleAds : MonoBehaviour
         if(fullScreenAd.IsLoaded())
         {
             fullScreenAd.Show();
+            RequestFullScreenAd();
         }
         else
         {
-            Debug.Log("Full screen a not loaded");
+            Debug.Log("Full screen ad not loaded");
+            RequestFullScreenAd();
         }
     }
 }
