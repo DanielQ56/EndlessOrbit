@@ -64,7 +64,7 @@ public class PlayerController : MonoBehaviour
 
     void CheckDetach()
     {
-        if (Input.touchCount > 0 && state == PlayerState.Tethered && !IsPointerOverObject() && Time.timeScale > 0)
+        if ((Input.touchCount > 0 && state == PlayerState.Tethered && !IsPointerOverObject() && Time.timeScale > 0) || Input.GetKeyDown(KeyCode.Mouse0))
         {
             if(EventSystem.current.currentSelectedGameObject == null)
                 Detach();

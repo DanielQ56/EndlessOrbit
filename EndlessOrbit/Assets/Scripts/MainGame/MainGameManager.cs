@@ -38,11 +38,16 @@ public class MainGameManager : MonoBehaviour
 
     GameObject player;
 
-    private void Start()
+    int currentGStars = 0;
+    int currentSStars = 0;
+
+    #region Setup
+
+    private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         increaseSpeed = new UnityEvent();
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
         }
@@ -52,7 +57,13 @@ public class MainGameManager : MonoBehaviour
         }
         SetBounds();
         GoogleAds.instance.HideBanner();
+    }
+
+    private void Start()
+    {
         updateCameraPosition(startingPlanet);
+        currentGStars = 0;
+        currentSStars = 0;
     }
 
     void SetBounds()
@@ -73,6 +84,7 @@ public class MainGameManager : MonoBehaviour
 
     }
 
+    #endregion
 
     public void PauseGame()
     {
@@ -85,21 +97,20 @@ public class MainGameManager : MonoBehaviour
         playerIsAlive = false;
         gameOver.GameOver(currentScore);
         ScoreManager.instance.RecordScore(currentScore);
+        PlayerManager.instance.AddStars(currentGStars, currentSStars);
         GoogleAds.instance.ShowFullScreenAd();
     }
 
+    #region Hit Planet
+
     public void AttachedToNewPlanet(Transform newPlanet)
     {
-        Debug.Log("attached");
         updateCameraPosition(newPlanet);
         UpdateScore(100);
+        AddCoins();
         IncreasePlayerSpeed();
     }
 
-    public bool IsMovingCamera()
-    {
-        return movingCamera;
-    }
 
     void IncreasePlayerSpeed()
     {
@@ -122,11 +133,51 @@ public class MainGameManager : MonoBehaviour
         SpeedIncreased = false;
     }
 
+    void AddCoins()
+    {
+        if (currentScore > ScoreManager.instance.GetHighScore() && currentScore > 0)
+            currentGStars += 1;
+        else
+            currentSStars += (currentScore % 1000 == 0 && currentScore > 0 ? 1 : 0);
+    }
+
+    #endregion
+
+    #region Camera Movement
+
+    public bool IsMovingCamera()
+    {
+        return movingCamera;
+    }
+
     void updateCameraPosition(Transform newPlanet)
     {
         StartCoroutine(UpdateCamPos(newPlanet));
     }
 
+    IEnumerator UpdateCamPos(Transform newPlanet)
+    {
+        movingCamera = true;
+        float botY = mainCam.ScreenToWorldPoint(Vector2.zero).y;
+        Vector3 pos = new Vector3(0, newPlanet.position.y + height, -10);
+        while (Mathf.Abs(mainCam.transform.position.y - pos.y) > 3)
+        {
+            mainCam.transform.position = Vector3.Lerp(mainCam.transform.position, pos, 3 * Time.deltaTime);
+            yield return null;
+        }
+        GenerateNextPlanet(newPlanet);
+        movingCamera = false;
+        if (displayHighScoreLine)
+        {
+            score.gameObject.SetActive(true);
+            displayHighScoreLine = false;
+        }
+
+    }
+
+    #endregion
+
+    #region Planet Generation
     void GenerateNextPlanet(Transform newPlanet)
     {
         if (planetParent.childCount == 1)
@@ -151,44 +202,24 @@ public class MainGameManager : MonoBehaviour
         switch (planet.transform.localScale.x)
         {
             case 18:
-                xOffset = 2.5f;
+                xOffset = 2.6f;
                 break;
             case 16:
-                xOffset = 2.5f;
+                xOffset = 2.6f;
                 break;
             case 14:
-                xOffset = 2.3f;
+                xOffset = 2.4f;
                 break;
             case 12:
-                xOffset = 2.1f;
+                xOffset = 2.4f;
                 break;
             case 8:
-                xOffset = 1.7f;
+                xOffset = 1.8f;
                 break;
         }
     }
 
-
-    IEnumerator UpdateCamPos(Transform newPlanet)
-    {
-        movingCamera = true;
-        float botY = mainCam.ScreenToWorldPoint(Vector2.zero).y;
-        Vector3 pos = new Vector3(0, newPlanet.position.y + height, -10);
-        while (Mathf.Abs(mainCam.transform.position.y - pos.y) > 3)
-        {
-            mainCam.transform.position = Vector3.Lerp(mainCam.transform.position, pos, 3 * Time.deltaTime);
-            yield return null;
-        }
-        GenerateNextPlanet(newPlanet);
-        movingCamera = false;
-        if(displayHighScoreLine)
-        {
-            score.gameObject.SetActive(true);
-            displayHighScoreLine = false;
-        }
-
-    }
-
+    #endregion
 
     public void PassedHighScore()
     {

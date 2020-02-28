@@ -27,10 +27,11 @@ public class ScoreManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        LoadScores();
-        if (!PlayerPrefs.HasKey("Username"))
-            PlayerPrefs.SetString("Username", "");
+    }
 
+    private void Start()
+    {
+        LoadScores();
     }
 
     #region global
@@ -164,11 +165,13 @@ public class ScoreManager : MonoBehaviour
 
             scores = data.scores;
             username = data.username;
+            PlayerManager.instance.Setup(data.goldstars, data.silverstars);
             mostRecentScore = scores[scores.Length - 1];
         }
         else
         {
             username = "";
+            PlayerManager.instance.Setup();
         }
     }
 
@@ -197,6 +200,8 @@ public class ScoreManager : MonoBehaviour
         GameData data = new GameData();
         data.scores = scores;
         data.username = username;
+        data.goldstars = PlayerManager.instance.GetGoldStars();
+        data.silverstars = PlayerManager.instance.GetSilverStars();
 
         bf.Serialize(file, data);
         file.Close();
@@ -260,6 +265,8 @@ class GameData
 {
     public string username;
     public int[] scores;
+    public int goldstars;
+    public int silverstars;
 }
 
 
