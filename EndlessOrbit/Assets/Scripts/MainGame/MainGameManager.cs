@@ -46,6 +46,10 @@ public class MainGameManager : MonoBehaviour
         {
             instance = this;
         }
+        else
+        {
+            Destroy(this.gameObject);
+        }
         SetBounds();
         GoogleAds.instance.HideBanner();
         updateCameraPosition(startingPlanet);

@@ -5,7 +5,7 @@ using UnityEngine;
 public class TitleScreenManager : MonoBehaviour
 {
 
-    private void Start()
+    private void Awake()
     {
         GoogleAds.instance.RequestBanner();
     }

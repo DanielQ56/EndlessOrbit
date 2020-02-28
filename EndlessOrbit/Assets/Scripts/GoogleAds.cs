@@ -41,7 +41,7 @@ public class GoogleAds : MonoBehaviour
         AdRequest request = new AdRequest.Builder().Build();
 
         bannerView.LoadAd(request);
-
+        Debug.Log("Here");
         bannerView.Show();
     }
 
