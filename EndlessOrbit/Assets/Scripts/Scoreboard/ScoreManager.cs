@@ -15,10 +15,10 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] GameObject LoadingPanel;
     [SerializeField] GameObject error;
 
-    
+
     void Awake()
     {
-        if (instance== null)
+        if (instance == null)
         {
             DontDestroyOnLoad(gameObject);
             instance = this;
@@ -28,7 +28,7 @@ public class ScoreManager : MonoBehaviour
             Destroy(gameObject);
         }
         LoadScores();
-        if(!PlayerPrefs.HasKey("Username"))
+        if (!PlayerPrefs.HasKey("Username"))
             PlayerPrefs.SetString("Username", "");
 
     }
@@ -44,14 +44,13 @@ public class ScoreManager : MonoBehaviour
 
     bool retrieving = false;
 
-    private void Start()
-    {
-        shouldCheckForGlobal = (PlayerPrefs.GetString("Username") != "");
-    }
+    string username;
+
 
     void SaveScoreToGlobal()
     {
-        if(shouldCheckForGlobal)
+        Debug.Log("Username: " + username);
+        if ((shouldCheckForGlobal = (username != "")))
         {
             Debug.Log("Retrieving");
             StartCoroutine(RetrieveGlobal(false));
@@ -60,10 +59,12 @@ public class ScoreManager : MonoBehaviour
 
     void OnGlobalLeaderboard()
     {
-        Debug.Log("Updated the scores");
+
         Players lastScore = gs.result[9];
-        if(mostRecentScore >= lastScore.score && String.Compare(PlayerPrefs.GetString("Username"), lastScore.username) < 0)
+        Debug.Log("Most recent score is: " + mostRecentScore + ", the last place score is: " + lastScore.score);
+        if (mostRecentScore > lastScore.score || (mostRecentScore == lastScore.score  && String.Compare(username, lastScore.username) < 0))
         {
+            Debug.Log("Saving score of " + mostRecentScore + " to user " + username);
             StartCoroutine(SaveGlobal());
         }
         else
@@ -75,7 +76,7 @@ public class ScoreManager : MonoBehaviour
     IEnumerator SaveGlobal()
     {
         WWWForm form = new WWWForm();
-        form.AddField("username", PlayerPrefs.GetString("Username"));
+        form.AddField("username", username);
         form.AddField("score", mostRecentScore);
         using(UnityWebRequest newScore = UnityWebRequest.Post(AddScore, form))
         {
@@ -133,20 +134,12 @@ public class ScoreManager : MonoBehaviour
 
     public void SetName(string name)
     {
-        if(name == "")
-        {
-            shouldCheckForGlobal = false;
-        }
-        else
-        {
-            shouldCheckForGlobal = true;
-        }
-        PlayerPrefs.SetString("Username", name);
+        username = name;
     }
 
     public string GetName()
     {
-        return PlayerPrefs.GetString("Username");
+        return username;
     }
 
 
@@ -166,11 +159,16 @@ public class ScoreManager : MonoBehaviour
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Open(Application.persistentDataPath + "/scores.dat", FileMode.Open);
 
-            Scores topScores = (Scores)bf.Deserialize(file);
+            GameData data = (GameData)bf.Deserialize(file);
             file.Close();
 
-            scores = topScores.scores;
+            scores = data.scores;
+            username = data.username;
             mostRecentScore = scores[scores.Length - 1];
+        }
+        else
+        {
+            username = "";
         }
     }
 
@@ -192,13 +190,15 @@ public class ScoreManager : MonoBehaviour
 
     public void SaveScores()
     {
+        Debug.Log("Saving scores.");
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Open(Application.persistentDataPath + "/scores.dat", FileMode.Create);
 
-        Scores topScores = new Scores();
-        topScores.scores = scores;
+        GameData data = new GameData();
+        data.scores = scores;
+        data.username = username;
 
-        bf.Serialize(file, topScores);
+        bf.Serialize(file, data);
         file.Close();
     }
 
@@ -226,6 +226,15 @@ public class ScoreManager : MonoBehaviour
         mostRecentScore = 0;
     }
 
+    private void OnApplicationPause(bool pause)
+    {
+        Debug.Log("In pause method: pause is " + pause);
+        if(pause)
+        {
+            SaveScores();
+        }
+    }
+
     private void OnApplicationQuit()
     {
         SaveScores();
@@ -244,6 +253,13 @@ public class Players
 {
     public string username;
     public int score;
+}
+
+[Serializable] 
+class GameData
+{
+    public string username;
+    public int[] scores;
 }
 
 
