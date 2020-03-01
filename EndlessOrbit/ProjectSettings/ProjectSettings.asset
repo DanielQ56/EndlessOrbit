@@ -728,9 +728,9 @@ PlayerSettings:
     m_VersionCode: 1
     m_VersionName: 
   apiCompatibilityLevel: 6
-  cloudProjectId: b6a534fc-9a5d-4559-86b5-b18889a9c221
+  cloudProjectId: 10b9f1b2-bd5b-448b-98f0-81e565bd71ca
   framebufferDepthMemorylessMode: 0
-  projectName: EndlessOrbit (1)
+  projectName: EndlessOrbit
   organizationId: drqi_unity
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
