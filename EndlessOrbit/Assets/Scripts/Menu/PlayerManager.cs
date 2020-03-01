@@ -31,6 +31,7 @@ public class PlayerManager : MonoBehaviour
     public void SetupItems(bool[] bought = null, int selected = 0)
     {
         Debug.Log(bought == null);
+        Debug.Log("Selected is: " + selected);
         if (bought != null)
         {
             for (int i = 0; i < allItems.Count; ++i)
@@ -41,6 +42,11 @@ public class PlayerManager : MonoBehaviour
                     allItems[i].bought = false;
                 allItems[i].selected = (i == selected);
             }
+        }
+        else
+        {
+            Debug.Log("Default");
+            SetToDefault();
         }
         selectedIndex = selected;
     }
@@ -60,16 +66,22 @@ public class PlayerManager : MonoBehaviour
         return ref allItems;
     }
 
-
-    public void SetToDefault()
+    public void SetDefaultItems()
     {
         allItems[0].bought = true;
         allItems[0].selected = true;
-        for(int i = 1; i < allItems.Count; ++i)
+        for (int i = 1; i < allItems.Count; ++i)
         {
             allItems[i].bought = false;
             allItems[i].selected = false;
         }
+    }
+
+
+    public void SetToDefault()
+    {
+        SetDefaultItems();
+        selectedIndex = 0;
         goldStars = 0;
         silverStars = 0;
     }

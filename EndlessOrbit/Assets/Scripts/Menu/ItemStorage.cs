@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ItemStorage : MonoBehaviour
 {
-    [SerializeField] GameObject panel;
     [SerializeField] GameObject grid;
     [SerializeField] GameObject itemPrefab;
 
@@ -13,21 +12,22 @@ public class ItemStorage : MonoBehaviour
         Item.selectedDelagate += this.DeactivateItem;
 
     }
-
-    private void Start()
+    private void OnEnable()
     {
         SetupGrid();
     }
 
+
     void SetupGrid()
     {
+        this.gameObject.SetActive(true);
         List<PurchasableItem> items = PlayerManager.instance.getAllItems();
+        Debug.Log(items.Count);
         for(int i = 0; i < items.Count; ++i)
         {
             GameObject item = Instantiate(itemPrefab, grid.transform);
             item.GetComponent<Item>().SetItem(items[i], i);
         }
-        panel.SetActive(false);
     }
 
 

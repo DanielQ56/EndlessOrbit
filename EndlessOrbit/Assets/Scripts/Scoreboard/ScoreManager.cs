@@ -146,6 +146,7 @@ public class ScoreManager : MonoBehaviour
 
     #region local
 
+    bool isSaving = false;
 
     int mostRecentScore = 0;
 
@@ -195,6 +196,7 @@ public class ScoreManager : MonoBehaviour
 
     public void SaveScores()
     {
+        isSaving = true;
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Open(Application.persistentDataPath + "/scores.dat", FileMode.Create);
 
@@ -208,9 +210,9 @@ public class ScoreManager : MonoBehaviour
         List<bool> bought = new List<bool>();
         for(int i = 0; i < items.Count; ++i)
         {
+            Debug.Log("Index: " + i + ", Bought: " + items[i].bought + ", Selected: " + items[i].selected);
             bought.Add(items[i].bought);
         }
-
         data.selectedItem = PlayerManager.instance.GetSelectedIndex();
 
         data.itemsBought = bought.ToArray();
@@ -218,6 +220,7 @@ public class ScoreManager : MonoBehaviour
 
         bf.Serialize(file, data);
         file.Close();
+        isSaving = false;
     }
 
     public void displayLocalScores()
@@ -244,13 +247,15 @@ public class ScoreManager : MonoBehaviour
     {
         if(pause)
         {
-            SaveScores();
+            if(!isSaving)
+                SaveScores();
         }
     }
 
     private void OnApplicationQuit()
     {
-        SaveScores();
+        if(!isSaving)
+            SaveScores();
     }
     #endregion
 }
