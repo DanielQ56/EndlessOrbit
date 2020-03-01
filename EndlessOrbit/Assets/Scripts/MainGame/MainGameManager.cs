@@ -138,7 +138,7 @@ public class MainGameManager : MonoBehaviour
         if (currentScore > ScoreManager.instance.GetHighScore() && currentScore > 0)
             currentGStars += 1;
         else
-            currentSStars += (currentScore % 1000 == 0 && currentScore > 0 ? 1 : 0);
+            currentSStars += (currentScore % 500 == 0 && currentScore > 0 ? 1 : 0);
     }
 
     #endregion

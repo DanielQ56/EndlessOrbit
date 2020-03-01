@@ -41,7 +41,6 @@ public class ScoreManager : MonoBehaviour
 
 
     GlobalScores gs;
-    bool shouldCheckForGlobal;
 
     bool retrieving = false;
 
@@ -50,8 +49,7 @@ public class ScoreManager : MonoBehaviour
 
     void SaveScoreToGlobal()
     {
-        Debug.Log("Username: " + username);
-        if ((shouldCheckForGlobal = (username != "")))
+        if (username.Length > 0)
         {
             Debug.Log("Retrieving");
             StartCoroutine(RetrieveGlobal(false));
@@ -147,6 +145,8 @@ public class ScoreManager : MonoBehaviour
     #endregion
 
     #region local
+
+
     int mostRecentScore = 0;
 
     int[] scores = new int[10];
@@ -164,14 +164,16 @@ public class ScoreManager : MonoBehaviour
             file.Close();
 
             scores = data.scores;
-            username = data.username;
+            username = (data.username == null ? "" : data.username);
             PlayerManager.instance.Setup(data.goldstars, data.silverstars);
+            PlayerManager.instance.SetupItems(data.itemsBought, data.selectedItem);
             mostRecentScore = scores[scores.Length - 1];
         }
         else
         {
             username = "";
             PlayerManager.instance.Setup();
+            PlayerManager.instance.SetupItems();
         }
     }
 
@@ -193,7 +195,6 @@ public class ScoreManager : MonoBehaviour
 
     public void SaveScores()
     {
-        Debug.Log("Saving scores.");
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Open(Application.persistentDataPath + "/scores.dat", FileMode.Create);
 
@@ -202,6 +203,18 @@ public class ScoreManager : MonoBehaviour
         data.username = username;
         data.goldstars = PlayerManager.instance.GetGoldStars();
         data.silverstars = PlayerManager.instance.GetSilverStars();
+
+        List<PurchasableItem> items = PlayerManager.instance.getAllItems();
+        List<bool> bought = new List<bool>();
+        for(int i = 0; i < items.Count; ++i)
+        {
+            bought.Add(items[i].bought);
+        }
+
+        data.selectedItem = PlayerManager.instance.GetSelectedIndex();
+
+        data.itemsBought = bought.ToArray();
+
 
         bf.Serialize(file, data);
         file.Close();
@@ -222,18 +235,13 @@ public class ScoreManager : MonoBehaviour
 
     public void DeleteAllData()
     {
-        string path = Application.persistentDataPath + "/scores.dat";
-        if (File.Exists(path))
-        {
-            File.Delete(path);
-        }
+        PlayerManager.instance.SetToDefault();
         Array.Clear(scores, 0, 10);
         mostRecentScore = 0;
     }
 
     private void OnApplicationPause(bool pause)
     {
-        Debug.Log("In pause method: pause is " + pause);
         if(pause)
         {
             SaveScores();
@@ -265,8 +273,10 @@ class GameData
 {
     public string username;
     public int[] scores;
+    public bool[] itemsBought;
     public int goldstars;
     public int silverstars;
+    public int selectedItem;
 }
 
 

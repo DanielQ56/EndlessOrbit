@@ -22,7 +22,7 @@ public class CustomizationManager : MonoBehaviour
 
     private void OnEnable()
     {
-        previewPlayer.color = PlayerCustomization.instance.playerColor;
+        //previewPlayer.color = PlayerCustomization.instance.playerColor;
         previewPlayer.sprite = PlayerCustomization.instance.playerSprite;
 
         StartCoroutine(ToggleSliders());
@@ -35,9 +35,9 @@ public class CustomizationManager : MonoBehaviour
         yield return new WaitForEndOfFrame();
         if(panel.activeInHierarchy)
         {
-            sliders[0].ActivatePanel(PlayerCustomization.instance.playerColor.r);
-            sliders[1].ActivatePanel(PlayerCustomization.instance.playerColor.g);
-            sliders[2].ActivatePanel(PlayerCustomization.instance.playerColor.b);
+            //sliders[0].ActivatePanel(PlayerCustomization.instance.playerColor.r);
+            //sliders[1].ActivatePanel(PlayerCustomization.instance.playerColor.g);
+            //sliders[2].ActivatePanel(PlayerCustomization.instance.playerColor.b);
         }
     }
 
@@ -50,7 +50,7 @@ public class CustomizationManager : MonoBehaviour
     public void SaveChanges()
     {
         PlayerCustomization.instance.playerSprite = previewPlayer.sprite;
-        PlayerCustomization.instance.playerColor = previewPlayer.color;
+        //PlayerCustomization.instance.playerColor = previewPlayer.color;
         this.gameObject.SetActive(false);
     }
 

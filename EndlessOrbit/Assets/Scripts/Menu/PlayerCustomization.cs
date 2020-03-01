@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerCustomization : MonoBehaviour
 {
     public static PlayerCustomization instance = null;
-    public Color playerColor;
     public Sprite playerSprite;
 
     private void Awake()
@@ -19,7 +18,7 @@ public class PlayerCustomization : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        playerColor = Color.white;
         
     }
+
 }

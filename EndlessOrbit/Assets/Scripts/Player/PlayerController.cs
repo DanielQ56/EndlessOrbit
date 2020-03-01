@@ -47,7 +47,6 @@ public class PlayerController : MonoBehaviour
         state = PlayerState.Tethered;
         SpriteRenderer sprite = GetComponent<SpriteRenderer>();
         sprite.sprite = PlayerCustomization.instance.playerSprite;
-        sprite.color = PlayerCustomization.instance.playerColor;
 
     }
 
