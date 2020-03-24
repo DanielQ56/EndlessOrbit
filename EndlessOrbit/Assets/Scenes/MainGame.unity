@@ -5792,15 +5792,18 @@ MonoBehaviour:
   - {fileID: 7272521961996298682, guid: 1beba6d13b22d5b419d8ef04af918d5d, type: 3}
   - {fileID: 2897059891350927236, guid: 800110fd11edc3a439099ffd68a1507d, type: 3}
   maxNumOfPlanets: 3
-  gameOver: {fileID: 1583387090}
-  PausePanel: {fileID: 636201262}
   playerParticles: {fileID: 140328978}
   score: {fileID: 786615496}
+  asteroidPrefab: {fileID: 4238242934415597470, guid: 79cd54f4325348d4f951636f9446449b,
+    type: 3}
   xOffset: 2.5
   yOffset: 2.5
   increaseSpeed:
     m_PersistentCalls:
       m_Calls: []
+  asteroidTimer: 3
+  gameOver: {fileID: 1583387090}
+  PausePanel: {fileID: 636201262}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

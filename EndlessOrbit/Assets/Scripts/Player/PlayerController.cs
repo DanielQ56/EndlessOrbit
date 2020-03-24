@@ -160,11 +160,24 @@ public class PlayerController : MonoBehaviour
         rotationAngle += (Mathf.Sign(rotationAngle) * angleIncreaseValue);
     }
 
-    private void OnBecameInvisible()
+    void Dead()
     {
         stillAlive = false;
         Debug.Log("dead");
         MainGameManager.instance.GameOver();
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.CompareTag("Asteroid"))
+        {
+            Dead();
+        }
+    }
+
+    private void OnBecameInvisible()
+    {
+        Dead();
     }
 
     #region Assigning The New Direction 

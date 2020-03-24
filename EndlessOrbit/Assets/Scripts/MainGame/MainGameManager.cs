@@ -12,10 +12,9 @@ public class MainGameManager : MonoBehaviour
     [SerializeField] Transform startingPlanet;
     [SerializeField] List<GameObject> planets;
     [Range(1, 3)] public int maxNumOfPlanets;
-    [SerializeField] GameOverScript gameOver;
-    [SerializeField] GameObject PausePanel;
     [SerializeField] ParticleSystem playerParticles;
     [SerializeField] HighScoreLine score;
+    [SerializeField] GameObject asteroidPrefab;
     [SerializeField] float xOffset;
     [SerializeField] float yOffset;
 
@@ -24,7 +23,6 @@ public class MainGameManager : MonoBehaviour
 
     public static MainGameManager instance;
 
-    int currentScore = 0;
 
     bool movingCamera = false;
 
@@ -38,8 +36,6 @@ public class MainGameManager : MonoBehaviour
 
     GameObject player;
 
-    int currentGStars = 0;
-    int currentSStars = 0;
 
     #region Setup
 
@@ -64,6 +60,7 @@ public class MainGameManager : MonoBehaviour
         updateCameraPosition(startingPlanet);
         currentGStars = 0;
         currentSStars = 0;
+        timer = asteroidTimer;
     }
 
     void SetBounds()
@@ -71,6 +68,15 @@ public class MainGameManager : MonoBehaviour
         width = mainCam.ScreenToWorldPoint(new Vector2(mainCam.pixelWidth, mainCam.pixelHeight)).x - mainCam.ScreenToWorldPoint(Vector2.zero).x;
         height = (mainCam.ScreenToWorldPoint(new Vector2(mainCam.pixelWidth, mainCam.pixelHeight)).y - mainCam.ScreenToWorldPoint(Vector2.zero).y)/2;
     }
+
+    #endregion
+
+    #region In Game Routine
+
+    [SerializeField] float asteroidTimer;
+    float timer;
+
+    bool timerPaused = false;
 
     private void Update()
     {
@@ -80,11 +86,49 @@ public class MainGameManager : MonoBehaviour
             {
                 PauseGame();
             }
+            AsteroidCycle();
+
         }
 
     }
 
+    void AsteroidCycle()
+    {
+        if (timer >= 0f)
+        {
+            if (!timerPaused)
+                timer -= Time.deltaTime;
+        }
+        else
+        {
+            SpawnAsteroid();
+            timer = asteroidTimer;
+        }
+    }
+
+    void SpawnAsteroid()
+    {
+        GameObject asteroid = Instantiate(asteroidPrefab);
+        float asteroidHeight = asteroid.GetComponent<CircleCollider2D>().radius * asteroid.transform.localScale.x;
+        Vector3 startPos, endPos;
+        if(Random.value < 0.51f)
+        {
+            startPos = new Vector3(mainCam.transform.position.x - (width / 2), Random.Range(planetParent.GetChild(0).transform.position.y + asteroidHeight, planetParent.GetChild(1).transform.position.y - asteroidHeight));
+            endPos = new Vector3(mainCam.transform.position.x + (width / 2), Random.Range(planetParent.GetChild(0).transform.position.y + asteroidHeight, planetParent.GetChild(1).transform.position.y - asteroidHeight));
+        }
+        else
+        {
+            startPos = new Vector3(mainCam.transform.position.x + (width / 2), Random.Range(planetParent.GetChild(0).transform.position.y + asteroidHeight, planetParent.GetChild(1).transform.position.y - asteroidHeight));
+            endPos = new Vector3(mainCam.transform.position.x - (width / 2), Random.Range(planetParent.GetChild(0).transform.position.y + asteroidHeight, planetParent.GetChild(1).transform.position.y - asteroidHeight));
+        }
+        asteroid.GetComponent<Asteroid>().CreateAsteroid(startPos, endPos);
+    }
+
     #endregion
+
+    #region Time
+    [SerializeField] GameOverScript gameOver;
+    [SerializeField] GameObject PausePanel;
 
     public void PauseGame()
     {
@@ -100,6 +144,7 @@ public class MainGameManager : MonoBehaviour
         PlayerManager.instance.AddStars(currentGStars, currentSStars);
         GoogleAds.instance.ShowFullScreenAd();
     }
+    #endregion
 
     #region Hit Planet
 
@@ -123,24 +168,6 @@ public class MainGameManager : MonoBehaviour
             playerParticles.Play();
         }
     }
-
-    void UpdateScore(int value)
-    {
-        currentScore += value;
-        scoreText.text = currentScore.ToString();
-        if (currentScore == ScoreManager.instance.GetHighScore() && currentScore > 0)
-            displayHighScoreLine = true;
-        SpeedIncreased = false;
-    }
-
-    void AddCoins()
-    {
-        if (currentScore > ScoreManager.instance.GetHighScore() && currentScore > 0)
-            currentGStars += 1;
-        else
-            currentSStars += (currentScore % 500 == 0 && currentScore > 0 ? 1 : 0);
-    }
-
     #endregion
 
     #region Camera Movement
@@ -157,6 +184,7 @@ public class MainGameManager : MonoBehaviour
 
     IEnumerator UpdateCamPos(Transform newPlanet)
     {
+        timerPaused = true;
         movingCamera = true;
         float botY = mainCam.ScreenToWorldPoint(Vector2.zero).y;
         Vector3 pos = new Vector3(0, newPlanet.position.y + height, -10);
@@ -167,6 +195,7 @@ public class MainGameManager : MonoBehaviour
         }
         GenerateNextPlanet(newPlanet);
         movingCamera = false;
+        timerPaused = false;
         if (displayHighScoreLine)
         {
             score.gameObject.SetActive(true);
@@ -221,6 +250,28 @@ public class MainGameManager : MonoBehaviour
 
     #endregion
 
+    #region Score/Currency
+    int currentScore = 0;
+    int currentGStars = 0;
+    int currentSStars = 0;
+
+    void UpdateScore(int value)
+    {
+        currentScore += value;
+        scoreText.text = currentScore.ToString();
+        if (currentScore == ScoreManager.instance.GetHighScore() && currentScore > 0)
+            displayHighScoreLine = true;
+        SpeedIncreased = false;
+    }
+
+    void AddCoins()
+    {
+        if (currentScore > ScoreManager.instance.GetHighScore() && currentScore > 0)
+            currentGStars += 1;
+        else
+            currentSStars += (currentScore % 500 == 0 && currentScore > 0 ? 1 : 0);
+    }
+
     public void PassedHighScore()
     {
         if(score.gameObject.activeInHierarchy)
@@ -228,6 +279,8 @@ public class MainGameManager : MonoBehaviour
             score.HighScore();
         }
     }
+    #endregion
+
 
 
 
