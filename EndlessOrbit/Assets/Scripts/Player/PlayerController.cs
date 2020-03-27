@@ -24,6 +24,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float MaxSpeed;
     [SerializeField] float angleIncreaseValue;
 
+    public delegate void Detached();
+    public static Detached PlayerDetached;
+
     int direction = 1;
 
     float movementAngle;
@@ -102,9 +105,10 @@ public class PlayerController : MonoBehaviour
     {
         if (state == PlayerState.Tethered)
         {
-
             if (!AudioManager.instance.muted)
                 AudioManager.instance.Play("Space");
+            if(PlayerDetached != null)
+                PlayerDetached.Invoke();
             state = PlayerState.Free;
             Vector3 relativePosition = new Vector3(this.transform.position.x - BodyToRotateAround.transform.position.x,
                 this.transform.position.y - BodyToRotateAround.transform.position.y, 0);
@@ -162,9 +166,12 @@ public class PlayerController : MonoBehaviour
 
     void Dead()
     {
-        stillAlive = false;
-        Debug.Log("dead");
-        MainGameManager.instance.GameOver();
+        if (stillAlive)
+        {
+            stillAlive = false;
+            Debug.Log("dead");
+            MainGameManager.instance.GameOver();
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

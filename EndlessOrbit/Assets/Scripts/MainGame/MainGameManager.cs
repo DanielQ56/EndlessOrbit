@@ -8,16 +8,11 @@ public class MainGameManager : MonoBehaviour
 {
     [SerializeField] Camera mainCam;
     [SerializeField] Text scoreText;
-    [SerializeField] Transform planetParent;
-    [SerializeField] Transform startingPlanet;
-    [SerializeField] List<GameObject> planets;
-    [Range(1, 3)] public int maxNumOfPlanets;
-    [SerializeField] ParticleSystem playerParticles;
-    [SerializeField] HighScoreLine score;
-    [SerializeField] GameObject asteroidPrefab;
-    [SerializeField] float xOffset;
-    [SerializeField] float yOffset;
+    [SerializeField] bool isUnstable;
 
+
+    public delegate void TimeStopped();
+    public static TimeStopped StopTime;
 
     public UnityEvent increaseSpeed;
 
@@ -39,7 +34,7 @@ public class MainGameManager : MonoBehaviour
 
     #region Setup
 
-    private void Awake()
+    void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         increaseSpeed = new UnityEvent();
@@ -55,7 +50,7 @@ public class MainGameManager : MonoBehaviour
         GoogleAds.instance.HideBanner();
     }
 
-    private void Start()
+    void Start()
     {
         updateCameraPosition(startingPlanet);
         currentGStars = 0;
@@ -74,11 +69,13 @@ public class MainGameManager : MonoBehaviour
     #region In Game Routine
 
     [SerializeField] float asteroidTimer;
+    [SerializeField] GameObject asteroidPrefab;
+
     float timer;
 
     bool timerPaused = false;
 
-    private void Update()
+      void Update()
     {
         if (playerIsAlive)
         {
@@ -138,15 +135,23 @@ public class MainGameManager : MonoBehaviour
 
     public void GameOver()
     {
+        if(StopTime != null)
+            StopTime.Invoke();
         playerIsAlive = false;
         gameOver.GameOver(currentScore);
         ScoreManager.instance.RecordScore(currentScore);
         PlayerManager.instance.AddStars(currentGStars, currentSStars);
         GoogleAds.instance.ShowFullScreenAd();
     }
+    
+    public void ForceDetach()
+    {
+        player.GetComponent<PlayerController>().Detach();
+    }
     #endregion
 
     #region Hit Planet
+    [SerializeField] ParticleSystem playerParticles;
 
     public void AttachedToNewPlanet(Transform newPlanet)
     {
@@ -194,6 +199,10 @@ public class MainGameManager : MonoBehaviour
             yield return null;
         }
         GenerateNextPlanet(newPlanet);
+        if(isUnstable)
+        {
+            newPlanet.GetComponent<UnstableCelestialBody>().Attached(player);
+        }
         movingCamera = false;
         timerPaused = false;
         if (displayHighScoreLine)
@@ -207,6 +216,15 @@ public class MainGameManager : MonoBehaviour
     #endregion
 
     #region Planet Generation
+
+    [SerializeField] Transform planetParent;
+    [SerializeField] Transform startingPlanet;
+    [SerializeField] List<GameObject> planets;
+    [SerializeField] List<GameObject> unstablePlanets;
+
+
+    [SerializeField] float xOffset;
+    [SerializeField] float yOffset;
     void GenerateNextPlanet(Transform newPlanet)
     {
         if (planetParent.childCount == 1)
@@ -215,7 +233,7 @@ public class MainGameManager : MonoBehaviour
             Vector3 camPos = mainCam.transform.position;
             for (int i = 0; i < numPlanetsToSpawn; ++i)
             {
-                GameObject clone = Instantiate(planets[Random.Range(0, planets.Count)], planetParent);
+                GameObject clone = Instantiate((isUnstable ? unstablePlanets[Random.Range(0, planets.Count)] : planets[Random.Range(0, planets.Count)]), planetParent);
                 DetermineOffset(clone.transform);
                 clone.transform.position = new Vector3(Random.Range((camPos.x - width / 2) + xOffset, (camPos.x + width / 2) - xOffset),
                     Random.Range(camPos.y + yOffset, camPos.y + height - yOffset), 0);
@@ -251,6 +269,8 @@ public class MainGameManager : MonoBehaviour
     #endregion
 
     #region Score/Currency
+    [SerializeField] HighScoreLine score;
+
     int currentScore = 0;
     int currentGStars = 0;
     int currentSStars = 0;
