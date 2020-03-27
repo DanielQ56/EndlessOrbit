@@ -108,15 +108,22 @@ public class MainGameManager : MonoBehaviour
         GameObject asteroid = Instantiate(asteroidPrefab);
         float asteroidHeight = asteroid.GetComponent<CircleCollider2D>().radius * asteroid.transform.localScale.x;
         Vector3 startPos, endPos;
+        GameObject currPlanet = planetParent.GetChild(0).gameObject;
+        GameObject nextPlanet = planetParent.GetChild(1).gameObject;
         if(Random.value < 0.51f)
         {
-            startPos = new Vector3(mainCam.transform.position.x - (width / 2), Random.Range(planetParent.GetChild(0).transform.position.y + asteroidHeight, planetParent.GetChild(1).transform.position.y - asteroidHeight));
-            endPos = new Vector3(mainCam.transform.position.x + (width / 2), Random.Range(planetParent.GetChild(0).transform.position.y + asteroidHeight, planetParent.GetChild(1).transform.position.y - asteroidHeight));
+            startPos = new Vector3(mainCam.transform.position.x - (width / 2), 
+                Random.Range(currPlanet.transform.position.y + currPlanet.GetComponent<CircleCollider2D>().radius * currPlanet.transform.localScale.x,
+                nextPlanet.transform.position.y - nextPlanet.GetComponent<CircleCollider2D>().radius * nextPlanet.transform.localScale.x));
+            endPos = new Vector3(mainCam.transform.position.x + (width / 2), Random.Range(currPlanet.transform.position.y + currPlanet.GetComponent<CircleCollider2D>().radius * currPlanet.transform.localScale.x,
+                nextPlanet.transform.position.y - nextPlanet.GetComponent<CircleCollider2D>().radius * nextPlanet.transform.localScale.x));
         }
         else
         {
-            startPos = new Vector3(mainCam.transform.position.x + (width / 2), Random.Range(planetParent.GetChild(0).transform.position.y + asteroidHeight, planetParent.GetChild(1).transform.position.y - asteroidHeight));
-            endPos = new Vector3(mainCam.transform.position.x - (width / 2), Random.Range(planetParent.GetChild(0).transform.position.y + asteroidHeight, planetParent.GetChild(1).transform.position.y - asteroidHeight));
+            startPos = new Vector3(mainCam.transform.position.x + (width / 2), Random.Range(currPlanet.transform.position.y + currPlanet.GetComponent<CircleCollider2D>().radius * currPlanet.transform.localScale.x,
+                nextPlanet.transform.position.y - nextPlanet.GetComponent<CircleCollider2D>().radius * nextPlanet.transform.localScale.x));
+            endPos = new Vector3(mainCam.transform.position.x - (width / 2), Random.Range(currPlanet.transform.position.y + currPlanet.GetComponent<CircleCollider2D>().radius * currPlanet.transform.localScale.x,
+                nextPlanet.transform.position.y - nextPlanet.GetComponent<CircleCollider2D>().radius * nextPlanet.transform.localScale.x));
         }
         asteroid.GetComponent<Asteroid>().CreateAsteroid(startPos, endPos);
     }
