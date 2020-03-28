@@ -1,21 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &809368762677148922
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7632360517983594682}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f86216859602fd1418f0043e790a6906, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isStartingBody: 0
-  explosion: {fileID: 4413067044856170182}
-  stableTimer: 3
-  shakeInc: 0.02
 --- !u!1 &7181321619885229966
 GameObject:
   m_ObjectHideFlags: 0
@@ -4828,6 +4812,23 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &809368762677148922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7632360517983594682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f86216859602fd1418f0043e790a6906, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isStartingBody: 0
+  explosion: {fileID: 4413067044856170182}
+  stableTimer: 5
+  shakeInc: 0.02
+  timerDec: 0.8
 --- !u!1001 &4746789519898976062
 PrefabInstance:
   m_ObjectHideFlags: 0

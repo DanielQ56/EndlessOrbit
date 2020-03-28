@@ -70,10 +70,12 @@ public class MainGameManager : MonoBehaviour
 
     [SerializeField] float asteroidTimer;
     [SerializeField] GameObject asteroidPrefab;
+    [SerializeField] GameObject asteroidIndicator;
 
     float timer;
 
     bool timerPaused = false;
+    bool spawningAsteroid = false;
 
       void Update()
     {
@@ -91,32 +93,37 @@ public class MainGameManager : MonoBehaviour
 
     void AsteroidCycle()
     {
-        if (timer >= 0f)
+        if (timer >= 2f)
         {
             if (!timerPaused)
                 timer -= Time.deltaTime;
         }
         else
         {
-            SpawnAsteroid();
-            timer = asteroidTimer;
+            if(!spawningAsteroid)
+            {
+                StartCoroutine(IndicateSpawn());
+            }
         }
     }
 
-    void SpawnAsteroid()
+    IEnumerator IndicateSpawn()
     {
-        GameObject asteroid = Instantiate(asteroidPrefab);
-        float asteroidHeight = asteroid.GetComponent<CircleCollider2D>().radius * asteroid.transform.localScale.x;
+        spawningAsteroid = true;
+        asteroidIndicator.SetActive(true);
+
         Vector3 startPos, endPos;
         GameObject currPlanet = planetParent.GetChild(0).gameObject;
         GameObject nextPlanet = planetParent.GetChild(1).gameObject;
-        if(Random.value < 0.51f)
+        if (Random.value < 0.51f)
         {
-            startPos = new Vector3(mainCam.transform.position.x - (width / 2), 
+            startPos = new Vector3(mainCam.transform.position.x - (width / 2),
                 Random.Range(currPlanet.transform.position.y + currPlanet.GetComponent<CircleCollider2D>().radius * currPlanet.transform.localScale.x,
                 nextPlanet.transform.position.y - nextPlanet.GetComponent<CircleCollider2D>().radius * nextPlanet.transform.localScale.x));
             endPos = new Vector3(mainCam.transform.position.x + (width / 2), Random.Range(currPlanet.transform.position.y + currPlanet.GetComponent<CircleCollider2D>().radius * currPlanet.transform.localScale.x,
                 nextPlanet.transform.position.y - nextPlanet.GetComponent<CircleCollider2D>().radius * nextPlanet.transform.localScale.x));
+
+            asteroidIndicator.transform.position = startPos + Vector3.right * 0.5f;
         }
         else
         {
@@ -124,7 +131,30 @@ public class MainGameManager : MonoBehaviour
                 nextPlanet.transform.position.y - nextPlanet.GetComponent<CircleCollider2D>().radius * nextPlanet.transform.localScale.x));
             endPos = new Vector3(mainCam.transform.position.x - (width / 2), Random.Range(currPlanet.transform.position.y + currPlanet.GetComponent<CircleCollider2D>().radius * currPlanet.transform.localScale.x,
                 nextPlanet.transform.position.y - nextPlanet.GetComponent<CircleCollider2D>().radius * nextPlanet.transform.localScale.x));
+
+            asteroidIndicator.transform.position = startPos + Vector3.left * 0.5f;
         }
+
+
+        float time = 2f;
+        while(time > 0f)
+        {
+            yield return new WaitForSeconds(time * 0.2f);
+            asteroidIndicator.SetActive(false);
+            time -= Mathf.Clamp(time * 0.2f, 0.05f, 2f);
+            yield return new WaitForSeconds(time * 0.2f);
+            asteroidIndicator.SetActive(true);
+            time -= Mathf.Clamp(time * 0.2f, 0.05f, 2f);
+        }
+        asteroidIndicator.SetActive(false);
+        SpawnAsteroid(startPos, endPos);
+        spawningAsteroid = false;
+        timer = asteroidTimer;
+    }
+
+    void SpawnAsteroid(Vector3 startPos, Vector3 endPos)
+    { 
+        GameObject asteroid = Instantiate(asteroidPrefab);
         asteroid.GetComponent<Asteroid>().CreateAsteroid(startPos, endPos);
     }
 
@@ -244,6 +274,10 @@ public class MainGameManager : MonoBehaviour
                 DetermineOffset(clone.transform);
                 clone.transform.position = new Vector3(Random.Range((camPos.x - width / 2) + xOffset, (camPos.x + width / 2) - xOffset),
                     Random.Range(camPos.y + yOffset, camPos.y + height - yOffset), 0);
+                if(isUnstable)
+                {
+                    clone.GetComponent<UnstableCelestialBody>().DecrementStableTimer(currentScore / 1000);
+                }
                 //clone.transform.position = new Vector3(Random.Range(-width + gap * i, -width + gap * (i + 1)),
                 //Random.Range(mainCam.transform.position.y + mainCam.orthographicSize/3, mainCam.transform.position.y + mainCam.orthographicSize -1), 0);
 

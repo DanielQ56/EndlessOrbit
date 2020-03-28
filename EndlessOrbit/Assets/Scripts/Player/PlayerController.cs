@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Transform initialBody;
     [SerializeField] float MaxSpeed;
     [SerializeField] float angleIncreaseValue;
+    [SerializeField] float lineLength;
+    [SerializeField] int tutorialAmount;
 
     public delegate void Detached();
     public static Detached PlayerDetached;
@@ -33,6 +35,8 @@ public class PlayerController : MonoBehaviour
 
     bool tethered = true;
 
+    LineRenderer line;
+
     Transform BodyToRotateAround;
 
     Vector3 posToMoveTowards;
@@ -42,6 +46,8 @@ public class PlayerController : MonoBehaviour
 
     bool stillAlive = true;
 
+    int linesLeft;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -50,6 +56,8 @@ public class PlayerController : MonoBehaviour
         state = PlayerState.Tethered;
         SpriteRenderer sprite = GetComponent<SpriteRenderer>();
         sprite.sprite = PlayerCustomization.instance.playerSprite;
+        line = GetComponent<LineRenderer>();
+        linesLeft = tutorialAmount;
 
     }
 
@@ -63,6 +71,8 @@ public class PlayerController : MonoBehaviour
             Rotate();
         }
     }
+
+    #region Input
 
     void CheckDetach()
     {
@@ -80,7 +90,11 @@ public class PlayerController : MonoBehaviour
         return false;
 
     }
-    
+
+    #endregion
+
+    #region Movement
+
     void Rotate()
     {
         transform.Rotate(Vector3.forward, spinAngle * direction * Time.deltaTime);
@@ -115,9 +129,10 @@ public class PlayerController : MonoBehaviour
             float inverseSlope = (relativePosition.x != 0 ? (-1f / (relativePosition.y / relativePosition.x)) : 0);//(relativePosition.x + (relativePosition.x > 0 ? 0.5f : -0.5f)));
             float b = relativePosition.y - (relativePosition.x * inverseSlope);
             float x = relativePosition.x + (direction == 1 ? -1 : 1) * Mathf.Sign(relativePosition.y) * 5;
-            posToMoveTowards = new Vector3(x, (inverseSlope * x + b), 0);
+            posToMoveTowards = new Vector3(x, (inverseSlope * x + b), 0) * 5f;
             movementAngle = Mathf.Tan(Mathf.Abs((posToMoveTowards.y - transform.position.y) / (posToMoveTowards.x - transform.position.x)));
             AssignDirection(posToMoveTowards);
+            DrawLine();
         }
     } 
     /*void Detach() OLD DETACH JIC WE NEED IT AGAIN
@@ -134,11 +149,8 @@ public class PlayerController : MonoBehaviour
 
     void MoveStraight()
     {
-        if(Vector3.Magnitude(posToMoveTowards) < velocity)
-        {
-            posToMoveTowards *= 2;
-        }
-         transform.Translate( Vector3.ClampMagnitude(posToMoveTowards, MaxSpeed)  * Time.deltaTime, BodyToRotateAround.transform);
+        transform.Translate( Vector3.ClampMagnitude(posToMoveTowards, MaxSpeed)  * Time.deltaTime, BodyToRotateAround.transform);
+        Debug.Log(posToMoveTowards);
     }
 
     void MoveAroundBody()
@@ -146,16 +158,21 @@ public class PlayerController : MonoBehaviour
         this.transform.RotateAround(BodyToRotateAround.position, Vector3.forward, rotationAngle * Time.deltaTime);
     }
 
+    #endregion
+
+    #region New Planet
+
     public void NewBodyToOrbit(Transform newBody)
     {
         //AUDIO (can move)
         if (!AudioManager.instance.muted)
             AudioManager.instance.Play("Hit");
-
         AssignNewAngleAndDirection(newBody);
         BodyToRotateAround = newBody;
         state = PlayerState.Tethered;
         MainGameManager.instance.AttachedToNewPlanet(newBody);
+
+        line.positionCount = 0;
     }
     
     public void IncreaseSpeedListener()
@@ -163,6 +180,10 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Increased");
         rotationAngle += (Mathf.Sign(rotationAngle) * angleIncreaseValue);
     }
+    #endregion
+
+
+    #region Death
 
     void Dead()
     {
@@ -185,6 +206,22 @@ public class PlayerController : MonoBehaviour
     private void OnBecameInvisible()
     {
         Dead();
+    }
+
+    #endregion
+
+    void DrawLine()
+    {
+        if (linesLeft > 0)
+        {
+            Debug.Log(posToMoveTowards);
+            Vector3[] points = new Vector3[2];
+            points[0] = transform.position;
+            points[1] = BodyToRotateAround.transform.InverseTransformDirection(posToMoveTowards) * lineLength;
+            line.positionCount = 2;
+            line.SetPositions(points);
+            linesLeft -=1;
+        }
     }
 
     #region Assigning The New Direction 

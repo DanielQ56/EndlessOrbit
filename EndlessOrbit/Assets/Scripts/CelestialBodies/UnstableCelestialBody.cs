@@ -7,8 +7,11 @@ public class UnstableCelestialBody : CelestialBody
     [SerializeField] ParticleSystem explosion;
     [SerializeField] float stableTimer;
     [SerializeField] float shakeInc;
+    [SerializeField] float timerDec;
 
     Vector2 origin;
+
+    float maxTimer;
     float timer;
     float currShakeMult;
 
@@ -24,7 +27,8 @@ public class UnstableCelestialBody : CelestialBody
     protected override void Start()
     {
         base.Start();
-        timer = stableTimer;
+        timer = maxTimer;
+        Debug.Log("Timer: " + timer);
         origin = this.transform.position;
         currShakeMult = shakeInc;
         rend = GetComponent<SpriteRenderer>();
@@ -88,6 +92,11 @@ public class UnstableCelestialBody : CelestialBody
         rend.color = Color.black;
         this.GetComponent<LineRenderer>().material.color = Color.black;
         playerAttached = false;
+    }
+
+    public void DecrementStableTimer(int level)
+    {
+        maxTimer = stableTimer * Mathf.Pow(timerDec, level);
     }
 
     public void Attached(GameObject player)
