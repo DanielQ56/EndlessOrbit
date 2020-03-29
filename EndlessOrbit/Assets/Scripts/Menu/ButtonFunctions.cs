@@ -5,9 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class ButtonFunctions : MonoBehaviour
 {
-    public void LoadScene(string name)
+    public void LoadScene()
     {
-        SceneManager.LoadScene(name);
+        SceneManager.LoadScene(TitleScreenManager.instance.GetMode());
+    }
+
+    public void LoadMenu()
+    {
+        SceneManager.LoadScene("Menu");
     }
 
     public void OpenLeaderboard()
@@ -18,20 +23,5 @@ public class ButtonFunctions : MonoBehaviour
     public void OpenGlobalLeaderboard()
     {
         ScoreManager.instance.DisplayGlobalScores();
-    }
-
-    public void PauseGame()
-    {
-        Time.timeScale = 0;
-    }
-
-    public void ResumeGame()
-    {
-        Time.timeScale = 1;
-    }
-
-    public void togglePanel(GameObject panel)
-    {
-        panel.SetActive(!panel.activeInHierarchy);
     }
 }
