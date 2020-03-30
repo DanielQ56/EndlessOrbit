@@ -16,8 +16,11 @@ public class GameOverScript : MonoBehaviour
         if (!AudioManager.instance.muted)
             AudioManager.instance.Play("GameOver");
 
-        gameOverPanel.SetActive(true);
-        scoreText.text = score.ToString();
-        scoreLine.SetActive(false);
+        if(gameOverPanel != null)
+            gameOverPanel.SetActive(true);
+        if(scoreText != null)
+            scoreText.text = score.ToString();
+        if(scoreLine != null)
+            scoreLine.SetActive(false);
     }
 }

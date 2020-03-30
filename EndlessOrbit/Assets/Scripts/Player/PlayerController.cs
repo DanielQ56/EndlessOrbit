@@ -17,7 +17,6 @@ public enum Direction
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] int velocity;
     [SerializeField] float rotationAngle;
     [SerializeField] float spinAngle;
     [SerializeField] Transform initialBody;
@@ -55,7 +54,7 @@ public class PlayerController : MonoBehaviour
         BodyToRotateAround = initialBody;
         state = PlayerState.Tethered;
         SpriteRenderer sprite = GetComponent<SpriteRenderer>();
-        sprite.sprite = PlayerCustomization.instance.playerSprite;
+        sprite.sprite = PlayerManager.instance.GetSelectedSprite();
         line = GetComponent<LineRenderer>();
         linesLeft = tutorialAmount;
 
@@ -126,31 +125,20 @@ public class PlayerController : MonoBehaviour
             state = PlayerState.Free;
             Vector3 relativePosition = new Vector3(this.transform.position.x - BodyToRotateAround.transform.position.x,
                 this.transform.position.y - BodyToRotateAround.transform.position.y, 0);
-            float inverseSlope = (relativePosition.x != 0 ? (-1f / (relativePosition.y / relativePosition.x)) : 0);//(relativePosition.x + (relativePosition.x > 0 ? 0.5f : -0.5f)));
+            float inverseSlope = (relativePosition.x != 0 ? (-1f / (relativePosition.y / relativePosition.x)) : 0);
             float b = relativePosition.y - (relativePosition.x * inverseSlope);
             float x = relativePosition.x + (direction == 1 ? -1 : 1) * Mathf.Sign(relativePosition.y) * 5;
             posToMoveTowards = new Vector3(x, (inverseSlope * x + b), 0) * 5f;
-            movementAngle = Mathf.Tan(Mathf.Abs((posToMoveTowards.y - transform.position.y) / (posToMoveTowards.x - transform.position.x)));
+            movementAngle = Mathf.Tan(Mathf.Abs((posToMoveTowards.y - relativePosition.y) / (posToMoveTowards.x - relativePosition.x)));
             AssignDirection(posToMoveTowards);
             DrawLine();
         }
     } 
-    /*void Detach() OLD DETACH JIC WE NEED IT AGAIN
-    {
-        //Audio (can move)
-        
-        state = PlayerState.Free;
-        Vector3 relativePosition = new Vector3(this.transform.position.x - BodyToRotateAround.transform.position.x,
-            this.transform.position.y - BodyToRotateAround.transform.position.y, 0);
-        float inverseSlope = -1f / (relativePosition.y / (relativePosition.x + (relativePosition.x > 0 ? 0.5f : -0.5f)));
-        float b = relativePosition.y - (relativePosition.x * inverseSlope);
-        float x = relativePosition.x + (direction == 1 ? -1 : 1) * Mathf.Sign(relativePosition.y) * 5;
-    }*/
 
     void MoveStraight()
     {
-        transform.Translate( Vector3.ClampMagnitude(posToMoveTowards, MaxSpeed)  * Time.deltaTime, BodyToRotateAround.transform);
         Debug.Log(posToMoveTowards);
+        transform.Translate( BodyToRotateAround.InverseTransformDirection(Vector3.ClampMagnitude(posToMoveTowards, MaxSpeed)) * Time.deltaTime, BodyToRotateAround.transform);
     }
 
     void MoveAroundBody()
@@ -171,13 +159,12 @@ public class PlayerController : MonoBehaviour
         BodyToRotateAround = newBody;
         state = PlayerState.Tethered;
         MainGameManager.instance.AttachedToNewPlanet(newBody);
-
         line.positionCount = 0;
+
     }
     
     public void IncreaseSpeedListener()
     {
-        Debug.Log("Increased");
         rotationAngle += (Mathf.Sign(rotationAngle) * angleIncreaseValue);
     }
     #endregion
@@ -190,7 +177,6 @@ public class PlayerController : MonoBehaviour
         if (stillAlive)
         {
             stillAlive = false;
-            Debug.Log("dead");
             MainGameManager.instance.GameOver();
         }
     }
@@ -214,10 +200,10 @@ public class PlayerController : MonoBehaviour
     {
         if (linesLeft > 0)
         {
-            Debug.Log(posToMoveTowards);
             Vector3[] points = new Vector3[2];
             points[0] = transform.position;
             points[1] = BodyToRotateAround.transform.InverseTransformDirection(posToMoveTowards) * lineLength;
+            Debug.Log(points[1]);
             line.positionCount = 2;
             line.SetPositions(points);
             linesLeft -=1;

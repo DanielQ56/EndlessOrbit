@@ -11,7 +11,6 @@ public class ScoreManager : MonoBehaviour
     public static ScoreManager instance = null;
 
     [SerializeField] Leaderboard leader;
-    [SerializeField] GlobalLeaderboard globalLeader;
     [SerializeField] GameObject LoadingPanel;
     [SerializeField] GameObject error;
 
@@ -31,13 +30,16 @@ public class ScoreManager : MonoBehaviour
 
     private void Start()
     {
+        DeletePath();
         LoadScores();
     }
 
     #region global
 
-    private const string AddScore = "https://endless-orbit.herokuapp.com/add_score";
-    private const string GetScores = "https://endless-orbit.herokuapp.com/scores";
+    private const string AddNormalScore = "https://endless-orbit.herokuapp.com/add_normal_score";
+    private const string GetNormalScores = "https://endless-orbit.herokuapp.com/normalscores";
+    private const string AddUnstableScore = "https://endless-orbit.herokuapp.com/add_unstable_score";
+    private const string GetUnstableScores = "https://endless-orbit.herokuapp.com/unstablescores";
 
 
     GlobalScores gs;
@@ -47,24 +49,22 @@ public class ScoreManager : MonoBehaviour
     string username;
 
 
-    void SaveScoreToGlobal()
+    void SaveScoreToGlobal(bool isUnstable)
     {
         if (username.Length > 0)
         {
-            Debug.Log("Retrieving");
-            StartCoroutine(RetrieveGlobal(false));
+            StartCoroutine(RetrieveGlobal(false, isUnstable));
         }
     }
 
-    void OnGlobalLeaderboard()
+    void OnGlobalLeaderboard(bool isUnstable)
     {
-
+        int recent = (isUnstable ? recentUnstableScore : recentNormalScore);
         Players lastScore = gs.result[9];
-        Debug.Log("Most recent score is: " + mostRecentScore + ", the last place score is: " + lastScore.score);
-        if (mostRecentScore > lastScore.score || (mostRecentScore == lastScore.score  && String.Compare(username, lastScore.username) < 0))
+        if ( recent > lastScore.score || (recent == lastScore.score  && String.Compare(username, lastScore.username) < 0))
         {
-            Debug.Log("Saving score of " + mostRecentScore + " to user " + username);
-            StartCoroutine(SaveGlobal());
+            Debug.Log("Saving score of " + recent + " to user " + username);
+            StartCoroutine(SaveGlobal(isUnstable, recent));
         }
         else
         {
@@ -72,12 +72,12 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    IEnumerator SaveGlobal()
+    IEnumerator SaveGlobal(bool isUnstable, int recent)
     {
         WWWForm form = new WWWForm();
         form.AddField("username", username);
-        form.AddField("score", mostRecentScore);
-        using(UnityWebRequest newScore = UnityWebRequest.Post(AddScore, form))
+        form.AddField("score", recent);
+        using(UnityWebRequest newScore = UnityWebRequest.Post(isUnstable ? AddUnstableScore : AddNormalScore, form))
         {
             newScore.chunkedTransfer = false;
             UnityWebRequestAsyncOperation request = newScore.SendWebRequest();
@@ -90,17 +90,17 @@ public class ScoreManager : MonoBehaviour
             retrieving = false;
         }
     }
-
-    public void DisplayGlobalScores()
+    
+    public void DisplayGlobalScores(bool isUnstable)
     {
-        StartCoroutine(RetrieveGlobal(true));
+        StartCoroutine(RetrieveGlobal(true, isUnstable));
     }
 
-    IEnumerator RetrieveGlobal(bool display)
+    IEnumerator RetrieveGlobal(bool display, bool isUnstable)
     {
         while (retrieving)
             yield return null;
-        using (UnityWebRequest scores = UnityWebRequest.Get(GetScores))
+        using (UnityWebRequest scores = UnityWebRequest.Get(isUnstable ? GetUnstableScores : GetNormalScores))
         {
             retrieving = true;
             char[] charsToTrim = new char[] { '[', ']' };
@@ -120,11 +120,11 @@ public class ScoreManager : MonoBehaviour
                 gs = JsonUtility.FromJson<GlobalScores>("{\"result\":" + scores.downloadHandler.text.Trim() + "}");
                 if (display)
                 {
-                    globalLeader.ActivateLeaderboard(gs.result, mostRecentScore, PlayerPrefs.GetString("Username"));
+                    leader.ActivateGlobalBoard(gs.result, isUnstable ? recentUnstableScore : recentNormalScore, PlayerPrefs.GetString("Username"));
                     retrieving = false;
                 }
                 else
-                    OnGlobalLeaderboard();
+                    OnGlobalLeaderboard(isUnstable);
 
             }
            
@@ -146,29 +146,71 @@ public class ScoreManager : MonoBehaviour
 
     #region local
 
+    bool isOnGlobal = false;
+
     bool isSaving = false;
 
-    int mostRecentScore = 0;
+    int recentNormalScore = 0;
+    int recentUnstableScore = 0;
 
-    int[] scores = new int[10];
+    int[] normalScores = new int[10];
+    int[] unstableScores = new int[10];
 
     List<int> tempScores = new List<int>();
 
+    public void ChangeBoards(int value)
+    {
+        if(value == 0)
+        {
+            isOnGlobal = false;
+        }
+        else
+        {
+            isOnGlobal = true;
+        }
+    }
+
+    public void ChangeLeaderboards(int value, bool isUnstable = false)
+    {
+        isOnGlobal = value == 0 ? false : true;
+        UpdateToggles(isUnstable);
+    }
+
+    public void UpdateToggles(bool isUnstable)
+    {
+        leader.DisplayLeaderboard(isUnstable);
+    }
+
+    public void DisplayScores(bool isUnstable)
+    {
+        if(isOnGlobal)
+        {
+            DisplayGlobalScores(isUnstable);
+        }
+        else
+        {
+            Debug.Log("Loading Local Scores: " + isUnstable);
+            DisplayLocalScores(isUnstable);
+        }
+    }
+
     void LoadScores()
     {
-        if(File.Exists(Application.persistentDataPath + "/scores.dat"))
+        if(File.Exists(Application.persistentDataPath + "/EndlessOrbitScores.dat"))
         {
             BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Open(Application.persistentDataPath + "/scores.dat", FileMode.Open);
+            FileStream file = File.Open(Application.persistentDataPath + "/EndlessOrbitScores.dat", FileMode.Open);
 
             GameData data = (GameData)bf.Deserialize(file);
             file.Close();
 
-            scores = data.scores;
+            normalScores = data.normalScores;
+            unstableScores = data.unstableScores;
             username = (data.username == null ? "" : data.username);
             PlayerManager.instance.Setup(data.goldstars, data.silverstars);
             PlayerManager.instance.SetupItems(data.itemsBought, data.selectedItem);
-            mostRecentScore = scores[scores.Length - 1];
+            recentNormalScore = normalScores[normalScores.Length - 1];
+            recentUnstableScore = unstableScores[unstableScores.Length - 1];
         }
         else
         {
@@ -178,30 +220,42 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    public void RecordScore(int score)
+    public void RecordScore(int score, bool isUnstable)
     {
-        mostRecentScore = score;
-        SaveScoreToGlobal();
+        if (isUnstable)
+            recentUnstableScore = score;
+        else
+            recentNormalScore = score;
 
-        if (score <= scores[0])
+        SaveScoreToGlobal(isUnstable);
+
+        if (score <= (isUnstable ? unstableScores[0] : normalScores[0]))
         {
             return;
         }
 
  
-
-        scores[0] = score;
-        Array.Sort(scores);
+        if(isUnstable)
+        {
+            unstableScores[0] = score;
+            Array.Sort(unstableScores);
+        }
+        else
+        {
+            normalScores[0] = score;
+            Array.Sort(normalScores);
+        }
     }
 
     public void SaveScores()
     {
         isSaving = true;
         BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Open(Application.persistentDataPath + "/scores.dat", FileMode.Create);
+        FileStream file = File.Open(Application.persistentDataPath + "/EndlessOrbitScores.dat", FileMode.Create);
 
         GameData data = new GameData();
-        data.scores = scores;
+        data.normalScores = normalScores;
+        data.unstableScores = unstableScores;
         data.username = username;
         data.goldstars = PlayerManager.instance.GetGoldStars();
         data.silverstars = PlayerManager.instance.GetSilverStars();
@@ -223,24 +277,24 @@ public class ScoreManager : MonoBehaviour
         isSaving = false;
     }
 
-    public void displayLocalScores()
+    public void DisplayLocalScores(bool isUnstable)
     {
         tempScores.Clear();
-        tempScores.AddRange(scores);
+        tempScores.AddRange(isUnstable ? unstableScores : normalScores);
         tempScores.Reverse();
-        leader.ActivateLeaderboard(tempScores, mostRecentScore);
+        leader.ActivateLeaderboard(tempScores, isUnstable ? recentUnstableScore : recentNormalScore);
     }
 
-    public int GetHighScore()
+    public int GetHighScore(bool isUnstable)
     {
-        return scores[scores.Length - 1];
+        return (isUnstable ? unstableScores[unstableScores.Length - 1] : normalScores[normalScores.Length - 1]);
     }
 
     public void DeleteAllData()
     {
         PlayerManager.instance.SetToDefault();
-        Array.Clear(scores, 0, 10);
-        mostRecentScore = 0;
+        recentNormalScore = 0;
+        recentUnstableScore = 0;
     }
 
     private void OnApplicationPause(bool pause)
@@ -257,9 +311,18 @@ public class ScoreManager : MonoBehaviour
         if(!isSaving)
             SaveScores();
     }
+
+    void DeletePath()
+    {
+        string path = Application.persistentDataPath + "/scores.dat";
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
+    }
     #endregion
 }
-
+#region Custom Classes
 [Serializable] 
 public class GlobalScores
 {
@@ -277,7 +340,8 @@ public class Players
 class GameData
 {
     public string username;
-    public int[] scores;
+    public int[] normalScores;
+    public int[] unstableScores;
     public bool[] itemsBought;
     public int goldstars;
     public int silverstars;
@@ -290,3 +354,4 @@ class Scores
 {
     public int[] scores;
 }
+#endregion

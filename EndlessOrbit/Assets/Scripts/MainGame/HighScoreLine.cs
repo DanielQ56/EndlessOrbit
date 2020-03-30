@@ -20,7 +20,8 @@ public class HighScoreLine : MonoBehaviour
 
     private void OnDisable()
     {
-        text.gameObject.SetActive(false);
+        if(text.gameObject != null)
+            text.gameObject.SetActive(false);
     }
 
     public void HighScore()

@@ -15,13 +15,6 @@ public class ButtonFunctions : MonoBehaviour
         SceneManager.LoadScene("Menu");
     }
 
-    public void OpenLeaderboard()
-    {
-        ScoreManager.instance.displayLocalScores();
-    }
 
-    public void OpenGlobalLeaderboard()
-    {
-        ScoreManager.instance.DisplayGlobalScores();
-    }
+
 }

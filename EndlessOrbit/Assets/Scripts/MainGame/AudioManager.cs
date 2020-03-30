@@ -23,11 +23,6 @@ public class AudioManager : MonoBehaviour
     {
         if (instance == null)
             instance = this;
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
 
         //Initialize SFX Array
         foreach(Sound track in sfx)
@@ -53,7 +48,7 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        if (!muted)
+        if (!muted && s.source != null)
             s.source.Play();
     }
 

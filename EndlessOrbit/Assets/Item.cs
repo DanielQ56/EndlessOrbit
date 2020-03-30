@@ -34,8 +34,6 @@ public class Item : MonoBehaviour
         childIndex = index;
 
 
-        if(item.selected)
-            PlayerCustomization.instance.playerSprite = currentItem.ItemSprite;
         Activated.SetActive(item.selected);
         button.interactable = !item.selected;
     }
@@ -46,7 +44,6 @@ public class Item : MonoBehaviour
         {
             selectedDelagate(childIndex);
             currentItem.selected = true;
-            PlayerCustomization.instance.playerSprite = currentItem.ItemSprite;
             Activated.SetActive(true);
             button.interactable = false;
         }

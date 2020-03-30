@@ -51,6 +51,11 @@ public class PlayerManager : MonoBehaviour
         selectedIndex = selected;
     }
 
+    public Sprite GetSelectedSprite()
+    {
+        return allItems[selectedIndex].ItemSprite;
+    }
+
     public int GetSelectedIndex()
     {
         return selectedIndex;

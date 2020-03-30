@@ -4,34 +4,27 @@ using UnityEngine;
 
 public class GlobalLeaderboard : MonoBehaviour
 {
-    [SerializeField] GameObject leaderboardPanel;
-    [SerializeField] GameObject board;
+    [SerializeField] GameObject globalBoard;
 
     bool recentScoreIdentified = false;
 
-    private void Start()
+    public void ActivateLeaderBoard(Players[] players, int recentScore, string playerName)
     {
-        leaderboardPanel.SetActive(false);
-    }
-
-    public void ActivateLeaderboard(Players[] players, int recentScore, string playerName)
-    {
-        leaderboardPanel.SetActive(true);
-        Debug.Log(players.Length);
+        globalBoard.transform.SetAsFirstSibling();
         recentScoreIdentified = false;
-        for (int i = 0; i < board.transform.childCount; ++i)
+        for (int i = 0; i < globalBoard.transform.childCount; ++i)
         {
             if (i < players.Length && players[i].score > 0)
             {
                 bool foundRecentScore = (recentScore > 0 && players[i].score == recentScore && !recentScoreIdentified && playerName == players[i].username);
-                board.transform.GetChild(i).gameObject.SetActive(true);
-                board.transform.GetChild(i).GetComponent<GlobalScore>().SetVariables(i + 1, players[i].username, players[i].score, foundRecentScore);
+                globalBoard.transform.GetChild(i).gameObject.SetActive(true);
+                globalBoard.transform.GetChild(i).GetComponent<GlobalScore>().SetVariables(i + 1, players[i].username, players[i].score, foundRecentScore);
                 if (foundRecentScore)
                     recentScoreIdentified = true;
             }
             else
             {
-                board.transform.GetChild(i).gameObject.SetActive(false);
+                globalBoard.transform.GetChild(i).gameObject.SetActive(false);
             }
         }
     }

@@ -145,6 +145,8 @@ public class MainGameManager : MonoBehaviour
             yield return new WaitForSeconds(time * 0.2f);
             asteroidIndicator.SetActive(true);
             time -= Mathf.Clamp(time * 0.2f, 0.05f, 2f);
+            if (!playerIsAlive)
+                yield break;
         }
         asteroidIndicator.SetActive(false);
         SpawnAsteroid(startPos, endPos);
@@ -176,7 +178,7 @@ public class MainGameManager : MonoBehaviour
             StopTime.Invoke();
         playerIsAlive = false;
         gameOver.GameOver(currentScore);
-        ScoreManager.instance.RecordScore(currentScore);
+        ScoreManager.instance.RecordScore(currentScore, isUnstable);
         PlayerManager.instance.AddStars(currentGStars, currentSStars);
         GoogleAds.instance.ShowFullScreenAd();
     }
@@ -320,14 +322,14 @@ public class MainGameManager : MonoBehaviour
     {
         currentScore += value;
         scoreText.text = currentScore.ToString();
-        if (currentScore == ScoreManager.instance.GetHighScore() && currentScore > 0)
+        if (currentScore == ScoreManager.instance.GetHighScore(isUnstable) && currentScore > 0)
             displayHighScoreLine = true;
         SpeedIncreased = false;
     }
 
     void AddCoins()
     {
-        if (currentScore > ScoreManager.instance.GetHighScore() && currentScore > 0)
+        if (currentScore > ScoreManager.instance.GetHighScore(isUnstable) && currentScore > 0)
             currentGStars += 1;
         else
             currentSStars += (currentScore % 500 == 0 && currentScore > 0 ? 1 : 0);
@@ -341,6 +343,11 @@ public class MainGameManager : MonoBehaviour
         }
     }
     #endregion
+
+    public bool isUnstableMode()
+    {
+        return isUnstable;
+    }
 
 
 
