@@ -16,6 +16,5 @@ public class NameInput : MonoBehaviour
     public void ChangeName()
     {
         ScoreManager.instance.SetName(input.text);
-        this.gameObject.SetActive(false);
     }
 }

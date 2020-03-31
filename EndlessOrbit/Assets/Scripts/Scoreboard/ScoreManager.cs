@@ -5,6 +5,7 @@ using System;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -46,7 +47,6 @@ public class ScoreManager : MonoBehaviour
 
     bool retrieving = false;
 
-    string username;
 
 
     void SaveScoreToGlobal(bool isUnstable)
@@ -131,6 +131,21 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
+
+
+    #endregion
+
+    #region Username/Input
+    string username;
+
+    public void DisablePopup(GameObject g)
+    {
+        bool value = g.GetComponent<Toggle>().isOn ;
+        Debug.Log("Popup value: " + value);
+        popupDisabled = value;
+    }
+
+
     public void SetName(string name)
     {
         username = name;
@@ -140,11 +155,12 @@ public class ScoreManager : MonoBehaviour
     {
         return username;
     }
-
-
     #endregion
 
     #region local
+    [SerializeField] GameObject Popup;
+
+    bool popupDisabled = false;
 
     bool isOnGlobal = false;
 
@@ -207,6 +223,7 @@ public class ScoreManager : MonoBehaviour
             normalScores = data.normalScores;
             unstableScores = data.unstableScores;
             username = (data.username == null ? "" : data.username);
+            popupDisabled = data.popupDisabled;
             PlayerManager.instance.Setup(data.goldstars, data.silverstars);
             PlayerManager.instance.SetupItems(data.itemsBought, data.selectedItem);
             recentNormalScore = normalScores[normalScores.Length - 1];
@@ -217,6 +234,10 @@ public class ScoreManager : MonoBehaviour
             username = "";
             PlayerManager.instance.Setup();
             PlayerManager.instance.SetupItems();
+        }
+        if(username.Length == 0 && !popupDisabled)
+        {
+            Popup.SetActive(true);
         }
     }
 
@@ -259,7 +280,7 @@ public class ScoreManager : MonoBehaviour
         data.username = username;
         data.goldstars = PlayerManager.instance.GetGoldStars();
         data.silverstars = PlayerManager.instance.GetSilverStars();
-
+        data.popupDisabled = popupDisabled;
         List<PurchasableItem> items = PlayerManager.instance.getAllItems();
         List<bool> bought = new List<bool>();
         for(int i = 0; i < items.Count; ++i)
@@ -346,6 +367,7 @@ class GameData
     public int goldstars;
     public int silverstars;
     public int selectedItem;
+    public bool popupDisabled;
 }
 
 
