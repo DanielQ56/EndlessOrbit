@@ -53,7 +53,6 @@ public class MainGameManager : MonoBehaviour
     void Start()
     {
         updateCameraPosition(startingPlanet);
-        currentGStars = 0;
         currentSStars = 0;
         timer = asteroidTimer;
     }
@@ -177,9 +176,7 @@ public class MainGameManager : MonoBehaviour
         if(StopTime != null)
             StopTime.Invoke();
         playerIsAlive = false;
-        gameOver.GameOver(currentScore);
-        ScoreManager.instance.RecordScore(currentScore, isUnstable);
-        PlayerManager.instance.AddStars(currentGStars, currentSStars);
+        gameOver.GameOver(currentScore, currentSStars, isUnstable);
         GoogleAds.instance.ShowFullScreenAd();
     }
     
@@ -315,7 +312,6 @@ public class MainGameManager : MonoBehaviour
     [SerializeField] HighScoreLine score;
 
     int currentScore = 0;
-    int currentGStars = 0;
     int currentSStars = 0;
 
     void UpdateScore(int value)
@@ -330,9 +326,9 @@ public class MainGameManager : MonoBehaviour
     void AddCoins()
     {
         if (currentScore > ScoreManager.instance.GetHighScore(isUnstable) && currentScore > 0)
-            currentGStars += 1;
+            currentSStars += 5;
         else
-            currentSStars += (currentScore % 500 == 0 && currentScore > 0 ? 1 : 0);
+            currentSStars += (currentScore % 300 == 0 && currentScore > 0 ? 1 : 0);
     }
 
     public void PassedHighScore()

@@ -8,7 +8,6 @@ public class PurchasableItem : ScriptableObject
     public Sprite ItemSprite;
     public string itemName;
     public int cost;
-    public bool premium;
     public bool bought;
     public bool selected;
 }

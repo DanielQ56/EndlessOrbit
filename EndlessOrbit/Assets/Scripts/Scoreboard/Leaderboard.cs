@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Leaderboard : MonoBehaviour
 {
@@ -11,13 +12,14 @@ public class Leaderboard : MonoBehaviour
 
     bool recentScoreIdentified = false;
 
-    private void Start()
+    private void OnEnable()
     {
         boardHolder.SetActive(false);
     }
 
     public void DisplayLeaderboard(bool isUnstable)
     {
+        Debug.Log("Getting called");
         boardHolder.SetActive(true);
         toggleParent.UpdateToggles(isUnstable);
     }

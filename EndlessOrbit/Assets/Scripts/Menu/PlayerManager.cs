@@ -8,7 +8,8 @@ public class PlayerManager : MonoBehaviour
 
     [SerializeField] List<PurchasableItem> allItems;
 
-    int goldStars;
+    [SerializeField] GameObject ShopPanel;
+
     int silverStars;
 
     int selectedIndex = 0;
@@ -25,6 +26,11 @@ public class PlayerManager : MonoBehaviour
             Destroy(this.gameObject);
         }
         DontDestroyOnLoad(this.gameObject);
+    }
+
+    public void OpenShopInventory()
+    {
+        ShopPanel.SetActive(true);
     }
 
 
@@ -87,29 +93,20 @@ public class PlayerManager : MonoBehaviour
     {
         SetDefaultItems();
         selectedIndex = 0;
-        goldStars = 0;
         silverStars = 0;
     }
 
     
 
     #region Stars
-    public void Setup(int g = 0, int s = 0)
+    public void Setup(int s = 0)
     {
-        goldStars = g;
         silverStars = s;
-        Debug.Log(goldStars + " " + silverStars);
     }
 
-    public void AddStars(int g, int s)
+    public void AddStars(int s)
     {
-        goldStars += g;
         silverStars += s;
-    }
-
-    public int GetGoldStars()
-    {
-        return goldStars;
     }
 
     public int GetSilverStars()
@@ -117,24 +114,14 @@ public class PlayerManager : MonoBehaviour
         return silverStars;
     }
 
-    public bool BuyItem(bool premium, int cost)
+    public bool BuyItem(int cost)
     {
-        if(premium)
+        if (silverStars >= cost)
         {
-            if(goldStars >= cost)
-            {
-                goldStars -= cost;
-                return true;
-            }            
+            silverStars -= cost;
+            return true;
         }
-        else
-        {
-            if (silverStars >= cost)
-            {
-                silverStars -= cost;
-                return true;
-            }
-        }
+
         return false;
     }
     #endregion

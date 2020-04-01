@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class StarAmounts : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI goldStars;
     [SerializeField] TextMeshProUGUI silverStars;
 
     private void Awake()
@@ -21,7 +20,6 @@ public class StarAmounts : MonoBehaviour
 
     void UpdateText()
     {
-        goldStars.text = PlayerManager.instance.GetGoldStars().ToString();
         silverStars.text = PlayerManager.instance.GetSilverStars().ToString();
     }
 

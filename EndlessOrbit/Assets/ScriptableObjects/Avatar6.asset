@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemSprite: {fileID: 21300000, guid: b4b0e5c2ee713984e81e488152adeb7f, type: 3}
   itemName: UwU
-  cost: 3
-  premium: 1
+  cost: 100
   bought: 0
   selected: 0

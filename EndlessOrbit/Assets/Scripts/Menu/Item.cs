@@ -29,7 +29,7 @@ public class Item : MonoBehaviour
         spriteImage.sprite = item.ItemSprite;
         Debug.Log("Item Name: " + item.itemName + ", Bought: " + item.bought + ", Selected: " + item.selected);
         cost.text = (item.bought ? "Bought!" : item.cost.ToString());
-        cost.color = (item.premium ? Color.yellow : Color.gray);
+        cost.color = Color.black;
         currentItem = item;
         childIndex = index;
 
@@ -49,7 +49,7 @@ public class Item : MonoBehaviour
         }
         else
         {
-            if(PlayerManager.instance.BuyItem(currentItem.premium, currentItem.cost))
+            if(PlayerManager.instance.BuyItem(currentItem.cost))
             {
                 buyingDelegate();
                 cost.text = "Bought!";
