@@ -53,6 +53,11 @@ public class GoogleAds : MonoBehaviour
         }      
     }
 
+    public bool ShouldShowAds()
+    {
+        return showAds;
+    }
+
     #region Reward Ad
     public void RequestRewardedAd()
     {
@@ -116,7 +121,7 @@ public class GoogleAds : MonoBehaviour
     public void RequestFullScreenAd()
     {
         fullScreenAd = new InterstitialAd(fullScreenAdID);
-
+        fullScreenAd.OnAdClosed += OnFullScreenAdClosed;
         AdRequest request = new AdRequest.Builder().Build();
 
         fullScreenAd.LoadAd(request);
@@ -126,6 +131,7 @@ public class GoogleAds : MonoBehaviour
 
     public void ShowFullScreenAd()
     {
+
         if(fullScreenAd.IsLoaded())
         {
             fullScreenAd.Show();
@@ -136,6 +142,11 @@ public class GoogleAds : MonoBehaviour
             Debug.Log("Full screen ad not loaded");
             RequestFullScreenAd();
         }
+    }
+
+    void OnFullScreenAdClosed(object sender, EventArgs args)
+    {
+        MainGameManager.instance.FinalGameOver();
     }
     #endregion
 

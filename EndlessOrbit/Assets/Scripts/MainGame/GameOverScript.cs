@@ -18,6 +18,7 @@ public class GameOverScript : MonoBehaviour
 
     bool skip = false;
 
+
     private void Start()
     {
         gameOverPanel.gameObject.SetActive(false);

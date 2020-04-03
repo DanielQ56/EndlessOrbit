@@ -14,6 +14,9 @@ public class MainGameManager : MonoBehaviour
     public delegate void TimeStopped();
     public static TimeStopped StopTime;
 
+    public delegate void TimeResumed();
+    public static TimeResumed ResumeTime;
+
     public UnityEvent increaseSpeed;
 
     public static MainGameManager instance;
@@ -145,7 +148,11 @@ public class MainGameManager : MonoBehaviour
             asteroidIndicator.SetActive(true);
             time -= Mathf.Clamp(time * 0.2f, 0.05f, 2f);
             if (!playerIsAlive)
+            {
+                asteroidIndicator.SetActive(false);
+                spawningAsteroid = false;
                 yield break;
+            }
         }
         asteroidIndicator.SetActive(false);
         SpawnAsteroid(startPos, endPos);
@@ -164,6 +171,9 @@ public class MainGameManager : MonoBehaviour
     #region Time
     [SerializeField] GameOverScript gameOver;
     [SerializeField] GameObject PausePanel;
+    [SerializeField] GameObject ContinuePanel;
+
+    bool hasUsedContinue = false;
 
     public void PauseGame()
     {
@@ -176,10 +186,44 @@ public class MainGameManager : MonoBehaviour
         if(StopTime != null)
             StopTime.Invoke();
         playerIsAlive = false;
-        gameOver.GameOver(currentScore, currentSStars, isUnstable);
-        GoogleAds.instance.ShowFullScreenAd();
+        if(!hasUsedContinue)
+        {
+            ContinuePanel.SetActive(true);
+        }
+        else
+        {
+            FinalGameOver();
+        }
     }
-    
+
+    public void FinalGameOver()
+    {
+        if(ContinuePanel != null)
+            ContinuePanel.SetActive(false);
+        //if (GoogleAds.instance.ShouldShowAds())
+        //{
+        //    GoogleAds.instance.ShowFullScreenAd();
+        //}
+        //else
+        //{
+        //    gameOver.GameOver(currentScore, currentSStars, isUnstable);
+        //}
+        if(gameOver != null)
+            gameOver.GameOver(currentScore, currentSStars, isUnstable);
+    }
+
+    public void Continue()
+    {
+        ContinuePanel.SetActive(false);
+        if(ResumeTime != null)
+        {
+            ResumeTime.Invoke();
+        }
+        hasUsedContinue = true;
+        timer = asteroidTimer;
+        playerIsAlive = true;
+    }
+
     public void ForceDetach()
     {
         player.GetComponent<PlayerController>().Detach();

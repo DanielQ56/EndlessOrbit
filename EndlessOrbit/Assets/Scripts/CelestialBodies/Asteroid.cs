@@ -19,6 +19,7 @@ public class Asteroid : MonoBehaviour
         end = endPos - startPos;
         speed = Random.Range(minSpeed, maxSpeed);
         MainGameManager.StopTime += this.StopTime;
+        MainGameManager.ResumeTime += Continue;
     }
 
 
@@ -33,6 +34,12 @@ public class Asteroid : MonoBehaviour
         timeStopped = true;
     }
 
+    void Continue()
+    {
+        if(this != null && this.gameObject != null)
+            Destroy(this.gameObject);
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Destroy(this.gameObject);
@@ -40,6 +47,8 @@ public class Asteroid : MonoBehaviour
 
     private void OnBecameInvisible()
     {
+        MainGameManager.StopTime -= this.StopTime;
+        MainGameManager.ResumeTime -= Continue;
         Destroy(this.gameObject);
     }
 }

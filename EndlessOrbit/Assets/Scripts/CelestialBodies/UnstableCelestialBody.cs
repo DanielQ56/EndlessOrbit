@@ -18,22 +18,29 @@ public class UnstableCelestialBody : CelestialBody
     bool crumbling = false;
     bool shaking = false;
     bool playerAttached = false;
+    bool playerWasAttached = false;
     bool timeStopped = false;
 
     GameObject player;
 
     SpriteRenderer rend;
 
+    Color originalColor;
+    Color ogLineColor;
+
     protected override void Start()
     {
         base.Start();
         timer = maxTimer;
-        Debug.Log("Timer: " + timer);
         origin = this.transform.position;
         currShakeMult = shakeInc;
         rend = GetComponent<SpriteRenderer>();
+        originalColor = rend.color;
+        if(!isStartingBody)
+            ogLineColor = this.GetComponent<LineRenderer>().material.color;
         MainGameManager.StopTime += this.StopTime;
         PlayerController.PlayerDetached += Detached;
+        MainGameManager.ResumeTime += this.Continue;
     }
 
     private void Update()
@@ -42,6 +49,7 @@ public class UnstableCelestialBody : CelestialBody
         {
             if (timer > 0f)
             {
+                Debug.Log("Should be shaking");
                 if (!shaking)
                 {
                     StartCoroutine(Shake());
@@ -64,6 +72,7 @@ public class UnstableCelestialBody : CelestialBody
         if (!isStartingBody && playerAttached)
         {
             playerAttached = false;
+            playerWasAttached = true;
             Crumble();
         }
     }
@@ -71,6 +80,21 @@ public class UnstableCelestialBody : CelestialBody
     void StopTime()
     {
         timeStopped = true;
+    }
+
+    void Continue()
+    {
+        Debug.Log("HI");
+        crumbling = false;
+        shaking = false;
+        timeStopped = false;
+        playerAttached = playerWasAttached;
+        this.transform.position = origin;
+        rend.color = originalColor;
+        if(!isStartingBody)
+            this.GetComponent<LineRenderer>().material.color = ogLineColor;
+        timer = maxTimer;
+        currShakeMult = shakeInc;
     }
 
     IEnumerator Shake()
@@ -120,5 +144,6 @@ public class UnstableCelestialBody : CelestialBody
     {
         MainGameManager.StopTime -= this.StopTime;
         PlayerController.PlayerDetached -= this.Detached;
+        MainGameManager.ResumeTime -= Continue;
     }
 }

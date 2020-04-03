@@ -10,6 +10,8 @@ public class CelestialBody : MonoBehaviour
     protected CircleCollider2D m_collider;
     // Start is called before the first frame update
 
+    protected bool alreadyHadPlayer = false;
+
 
     protected virtual void Start()
     {
@@ -32,6 +34,7 @@ public class CelestialBody : MonoBehaviour
 
             int pointCount = line.positionCount;
             Vector3[] points = new Vector3[pointCount];
+            line.material.color = Color.white;
             for (int i = 0; i < pointCount; ++i)
             {
                 float rad = Mathf.Deg2Rad * (i * 360f / segments);
@@ -43,9 +46,10 @@ public class CelestialBody : MonoBehaviour
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Player"))
+        if(collision.CompareTag("Player") && !alreadyHadPlayer)
         {
             collision.gameObject.GetComponent<PlayerController>().NewBodyToOrbit(transform);
+            alreadyHadPlayer = true;
             MainGameManager.instance.PassedHighScore();
         }
     }

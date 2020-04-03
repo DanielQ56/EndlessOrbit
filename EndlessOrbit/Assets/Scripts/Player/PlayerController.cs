@@ -51,6 +51,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         MainGameManager.instance.increaseSpeed.AddListener(IncreaseSpeedListener);
+        MainGameManager.ResumeTime += Continue;
         BodyToRotateAround = initialBody;
         state = PlayerState.Tethered;
         SpriteRenderer sprite = GetComponent<SpriteRenderer>();
@@ -94,6 +95,9 @@ public class PlayerController : MonoBehaviour
 
     #region Movement
 
+    Vector3 prevPos;
+
+
     void Rotate()
     {
         transform.Rotate(Vector3.forward, spinAngle * direction * Time.deltaTime);
@@ -130,6 +134,7 @@ public class PlayerController : MonoBehaviour
             float x = relativePosition.x + (direction == 1 ? -1 : 1) * Mathf.Sign(relativePosition.y) * 5;
             posToMoveTowards = new Vector3(x, (inverseSlope * x + b), 0) * 5f;
             movementAngle = Mathf.Tan(Mathf.Abs((posToMoveTowards.y - relativePosition.y) / (posToMoveTowards.x - relativePosition.x)));
+            prevPos = this.transform.position;
             AssignDirection(posToMoveTowards);
             DrawLine();
         }
@@ -137,7 +142,6 @@ public class PlayerController : MonoBehaviour
 
     void MoveStraight()
     {
-        Debug.Log(posToMoveTowards);
         transform.Translate( BodyToRotateAround.InverseTransformDirection(Vector3.ClampMagnitude(posToMoveTowards, MaxSpeed)) * Time.deltaTime, BodyToRotateAround.transform);
     }
 
@@ -172,11 +176,23 @@ public class PlayerController : MonoBehaviour
 
     #region Death
 
+    void Continue()
+    {
+        this.transform.position = prevPos;
+        state = PlayerState.Tethered;
+        stillAlive = true;
+        if(linesLeft >= 0)
+        {
+            linesLeft += 1;
+        }
+    }
+
     void Dead()
     {
         if (stillAlive)
         {
             stillAlive = false;
+            line.positionCount = 0;
             MainGameManager.instance.GameOver();
         }
     }
@@ -194,6 +210,12 @@ public class PlayerController : MonoBehaviour
         Dead();
     }
 
+    private void OnDestroy()
+    {
+        MainGameManager.ResumeTime -= Continue;
+        MainGameManager.instance.increaseSpeed.RemoveListener(IncreaseSpeedListener);
+    }
+
     #endregion
 
     void DrawLine()
@@ -206,8 +228,8 @@ public class PlayerController : MonoBehaviour
             Debug.Log(points[1]);
             line.positionCount = 2;
             line.SetPositions(points);
-            linesLeft -=1;
         }
+        linesLeft -= 1;
     }
 
     #region Assigning The New Direction 
