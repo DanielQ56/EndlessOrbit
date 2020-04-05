@@ -10,9 +10,11 @@ public class PlayerManager : MonoBehaviour
 
     [SerializeField] GameObject ShopPanel;
 
+
     int silverStars;
 
     int selectedIndex = 0;
+
 
 
     private void Awake()
@@ -27,6 +29,34 @@ public class PlayerManager : MonoBehaviour
         }
         DontDestroyOnLoad(this.gameObject);
     }
+
+    #region Last Login
+    [SerializeField] List<int> rewardValues; //needed so the player can't constantly cycle
+
+    System.DateTime nextBonus;
+
+    public void SetNextBonusTime(System.DateTime lastTime)
+    {
+        nextBonus = lastTime;
+    }
+
+    public bool BonusAvailable()
+    {
+        return System.DateTime.Now > nextBonus;
+    }
+
+    public void JustReceivedBonus()
+    {
+        nextBonus = System.DateTime.Now.AddHours(22);
+    }
+
+    public System.DateTime GetNextBonus()
+    {
+        return nextBonus;
+    }
+    #endregion
+
+    #region Shop/Items
 
     public void OpenShopInventory()
     {
@@ -95,8 +125,8 @@ public class PlayerManager : MonoBehaviour
         selectedIndex = 0;
         silverStars = 0;
     }
+    #endregion
 
-    
 
     #region Stars
     public void Setup(int s = 0)

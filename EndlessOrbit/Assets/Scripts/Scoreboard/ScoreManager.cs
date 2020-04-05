@@ -224,6 +224,7 @@ public class ScoreManager : MonoBehaviour
             unstableScores = data.unstableScores;
             username = (data.username == null ? "" : data.username);
             popupDisabled = data.popupDisabled;
+            PlayerManager.instance.SetNextBonusTime(System.DateTime.Parse(data.nextBonus));
             PlayerManager.instance.Setup(data.silverstars);
             PlayerManager.instance.SetupItems(data.itemsBought, data.selectedItem);
             recentNormalScore = normalScores[normalScores.Length - 1];
@@ -232,6 +233,7 @@ public class ScoreManager : MonoBehaviour
         else
         {
             username = "";
+            PlayerManager.instance.SetNextBonusTime(default(System.DateTime));
             PlayerManager.instance.Setup();
             PlayerManager.instance.SetupItems();
         }
@@ -280,6 +282,7 @@ public class ScoreManager : MonoBehaviour
         data.username = username;
         data.silverstars = PlayerManager.instance.GetSilverStars();
         data.popupDisabled = popupDisabled;
+        data.nextBonus = PlayerManager.instance.GetNextBonus().ToString();
         List<PurchasableItem> items = PlayerManager.instance.getAllItems();
         List<bool> bought = new List<bool>();
         for(int i = 0; i < items.Count; ++i)
@@ -339,11 +342,11 @@ public class ScoreManager : MonoBehaviour
         {
             File.Delete(path);
         }
-        path = Application.persistentDataPath + "/EndlessOrbitScores.dat";
+        /*path = Application.persistentDataPath + "/EndlessOrbitScores.dat";
         if (File.Exists(path))
         {
             File.Delete(path);
-        }
+        }*/
     }
     #endregion
 }
@@ -371,6 +374,7 @@ class GameData
     public int silverstars;
     public int selectedItem;
     public bool popupDisabled;
+    public string nextBonus;
 }
 
 

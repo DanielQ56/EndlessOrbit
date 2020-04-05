@@ -29,7 +29,7 @@ public class Item : MonoBehaviour
         spriteImage.sprite = item.ItemSprite;
         Debug.Log("Item Name: " + item.itemName + ", Bought: " + item.bought + ", Selected: " + item.selected);
         cost.text = (item.bought ? "Bought!" : item.cost.ToString());
-        cost.color = Color.black;
+        cost.color = Color.white;
         currentItem = item;
         childIndex = index;
 
