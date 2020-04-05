@@ -8,7 +8,7 @@ public class GoogleAds : MonoBehaviour
 {
     public static GoogleAds instance;
 
-    string appID = "ca-app-pub-1176054287451959~9608087394";
+    string appID = "ca-app-pub-8915439303360774~3249557989";
 
     private BannerView bannerView;
     private string bannerID = "ca-app-pub-3940256099942544/6300978111";
@@ -17,7 +17,7 @@ public class GoogleAds : MonoBehaviour
     private string fullScreenAdID = "ca-app-pub-3940256099942544/1033173712";
 
     private RewardBasedVideoAd rewardedAd;
-    private string rewardedAdID = "	ca-app-pub-3940256099942544/5224354917";
+    private string rewardedAdID = "ca-app-pub-3940256099942544/5224354917";
 
     bool showAds = true;
 
@@ -61,6 +61,7 @@ public class GoogleAds : MonoBehaviour
     #region Reward Ad
     public void RequestRewardedAd()
     {
+        Debug.Log("Requesting Rewarded Ad");
         AdRequest request = new AdRequest.Builder().Build();
         rewardedAd.LoadAd(request, rewardedAdID);
     }
@@ -69,6 +70,7 @@ public class GoogleAds : MonoBehaviour
     {
         if(rewardedAd.IsLoaded())
         {
+            Debug.Log("Showing Ad");
             rewardedAd.Show();
         }
         else
@@ -79,22 +81,31 @@ public class GoogleAds : MonoBehaviour
 
     public void HandleRewardBasedVideoLoaded(object sender, EventArgs args)
     {
-
+        Debug.Log("Successfully Loaded Ad");
     }
 
     public void HandleRewardBasedVideoFailedToLoad(object sender, AdFailedToLoadEventArgs args)
     {
-
+        Debug.Log("Failed to load reward ad video " + args.Message);
     }
 
     public void HandleRewardBasedVideoRewarded(object sender, Reward args)
     {
-        
+        if(MainGameManager.instance != null)
+        {
+            Debug.Log("Rewarding with a continue!");
+            MainGameManager.instance.RewardedContinue();
+        }
+        else
+        {
+            Debug.Log("Instance is null :(");
+        }
     }
 
     public void HandleRewardBasedVideoClosed(object sender, EventArgs args)
     {
-
+        Debug.Log("Ad is closed!");
+        RequestRewardedAd();
     }
 
     #endregion
@@ -146,7 +157,7 @@ public class GoogleAds : MonoBehaviour
 
     void OnFullScreenAdClosed(object sender, EventArgs args)
     {
-        MainGameManager.instance.FinalGameOver();
+        MainGameManager.instance.ShowGameOverPanel();
     }
     #endregion
 

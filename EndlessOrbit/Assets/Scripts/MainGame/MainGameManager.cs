@@ -172,8 +172,11 @@ public class MainGameManager : MonoBehaviour
     [SerializeField] GameOverScript gameOver;
     [SerializeField] GameObject PausePanel;
     [SerializeField] GameObject ContinuePanel;
+    [SerializeField] GameObject RewardPanel;
 
     bool hasUsedContinue = false;
+
+    bool CanContinue = false;
 
     public void PauseGame()
     {
@@ -198,23 +201,37 @@ public class MainGameManager : MonoBehaviour
 
     public void FinalGameOver()
     {
-        if(ContinuePanel != null)
-            ContinuePanel.SetActive(false);
-        //if (GoogleAds.instance.ShouldShowAds())
-        //{
-        //    GoogleAds.instance.ShowFullScreenAd();
-        //}
-        //else
-        //{
-        //    gameOver.GameOver(currentScore, currentSStars, isUnstable);
-        //}
-        if(gameOver != null)
+#if UNITY_EDITOR
+        ShowGameOverPanel();
+#else
+        if(GoogleAds.instance.ShouldShowAds())
+        {
+            GoogleAds.instance.ShowFullScreenAd();
+        }
+        else
+        {
+            ShowGameOverPanel();
+        }
+#endif
+    }
+
+    public void ShowGameOverPanel()
+    {
+        if (gameOver != null)
             gameOver.GameOver(currentScore, currentSStars, isUnstable);
+    }
+
+    public void WatchAdForContinue()
+    {
+#if UNITY_EDITOR
+        RewardedContinue();
+#else
+        GoogleAds.instance.ShowRewardedAd();
+#endif
     }
 
     public void Continue()
     {
-        ContinuePanel.SetActive(false);
         if(ResumeTime != null)
         {
             ResumeTime.Invoke();
@@ -224,13 +241,27 @@ public class MainGameManager : MonoBehaviour
         playerIsAlive = true;
     }
 
+    public void RewardedContinue()
+    {
+        CanContinue = true;
+    }
+
+    private void OnApplicationPause(bool pause)
+    {
+        if(!pause && CanContinue)
+        {
+            RewardPanel.SetActive(true);
+            CanContinue = false;
+        }
+    }
+
     public void ForceDetach()
     {
         player.GetComponent<PlayerController>().Detach();
     }
-    #endregion
+#endregion
 
-    #region Hit Planet
+#region Hit Planet
     [SerializeField] ParticleSystem playerParticles;
 
     public void AttachedToNewPlanet(Transform newPlanet)
@@ -253,9 +284,9 @@ public class MainGameManager : MonoBehaviour
             playerParticles.Play();
         }
     }
-    #endregion
+#endregion
 
-    #region Camera Movement
+#region Camera Movement
 
     public bool IsMovingCamera()
     {
@@ -293,9 +324,9 @@ public class MainGameManager : MonoBehaviour
 
     }
 
-    #endregion
+#endregion
 
-    #region Planet Generation
+#region Planet Generation
 
     [SerializeField] Transform planetParent;
     [SerializeField] Transform startingPlanet;
@@ -350,9 +381,9 @@ public class MainGameManager : MonoBehaviour
         }
     }
 
-    #endregion
+#endregion
 
-    #region Score/Currency
+#region Score/Currency
     [SerializeField] HighScoreLine score;
 
     int currentScore = 0;
@@ -382,7 +413,7 @@ public class MainGameManager : MonoBehaviour
             score.HighScore();
         }
     }
-    #endregion
+#endregion
 
     public bool isUnstableMode()
     {
