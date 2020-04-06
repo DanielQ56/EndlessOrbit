@@ -84,7 +84,6 @@ public class UnstableCelestialBody : CelestialBody
 
     void Continue()
     {
-        Debug.Log("HI");
         crumbling = false;
         shaking = false;
         timeStopped = false;
@@ -100,7 +99,9 @@ public class UnstableCelestialBody : CelestialBody
     IEnumerator Shake()
     {
         shaking = true;
-        Vector2 newLoc = origin + Random.insideUnitCircle * currShakeMult;
+        Vector2 randomLoc = Random.insideUnitCircle * currShakeMult;
+        float minMagnitude = (Vector2.one * (currShakeMult - shakeInc)).sqrMagnitude;
+        Vector2 newLoc = origin + (randomLoc.sqrMagnitude < minMagnitude ? randomLoc.normalized * minMagnitude : randomLoc);
         this.transform.position = newLoc;
         currShakeMult += shakeInc;
         yield return new WaitForSeconds(0.1f);

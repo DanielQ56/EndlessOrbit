@@ -22,12 +22,15 @@ public class TitleScreenManager : MonoBehaviour
 
     public void UpdateModeText()
     {
+        if(selectedmode == "Normal")
+        {
+            selectedmode = "Unstable";
+        }
+        else
+        {
+            selectedmode = "Normal";
+        }
         currentMode.text = selectedmode;
-    }
-
-    public void ChangeMode(string mode)
-    {
-        selectedmode = mode;
     }
 
     public string GetMode()

@@ -8,8 +8,7 @@ public class GameOverScript : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI scoreAmount;
     [SerializeField] TextMeshProUGUI scoreHeader;
-    [SerializeField] TextMeshProUGUI highScoreHeader;
-    [SerializeField] TextMeshProUGUI highScoreAmount;
+    [SerializeField] TextMeshProUGUI highScoreText;
     [SerializeField] TextMeshProUGUI starsAmount;
     [SerializeField] TextMeshProUGUI starsHeader;
     [SerializeField] GameObject gameOverPanel;
@@ -33,8 +32,7 @@ public class GameOverScript : MonoBehaviour
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
-            highScoreAmount.gameObject.SetActive(false);
-            highScoreHeader.gameObject.SetActive(false);
+            highScoreText.gameObject.SetActive(false);
             starsAmount.gameObject.SetActive(false);
             starsHeader.gameObject.SetActive(false);
             otherUI.SetActive(false);
@@ -65,21 +63,17 @@ public class GameOverScript : MonoBehaviour
             tempScore += 2;
         }
         scoreAmount.text = score.ToString();
-        highScoreHeader.gameObject.SetActive(true);
-        highScoreAmount.gameObject.SetActive(true);
+        highScoreText.gameObject.SetActive(true);
         if (score > ScoreManager.instance.GetHighScore(isUnstable))
         {
             scoreHeader.text = "New High Score!";
-            highScoreAmount.text = score.ToString();
         }
         else
         {
-            scoreHeader.text = "Score";
-            highScoreAmount.text = ScoreManager.instance.GetHighScore(isUnstable).ToString();
+            scoreHeader.text = "Score:";
         }
-        highScoreHeader.gameObject.SetActive(true);
-        highScoreAmount.gameObject.SetActive(true);
         ScoreManager.instance.RecordScore(score, isUnstable);
+        highScoreText.text = "Highest Score: " + ScoreManager.instance.GetHighScore(isUnstable).ToString();
         StartCoroutine(TallyStars(collectedStars));
     }
 

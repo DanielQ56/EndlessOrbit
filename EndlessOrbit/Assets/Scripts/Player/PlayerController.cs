@@ -76,11 +76,19 @@ public class PlayerController : MonoBehaviour
 
     void CheckDetach()
     {
-        if ((Input.touchCount > 0 && state == PlayerState.Tethered && !IsPointerOverObject() && Time.timeScale > 0) || Input.GetKeyDown(KeyCode.Mouse0))
+#if UNITY_EDITOR
+        if (((Input.touchCount > 0 && !IsPointerOverObject() || Input.GetKeyDown(KeyCode.Mouse0)) && state == PlayerState.Tethered  && Time.timeScale > 0))
         {
             if(EventSystem.current.currentSelectedGameObject == null)
                 Detach();
         }
+#else
+                if ((Input.touchCount > 0 && state == PlayerState.Tethered && !IsPointerOverObject() && Time.timeScale > 0))
+        {
+            if(EventSystem.current.currentSelectedGameObject == null)
+                Detach();
+        }
+#endif
     }
 
     bool IsPointerOverObject()
@@ -91,9 +99,9 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    #endregion
+#endregion
 
-    #region Movement
+#region Movement
 
     Vector3 prevPos;
 
@@ -150,9 +158,9 @@ public class PlayerController : MonoBehaviour
         this.transform.RotateAround(BodyToRotateAround.position, Vector3.forward, rotationAngle * Time.deltaTime);
     }
 
-    #endregion
+#endregion
 
-    #region New Planet
+#region New Planet
 
     public void NewBodyToOrbit(Transform newBody)
     {
@@ -171,10 +179,10 @@ public class PlayerController : MonoBehaviour
     {
         rotationAngle += (Mathf.Sign(rotationAngle) * angleIncreaseValue);
     }
-    #endregion
+#endregion
 
 
-    #region Death
+#region Death
 
     void Continue()
     {
@@ -216,7 +224,7 @@ public class PlayerController : MonoBehaviour
         MainGameManager.instance.increaseSpeed.RemoveListener(IncreaseSpeedListener);
     }
 
-    #endregion
+#endregion
 
     void DrawLine()
     {
@@ -232,7 +240,7 @@ public class PlayerController : MonoBehaviour
         linesLeft -= 1;
     }
 
-    #region Assigning The New Direction 
+#region Assigning The New Direction 
     void AssignNewAngleAndDirection(Transform body)
     {
         float posX = body.position.x - transform.position.x;
@@ -307,5 +315,5 @@ public class PlayerController : MonoBehaviour
             horizontal = Direction.Right;
         }
     }
-    #endregion
+#endregion
 }

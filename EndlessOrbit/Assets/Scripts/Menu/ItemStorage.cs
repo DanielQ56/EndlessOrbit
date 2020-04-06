@@ -25,8 +25,15 @@ public class ItemStorage : MonoBehaviour
         Debug.Log(items.Count);
         for(int i = 0; i < items.Count; ++i)
         {
-            GameObject item = Instantiate(itemPrefab, grid.transform);
-            item.GetComponent<Item>().SetItem(items[i], i);
+            if (i < grid.transform.childCount)
+            {
+                grid.transform.GetChild(i).GetComponent<Item>().SetItem(items[i], i);
+            }
+            else
+            {
+                GameObject item = Instantiate(itemPrefab, grid.transform);
+                item.GetComponent<Item>().SetItem(items[i], i);
+            }
         }
     }
 

@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using TMPro;
 
 public class MainGameManager : MonoBehaviour
 {
     [SerializeField] Camera mainCam;
-    [SerializeField] Text scoreText;
+    [SerializeField] TextMeshProUGUI scoreText;
     [SerializeField] bool isUnstable;
 
 
@@ -352,9 +353,6 @@ public class MainGameManager : MonoBehaviour
                 {
                     clone.GetComponent<UnstableCelestialBody>().DecrementStableTimer(currentScore / 1000);
                 }
-                //clone.transform.position = new Vector3(Random.Range(-width + gap * i, -width + gap * (i + 1)),
-                //Random.Range(mainCam.transform.position.y + mainCam.orthographicSize/3, mainCam.transform.position.y + mainCam.orthographicSize -1), 0);
-
             }
         }
     }
@@ -364,7 +362,7 @@ public class MainGameManager : MonoBehaviour
         switch (planet.transform.localScale.x)
         {
             case 18:
-                xOffset = 2.6f;
+                xOffset = 3f;
                 break;
             case 16:
                 xOffset = 2.6f;

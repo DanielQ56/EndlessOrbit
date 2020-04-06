@@ -4826,7 +4826,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isStartingBody: 0
   explosion: {fileID: 4413067044856170182}
-  stableTimer: 5
+  stableTimer: 3
   shakeInc: 0.02
   timerDec: 0.8
 --- !u!1001 &4746789519898976062
