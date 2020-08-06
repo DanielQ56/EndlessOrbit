@@ -1162,7 +1162,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1628706508}
         m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:
@@ -8064,8 +8064,6 @@ MonoBehaviour:
   - {fileID: 4236335489499159839, guid: 9d2f4b82ae8e1fd4e8cd56023bfba1fa, type: 3}
   - {fileID: 5958938346486015295, guid: 5be533aae71f01e41828ea37dfa2ab61, type: 3}
   - {fileID: 7632360517983594682, guid: 7ece2829694874c408a496c8682761e8, type: 3}
-  xOffset: 2.5
-  yOffset: 2.5
   score: {fileID: 786615496}
 --- !u!1 &519420028
 GameObject:
@@ -22005,6 +22003,7 @@ MonoBehaviour:
   highScoreText: {fileID: 480537848}
   starsAmount: {fileID: 2144551376}
   starsHeader: {fileID: 1882137321}
+  StarIcon: {fileID: 1943797251}
   gameOverPanel: {fileID: 123935834}
   otherUI: {fileID: 1777308727}
   scoreLine: {fileID: 786615494}

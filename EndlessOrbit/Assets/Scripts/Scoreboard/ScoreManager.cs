@@ -31,7 +31,7 @@ public class ScoreManager : MonoBehaviour
 
     private void Start()
     {
-        DeletePath();
+        //DeletePath();
         LoadScores();
     }
 
@@ -169,8 +169,8 @@ public class ScoreManager : MonoBehaviour
     int recentNormalScore = 0;
     int recentUnstableScore = 0;
 
-    int[] normalScores = new int[10];
-    int[] unstableScores = new int[10];
+    int[] normalScores;
+    int[] unstableScores;
 
     List<int> tempScores = new List<int>();
 
@@ -219,9 +219,8 @@ public class ScoreManager : MonoBehaviour
 
             GameData data = (GameData)bf.Deserialize(file);
             file.Close();
-
-            normalScores = data.normalScores;
-            unstableScores = data.unstableScores;
+            normalScores = (data.normalScores != null && data.normalScores.Length > 0) ? data.normalScores : new int[10];
+            unstableScores = (data.unstableScores != null && data.unstableScores.Length > 0) ? data.unstableScores : new int[10];
             username = (data.username == null ? "" : data.username);
             popupDisabled = data.popupDisabled;
             PlayerManager.instance.SetNextBonusTime(System.DateTime.Parse(data.nextBonus));
@@ -236,6 +235,8 @@ public class ScoreManager : MonoBehaviour
             PlayerManager.instance.SetNextBonusTime(default(System.DateTime));
             PlayerManager.instance.Setup();
             PlayerManager.instance.SetupItems();
+            normalScores = new int[10];
+            unstableScores = new int[10];
         }
         if(username.Length == 0 && !popupDisabled)
         {
@@ -335,18 +336,20 @@ public class ScoreManager : MonoBehaviour
             SaveScores();
     }
 
-    void DeletePath()
+    public void DeletePath()
     {
-        string path = Application.persistentDataPath + "/scores.dat";
-        if (File.Exists(path))
-        {
-            File.Delete(path);
-        }
-        /*path = Application.persistentDataPath + "/EndlessOrbitScores.dat";
+        /*string path = Application.persistentDataPath + "/scores.dat";
         if (File.Exists(path))
         {
             File.Delete(path);
         }*/
+        string path = Application.persistentDataPath + "/EndlessOrbitScores.dat";
+        if (File.Exists(path))
+        {
+            Debug.Log("DELETING PATH");
+            File.Delete(path);
+        }
+        LoadScores();
     }
     #endregion
 }

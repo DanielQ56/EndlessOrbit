@@ -11,6 +11,7 @@ public class GameOverScript : MonoBehaviour
     [SerializeField] TextMeshProUGUI highScoreText;
     [SerializeField] TextMeshProUGUI starsAmount;
     [SerializeField] TextMeshProUGUI starsHeader;
+    [SerializeField] GameObject StarIcon;
     [SerializeField] GameObject gameOverPanel;
     [SerializeField] GameObject otherUI;
     [SerializeField] GameObject scoreLine;
@@ -32,6 +33,7 @@ public class GameOverScript : MonoBehaviour
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
+            StarIcon.SetActive(false);
             highScoreText.gameObject.SetActive(false);
             starsAmount.gameObject.SetActive(false);
             starsHeader.gameObject.SetActive(false);
@@ -82,6 +84,7 @@ public class GameOverScript : MonoBehaviour
         skip = false;
         starsAmount.gameObject.SetActive(true);
         starsHeader.gameObject.SetActive(true);
+        StarIcon.SetActive(true);
         int currStars = PlayerManager.instance.GetSilverStars();
         int newAmount = currStars + collectedStars;
         starsAmount.text = currStars.ToString();

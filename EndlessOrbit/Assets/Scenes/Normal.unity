@@ -8453,8 +8453,6 @@ MonoBehaviour:
   - {fileID: 4236335489499159839, guid: 9d2f4b82ae8e1fd4e8cd56023bfba1fa, type: 3}
   - {fileID: 5958938346486015295, guid: 5be533aae71f01e41828ea37dfa2ab61, type: 3}
   - {fileID: 7632360517983594682, guid: 7ece2829694874c408a496c8682761e8, type: 3}
-  xOffset: 2.5
-  yOffset: 2.5
   score: {fileID: 786615496}
 --- !u!1 &519420028
 GameObject:
@@ -23003,6 +23001,7 @@ MonoBehaviour:
   highScoreText: {fileID: 318217213}
   starsAmount: {fileID: 1091061574}
   starsHeader: {fileID: 1748800104}
+  StarIcon: {fileID: 358905011}
   gameOverPanel: {fileID: 92592421}
   otherUI: {fileID: 2057480418}
   scoreLine: {fileID: 786615494}
