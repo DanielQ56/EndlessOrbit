@@ -64,7 +64,8 @@ public class MainGameManager : MonoBehaviour
     void SetBounds()
     {
         width = mainCam.ScreenToWorldPoint(new Vector2(mainCam.pixelWidth, mainCam.pixelHeight)).x - mainCam.ScreenToWorldPoint(Vector2.zero).x;
-        height = (mainCam.ScreenToWorldPoint(new Vector2(mainCam.pixelWidth, mainCam.pixelHeight)).y - mainCam.ScreenToWorldPoint(Vector2.zero).y)/2;
+        height = (mainCam.ScreenToWorldPoint(new Vector2(mainCam.pixelWidth, mainCam.pixelHeight)).y - mainCam.ScreenToWorldPoint(Vector2.zero).y) / 2;
+        
     }
 
     #endregion
@@ -334,9 +335,6 @@ public class MainGameManager : MonoBehaviour
     [SerializeField] List<GameObject> planets;
     [SerializeField] List<GameObject> unstablePlanets;
 
-
-    [SerializeField] float xOffset;
-    [SerializeField] float yOffset;
     void GenerateNextPlanet(Transform newPlanet)
     {
         if (planetParent.childCount == 1)
@@ -346,9 +344,7 @@ public class MainGameManager : MonoBehaviour
             for (int i = 0; i < numPlanetsToSpawn; ++i)
             {
                 GameObject clone = Instantiate((isUnstable ? unstablePlanets[Random.Range(0, planets.Count)] : planets[Random.Range(0, planets.Count)]), planetParent);
-                DetermineOffset(clone.transform);
-                clone.transform.position = new Vector3(Random.Range((camPos.x - width / 2) + xOffset, (camPos.x + width / 2) - xOffset),
-                    Random.Range(camPos.y + yOffset, camPos.y + height - yOffset), 0);
+                DetermineOffset(clone);
                 if(isUnstable)
                 {
                     clone.GetComponent<UnstableCelestialBody>().DecrementStableTimer(currentScore / 1000);
@@ -357,26 +353,22 @@ public class MainGameManager : MonoBehaviour
         }
     }
 
-    void DetermineOffset(Transform planet)
+    void DetermineOffset(GameObject planet)
     {
-        switch (planet.transform.localScale.x)
-        {
-            case 18:
-                xOffset = 3f;
-                break;
-            case 16:
-                xOffset = 2.6f;
-                break;
-            case 14:
-                xOffset = 2.4f;
-                break;
-            case 12:
-                xOffset = 2.4f;
-                break;
-            case 8:
-                xOffset = 1.8f;
-                break;
-        }
+
+        CircleCollider2D coll = planet.GetComponent<CircleCollider2D>();
+
+
+        Debug.Log("X is between: " + (-width / 2 + (coll.radius * planet.transform.localScale.x) + PlayerController.instance.GetXWidth()) + " and " + (width / 2 - (coll.radius * planet.transform.localScale.x) - PlayerController.instance.GetXWidth()));
+
+        float x = Random.Range(-width / 2 + (coll.radius * planet.transform.localScale.x) + PlayerController.instance.GetXWidth(), width / 2 - (coll.radius * planet.transform.localScale.x) - PlayerController.instance.GetXWidth());
+
+
+        float y = Random.Range(mainCam.transform.position.y + height / 3, mainCam.transform.position.y + height - (coll.radius * planet.transform.localScale.x));
+
+
+
+        planet.transform.position = new Vector3(x, y, 0);
     }
 
 #endregion

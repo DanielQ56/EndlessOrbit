@@ -17,6 +17,8 @@ public enum Direction
 
 public class PlayerController : MonoBehaviour
 {
+    public static PlayerController instance = null;
+
     [SerializeField] float rotationAngle;
     [SerializeField] float spinAngle;
     [SerializeField] Transform initialBody;
@@ -40,12 +42,20 @@ public class PlayerController : MonoBehaviour
 
     Vector3 posToMoveTowards;
 
+    CircleCollider2D coll;
+
     PlayerState state;
     Direction horizontal;
 
     bool stillAlive = true;
 
     int linesLeft;
+
+    private void Awake()
+    {
+        instance = this;
+        coll = this.GetComponent<CircleCollider2D>();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -233,7 +243,6 @@ public class PlayerController : MonoBehaviour
             Vector3[] points = new Vector3[2];
             points[0] = transform.position;
             points[1] = BodyToRotateAround.transform.InverseTransformDirection(posToMoveTowards) * lineLength;
-            Debug.Log(points[1]);
             line.positionCount = 2;
             line.SetPositions(points);
         }
@@ -316,4 +325,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 #endregion
+
+    public float GetXWidth()
+    {
+        return coll.radius * this.transform.localScale.x;
+    }
 }
