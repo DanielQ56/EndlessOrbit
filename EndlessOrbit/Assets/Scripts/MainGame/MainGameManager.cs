@@ -175,6 +175,7 @@ public class MainGameManager : MonoBehaviour
     [SerializeField] GameObject PausePanel;
     [SerializeField] GameObject ContinuePanel;
     [SerializeField] GameObject RewardPanel;
+    [SerializeField] GameObject UnableToLoadPanel;
 
     bool hasUsedContinue = false;
 
@@ -255,6 +256,11 @@ public class MainGameManager : MonoBehaviour
             RewardPanel.SetActive(true);
             CanContinue = false;
         }
+    }
+
+    public void UnableToLoadVideo()
+    {
+        UnableToLoadPanel.SetActive(true);
     }
 
     public void ForceDetach()

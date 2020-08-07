@@ -34,6 +34,12 @@ public class AudioManager : MonoBehaviour
         AudioActive = new Dictionary<bool, Sprite>();
         AudioActive.Add(true, Enabled);
         AudioActive.Add(false, Disabled);
+
+        if(PlayerPrefs.GetInt("mute", 0) == 1)
+        {
+            ToggleSound();   
+        }
+
     }
 
 
@@ -55,7 +61,13 @@ public class AudioManager : MonoBehaviour
     public void ToggleSound()
     {
         muted = !muted;
+        Debug.Log("Muted is: " + muted);
         AudioImage.sprite = AudioActive[muted];
+    }
+
+    private void OnDestroy()
+    {
+        PlayerPrefs.SetInt("mute", muted ? 1 : 0);
     }
 
 }

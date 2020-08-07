@@ -20,6 +20,8 @@ public class GoogleAds : MonoBehaviour
     private string rewardedAdID = "ca-app-pub-3940256099942544/5224354917";
 
     bool showAds = true;
+    bool GotRewardsFromVideo = false;
+    bool LoadedProperly = false;
 
     private void Awake()
     {
@@ -82,29 +84,45 @@ public class GoogleAds : MonoBehaviour
     public void HandleRewardBasedVideoLoaded(object sender, EventArgs args)
     {
         Debug.Log("Successfully Loaded Ad");
+        LoadedProperly = true;
     }
 
     public void HandleRewardBasedVideoFailedToLoad(object sender, AdFailedToLoadEventArgs args)
     {
         Debug.Log("Failed to load reward ad video " + args.Message);
+        LoadedProperly = false;
     }
 
     public void HandleRewardBasedVideoRewarded(object sender, Reward args)
     {
-        if(MainGameManager.instance != null)
+        if (LoadedProperly)
         {
-            Debug.Log("Rewarding with a continue!");
-            MainGameManager.instance.RewardedContinue();
+            if (MainGameManager.instance != null)
+            {
+                Debug.Log("Rewarding with a continue!");
+                GotRewardsFromVideo = true;
+                MainGameManager.instance.RewardedContinue();
+            }
+            else
+            {
+                Debug.Log("Instance is null :(");
+            }
         }
         else
         {
-            Debug.Log("Instance is null :(");
+            if(MainGameManager.instance != null)
+            {
+                MainGameManager.instance.UnableToLoadVideo();
+            }
         }
     }
 
     public void HandleRewardBasedVideoClosed(object sender, EventArgs args)
     {
         Debug.Log("Ad is closed!");
+        if (!GotRewardsFromVideo)
+            MainGameManager.instance.FinalGameOver();
+        GotRewardsFromVideo = false;
         RequestRewardedAd();
     }
 
@@ -150,7 +168,7 @@ public class GoogleAds : MonoBehaviour
         }
         else
         {
-            Debug.Log("Full screen ad not loaded");
+            MainGameManager.instance.ShowGameOverPanel();
             RequestFullScreenAd();
         }
     }
