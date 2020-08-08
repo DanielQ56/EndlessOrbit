@@ -17,9 +17,12 @@ public class BackgroundParallax : MonoBehaviour
 
     Vector3 prevCamPos;
 
+    float height;
+
     private void Awake()
     {
         cam = Camera.main.transform;
+        height = (Camera.main.ScreenToWorldPoint(new Vector2(Camera.main.pixelWidth, Camera.main.pixelHeight)).y - Camera.main.ScreenToWorldPoint(Vector2.zero).y);
     }
 
     // Start is called before the first frame update
@@ -42,7 +45,7 @@ public class BackgroundParallax : MonoBehaviour
         {
             for (int i = 0; i < backgrounds.Length; ++i)
             {
-                float p = (prevCamPos.y - currentPos.y) * scale[i];
+                float p = (prevCamPos.y - currentPos.y);
                 Vector3 targetPos = new Vector3(backgrounds[i].position.x, backgrounds[i].position.y + p, backgrounds[i].position.z);
                 backgrounds[i].position = Vector3.Lerp(backgrounds[i].position, targetPos, smoothing * Time.deltaTime);
             }
@@ -50,11 +53,12 @@ public class BackgroundParallax : MonoBehaviour
         }
         else
         {
-            for (int i = 0; i < backgrounds.Length; ++i)
+            foreach(Transform t in backgrounds)
             {
-                if(cam.transform.position.y - backgrounds[i].position.y > distanceAway)
+                
+                if(t.position.y < (cam.position.y - height))
                 {
-                    backgrounds[i].position = new Vector3(backgrounds[i].transform.position.x, cam.transform.position.y + distanceAway, backgrounds[i].position.z);
+                    t.localPosition += Vector3.up * distanceAway * 2;
                 }
             }
         }
