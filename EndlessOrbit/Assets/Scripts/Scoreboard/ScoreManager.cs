@@ -228,6 +228,7 @@ public class ScoreManager : MonoBehaviour
             PlayerManager.instance.SetupItems(data.itemsBought, data.selectedItem);
             recentNormalScore = normalScores[normalScores.Length - 1];
             recentUnstableScore = unstableScores[unstableScores.Length - 1];
+            AudioManager.instance.SetStartingVolume(data.MusicVolume, data.EffectsVolume);
         }
         else
         {
@@ -237,6 +238,7 @@ public class ScoreManager : MonoBehaviour
             PlayerManager.instance.SetupItems();
             normalScores = new int[10];
             unstableScores = new int[10];
+            AudioManager.instance.SetStartingVolume();
         }
         if(username.Length == 0 && !popupDisabled)
         {
@@ -294,6 +296,8 @@ public class ScoreManager : MonoBehaviour
         data.selectedItem = PlayerManager.instance.GetSelectedIndex();
 
         data.itemsBought = bought.ToArray();
+        data.MusicVolume = AudioManager.instance.GetMusicVolume();
+        data.EffectsVolume = AudioManager.instance.GetEffectsVolume();
 
 
         bf.Serialize(file, data);
@@ -378,6 +382,8 @@ class GameData
     public int selectedItem;
     public bool popupDisabled;
     public string nextBonus;
+    public float MusicVolume;
+    public float EffectsVolume;
 }
 
 

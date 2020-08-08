@@ -26,9 +26,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float angleIncreaseValue;
     [SerializeField] float lineLength;
     [SerializeField] int tutorialAmount;
+    [SerializeField] AudioClip detached;
+    [SerializeField] AudioClip hit;
 
     public delegate void Detached();
     public static Detached PlayerDetached;
+
+    float width, height;
+    Camera mainCam;
 
     int direction = 1;
 
@@ -55,6 +60,15 @@ public class PlayerController : MonoBehaviour
     {
         instance = this;
         coll = this.GetComponent<CircleCollider2D>();
+        mainCam = Camera.main;
+        SetBounds();
+    }
+
+    void SetBounds()
+    {
+        width = mainCam.ScreenToWorldPoint(new Vector2(mainCam.pixelWidth, mainCam.pixelHeight)).x - mainCam.ScreenToWorldPoint(Vector2.zero).x;
+        height = (mainCam.ScreenToWorldPoint(new Vector2(mainCam.pixelWidth, mainCam.pixelHeight)).y - mainCam.ScreenToWorldPoint(Vector2.zero).y) / 2;
+
     }
 
     // Start is called before the first frame update
@@ -79,6 +93,7 @@ public class PlayerController : MonoBehaviour
             CheckDetach();
             Move();
             Rotate();
+            CheckOutOfBounds();
         }
     }
 
@@ -140,8 +155,7 @@ public class PlayerController : MonoBehaviour
     {
         if (state == PlayerState.Tethered)
         {
-            if (!AudioManager.instance.muted)
-                AudioManager.instance.Play("Space");
+            AudioManager.instance.PlayEffect(detached);
             if(PlayerDetached != null)
                 PlayerDetached.Invoke();
             state = PlayerState.Free;
@@ -174,9 +188,7 @@ public class PlayerController : MonoBehaviour
 
     public void NewBodyToOrbit(Transform newBody)
     {
-        //AUDIO (can move)
-        if (!AudioManager.instance.muted)
-            AudioManager.instance.Play("Hit");
+        AudioManager.instance.PlayEffect(hit);
         AssignNewAngleAndDirection(newBody);
         BodyToRotateAround = newBody;
         state = PlayerState.Tethered;
@@ -205,6 +217,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void CheckOutOfBounds()
+    {
+        if(this.transform.position.x +(coll.radius * this.transform.localScale.x) < mainCam.transform.position.x  - width / 2 || this.transform.position.x - (coll.radius * this.transform.localScale.x) > mainCam.transform.position.x + width / 2 
+            || this.transform.position.y + (coll.radius * this.transform.localScale.y) < mainCam.transform.position.y - height || this.transform.position.y - (coll.radius * this.transform.localScale.y) > mainCam.transform.position.y + height)
+        {
+            Dead();
+        }
+    }
+
     void Dead()
     {
         if (stillAlive)
@@ -223,10 +244,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnBecameInvisible()
-    {
-        Dead();
-    }
 
     private void OnDestroy()
     {

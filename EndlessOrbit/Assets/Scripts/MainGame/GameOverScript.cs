@@ -15,6 +15,7 @@ public class GameOverScript : MonoBehaviour
     [SerializeField] GameObject gameOverPanel;
     [SerializeField] GameObject otherUI;
     [SerializeField] GameObject scoreLine;
+    [SerializeField] AudioClip GameoverEffect;
 
     bool skip = false;
 
@@ -26,9 +27,7 @@ public class GameOverScript : MonoBehaviour
 
     public void GameOver(int score, int collectedStars, bool isUnstable)
     {
-        //AUDIO (can move)
-        if (!AudioManager.instance.muted)
-            AudioManager.instance.Play("GameOver");
+        AudioManager.instance.PlayEffect(GameoverEffect);
 
         if (gameOverPanel != null)
         {

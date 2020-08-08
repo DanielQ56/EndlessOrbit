@@ -1,83 +1,86 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
-using System;
-using System.Linq;
-using UnityEngine.UI;
 
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance = null;
-    [SerializeField] Sound[] sfx;
-    [SerializeField] Sound currentEffect = null;
-    [SerializeField] Sprite Enabled;
-    [SerializeField] Sprite Disabled;
-    [SerializeField] Image AudioImage;
 
-    public bool muted = false;
+    [SerializeField] AudioSource EffectsSource;
+    [SerializeField] AudioSource MusicSource;
 
-    Dictionary<bool, Sprite> AudioActive;
 
-    void Awake()
+    private void Awake()
     {
-        if (instance == null)
+        if(instance == null)
+        {
             instance = this;
-
-        //Initialize SFX Array
-        foreach(Sound track in sfx)
-        {
-            track.source = gameObject.AddComponent<AudioSource>();
-            track.source.clip = track.clip;
-            track.source.volume = track.volume;
+            
         }
-        AudioActive = new Dictionary<bool, Sprite>();
-        AudioActive.Add(true, Enabled);
-        AudioActive.Add(false, Disabled);
-
-        if(PlayerPrefs.GetInt("mute", 0) == 1)
+        else
         {
-            ToggleSound();   
+            Destroy(this.gameObject);
         }
-
+        DontDestroyOnLoad(this.gameObject);
     }
 
-
-    public void Play(string name)
+    public void SetStartingVolume(float mv = 0.5f, float ev = 0.5f)
     {
-        Sound s = Array.Find(sfx, sound => sound.name == name);
-        currentEffect = s;
-
-        if (s == null)
-        {
-            Debug.Log("ERROR: Sound not found");
-            return;
-        }
-
-        if (!muted && s.source != null)
-            s.source.Play();
+        EffectsSource.volume = ev;
+        MusicSource.volume = mv;
     }
 
-    public void ToggleSound()
+    public void PlayMusic(AudioClip clip)
     {
-        muted = !muted;
-        Debug.Log("Muted is: " + muted);
-        AudioImage.sprite = AudioActive[muted];
+        MusicSource.clip = clip;
+        MusicSource.Play();
     }
 
-    private void OnDestroy()
+    public void PlayEffect(AudioClip clip)
     {
-        PlayerPrefs.SetInt("mute", muted ? 1 : 0);
+        EffectsSource.clip = clip;
+        EffectsSource.Play();
     }
 
-}
+    public void PauseSounds()
+    {
+        EffectsSource.Pause();
+        MusicSource.Pause();
+    }
 
-[System.Serializable]
-public class Sound
-{
-    public string name;
-    public AudioClip clip;
-    public float volume;
-    [HideInInspector]
-    public AudioSource source;
+    public void UnpauseSounds()
+    {
+        EffectsSource.UnPause();
+        MusicSource.UnPause();
+    }
+
+    public void AdjustMusicVolume(float value)
+    {
+        MusicSource.volume = value;
+    }
+
+    public void AdjustEffectsVolume(float value)
+    {
+        EffectsSource.volume = value;
+    }
+
+    public void MuteMusic()
+    {
+        MusicSource.volume = 0f;
+    }
+
+    public void MuteEffects()
+    {
+        EffectsSource.volume = 0f;
+    }
+
+    public float GetMusicVolume()
+    {
+        return MusicSource.volume;
+    }
+
+    public float GetEffectsVolume()
+    {
+        return EffectsSource.volume;
+    }
 }

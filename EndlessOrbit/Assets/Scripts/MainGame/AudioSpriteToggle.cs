@@ -16,10 +16,7 @@ public class AudioSpriteToggle : MonoBehaviour
 
     void Update()
     {
-        if (AudioManager.instance.muted)
-            m_img.sprite = mutedSprite;
-        else
-            m_img.sprite = unmutedSprite;
+      
     }
 
 }

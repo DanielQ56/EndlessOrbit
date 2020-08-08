@@ -10,7 +10,7 @@ public class MainGameManager : MonoBehaviour
     [SerializeField] Camera mainCam;
     [SerializeField] TextMeshProUGUI scoreText;
     [SerializeField] bool isUnstable;
-
+    [SerializeField] AudioClip MainMusic;
 
     public delegate void TimeStopped();
     public static TimeStopped StopTime;
