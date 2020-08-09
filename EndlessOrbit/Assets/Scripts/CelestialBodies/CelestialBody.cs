@@ -8,16 +8,26 @@ public class CelestialBody : MonoBehaviour
 
 
     protected CircleCollider2D m_collider;
-    // Start is called before the first frame update
-
     protected bool alreadyHadPlayer = false;
 
+    float height;
+    Camera mainCam;
+
+    private void Awake()
+    {
+        m_collider = GetComponent<CircleCollider2D>();
+        mainCam = Camera.main;
+    }
 
     protected virtual void Start()
     {
-        //radius = Random.Range(minRadius, maxRadius);
-        m_collider = GetComponent<CircleCollider2D>();
         DrawColliderCircle();
+        height = (mainCam.ScreenToWorldPoint(new Vector2(mainCam.pixelWidth, mainCam.pixelHeight)).y - mainCam.ScreenToWorldPoint(Vector2.zero).y) / 2;
+    }
+
+    protected virtual void Update()
+    {
+        CheckOutOfBounds();
     }
 
 
@@ -53,11 +63,13 @@ public class CelestialBody : MonoBehaviour
             MainGameManager.instance.PassedHighScore();
         }
     }
-
-
-    protected virtual void OnBecameInvisible()
+    
+    void CheckOutOfBounds()
     {
-        Destroy(gameObject);
+        if (this.transform.position.y + m_collider.radius * this.transform.localScale.y < mainCam.transform.position.y - height)
+        {
+            Destroy(this.gameObject);
+        }
     }
 
 #if UNITY_EDITOR

@@ -311,7 +311,7 @@ public class MainGameManager : MonoBehaviour
         timerPaused = true;
         movingCamera = true;
         float botY = mainCam.ScreenToWorldPoint(Vector2.zero).y;
-        Vector3 pos = new Vector3(0, newPlanet.position.y + height, -10);
+        Vector3 pos = new Vector3(0, newPlanet.position.y - PlayerController.instance.GetXWidth() + height, -10);
         while (Mathf.Abs(mainCam.transform.position.y - pos.y) > 3)
         {
             mainCam.transform.position = Vector3.Lerp(mainCam.transform.position, pos, 3 * Time.deltaTime);
@@ -353,6 +353,7 @@ public class MainGameManager : MonoBehaviour
                 DetermineOffset(clone);
                 if(isUnstable)
                 {
+                    Debug.Log("Creating unstable planet");
                     clone.GetComponent<UnstableCelestialBody>().DecrementStableTimer(currentScore / 1000);
                 }
             }

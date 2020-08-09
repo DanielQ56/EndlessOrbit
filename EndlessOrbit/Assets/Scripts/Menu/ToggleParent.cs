@@ -11,7 +11,6 @@ public class ToggleParent : MonoBehaviour
 
     public void UpdateToggles(bool isUnstable)
     {
-        Debug.Log("Updating Toggles");
         if (isUnstable)
         {
             unstable.isOn = false;

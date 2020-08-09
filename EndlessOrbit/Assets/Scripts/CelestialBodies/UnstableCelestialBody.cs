@@ -27,6 +27,7 @@ public class UnstableCelestialBody : CelestialBody
 
     Color originalColor;
     Color ogLineColor;
+    Color transparent;
 
     protected override void Start()
     {
@@ -36,6 +37,7 @@ public class UnstableCelestialBody : CelestialBody
         currShakeMult = shakeInc;
         rend = GetComponent<SpriteRenderer>();
         originalColor = rend.color;
+        transparent = new Color(0f, 0f, 0f, 0f);
         if(!isStartingBody)
             ogLineColor = this.GetComponent<LineRenderer>().material.color;
         MainGameManager.StopTime += this.StopTime;
@@ -43,13 +45,13 @@ public class UnstableCelestialBody : CelestialBody
         MainGameManager.ResumeTime += this.Continue;
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
         if (!isStartingBody && playerAttached && !timeStopped)
         {
             if (timer > 0f)
             {
-                Debug.Log("Should be shaking");
                 if (!shaking)
                 {
                     StartCoroutine(Shake());
@@ -111,12 +113,20 @@ public class UnstableCelestialBody : CelestialBody
     void Crumble()
     {
         crumbling = true;
+
+        foreach (Transform t in this.transform)
+        {
+            t.gameObject.SetActive(false);
+        }
+        explosion.gameObject.SetActive(true);
         ParticleSystem.MainModule main = explosion.main;
+        
         main.startColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
         explosion.Play();
-        rend.color = Color.black;
-        this.GetComponent<LineRenderer>().material.color = Color.black;
+        rend.color = transparent;
+        this.GetComponent<LineRenderer>().enabled = false;
         playerAttached = false;
+
     }
 
     public void DecrementStableTimer(int level)
@@ -136,10 +146,6 @@ public class UnstableCelestialBody : CelestialBody
             base.OnTriggerEnter2D(collision);
     }
 
-    protected override void OnBecameInvisible()
-    {
-        base.OnBecameInvisible();
-    }
 
     private void OnDestroy()
     {

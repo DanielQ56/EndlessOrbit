@@ -186,9 +186,9 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    public void ChangeLeaderboards(int value, bool isUnstable = false)
+    public void ChangeLeaderboards(bool global, bool isUnstable = false)
     {
-        isOnGlobal = value == 0 ? false : true;
+        isOnGlobal = global;
         UpdateToggles(isUnstable);
     }
 
@@ -205,7 +205,6 @@ public class ScoreManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Loading Local Scores: " + isUnstable);
             DisplayLocalScores(isUnstable);
         }
     }
