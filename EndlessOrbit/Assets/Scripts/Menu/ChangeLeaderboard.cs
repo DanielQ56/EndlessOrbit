@@ -11,37 +11,23 @@ public class ChangeLeaderboard: MonoBehaviour
 
     private void Awake()
     {
-        Local.onClick.AddListener(SwapToLocal);
-        Global.onClick.AddListener(SwapToGlobal);
+        Global.onClick.AddListener(OpenGlobal);
     }
 
 
     private void OnEnable()
     {
-        Local.gameObject.SetActive(false);
         Global.gameObject.SetActive(true);
     }
 
 
-    void SwapToGlobal()
+    void OpenGlobal()
     {
-        Debug.Log("Swapping to global");
-        ScoreManager.instance.ChangeLeaderboards(true, (MainGameManager.instance != null ? MainGameManager.instance.isUnstableMode() : false));
-        Local.gameObject.SetActive(true);
-        Global.gameObject.SetActive(false);
-    }
-
-    void SwapToLocal()
-    {
-        Debug.Log("Swapping to local");
-        ScoreManager.instance.ChangeLeaderboards(false, (MainGameManager.instance != null ? MainGameManager.instance.isUnstableMode() : false));
-        Local.gameObject.SetActive(false);
-        Global.gameObject.SetActive(true);
+        ScoreManager.instance.DisplayGlobalLeaderboard();
     }
 
     private void OnDestroy()
     { 
-        Local.onClick.RemoveListener(SwapToGlobal);
-        Global.onClick.RemoveListener(SwapToLocal);
+        Global.onClick.RemoveListener(OpenGlobal);
     }
 }

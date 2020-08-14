@@ -13,7 +13,7 @@ public class ScoreManager : MonoBehaviour
 
     [SerializeField] Leaderboard leader;
     [SerializeField] GameObject LoadingPanel;
-    [SerializeField] GameObject error;
+    [SerializeField] InfoPanel InfoPanel;
 
 
     void Awake()
@@ -36,7 +36,7 @@ public class ScoreManager : MonoBehaviour
     }
 
     #region global
-
+    /* Old global leaderboard
     private const string AddNormalScore = "https://endless-orbit.herokuapp.com/add_normal_score";
     private const string GetNormalScores = "https://endless-orbit.herokuapp.com/normalscores";
     private const string AddUnstableScore = "https://endless-orbit.herokuapp.com/add_unstable_score";
@@ -130,8 +130,23 @@ public class ScoreManager : MonoBehaviour
            
         }
     }
+    */
 
+    public void Loading(bool loading)
+    {
+        LoadingPanel.SetActive(loading);
+    }
 
+    public void ProvideInfo(string info)
+    {
+        InfoPanel.gameObject.SetActive(true);
+        InfoPanel.SetText(info);
+    }
+
+    public void DisplayGlobalLeaderboard()
+    {
+        GooglePlayLeaderboard.instance.DisplayLeaderboard();
+    }
 
     #endregion
 
@@ -145,16 +160,6 @@ public class ScoreManager : MonoBehaviour
         popupDisabled = value;
     }
 
-
-    public void SetName(string name)
-    {
-        username = name;
-    }
-
-    public string GetName()
-    {
-        return username;
-    }
     #endregion
 
     #region local
@@ -162,7 +167,6 @@ public class ScoreManager : MonoBehaviour
 
     bool popupDisabled = false;
 
-    bool isOnGlobal = false;
 
     bool isSaving = false;
 
@@ -174,21 +178,8 @@ public class ScoreManager : MonoBehaviour
 
     List<int> tempScores = new List<int>();
 
-    public void ChangeBoards(int value)
+    public void ChangeLeaderboards(bool isUnstable = false)
     {
-        if(value == 0)
-        {
-            isOnGlobal = false;
-        }
-        else
-        {
-            isOnGlobal = true;
-        }
-    }
-
-    public void ChangeLeaderboards(bool global, bool isUnstable = false)
-    {
-        isOnGlobal = global;
         UpdateToggles(isUnstable);
     }
 
@@ -199,14 +190,8 @@ public class ScoreManager : MonoBehaviour
 
     public void DisplayScores(bool isUnstable)
     {
-        if(isOnGlobal)
-        {
-            DisplayGlobalScores(isUnstable);
-        }
-        else
-        {
-            DisplayLocalScores(isUnstable);
-        }
+        DisplayLocalScores(isUnstable);
+        
     }
 
     void LoadScores()
@@ -252,7 +237,7 @@ public class ScoreManager : MonoBehaviour
         else
             recentNormalScore = score;
 
-        SaveScoreToGlobal(isUnstable);
+        GooglePlayLeaderboard.instance.PostScoreToLeaderboard(score, isUnstable);
 
         if (score <= (isUnstable ? unstableScores[0] : normalScores[0]))
         {
