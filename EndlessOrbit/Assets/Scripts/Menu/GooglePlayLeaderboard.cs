@@ -50,7 +50,6 @@ public class GooglePlayLeaderboard : MonoBehaviour
          {
              if(result == SignInStatus.Success)
              {
-                 ScoreManager.instance.Loading(false);
                  ScoreManager.instance.ProvideInfo("Successfully signed in!");
                  isSignedIn = true;
              }
@@ -62,6 +61,8 @@ public class GooglePlayLeaderboard : MonoBehaviour
              {
                  ScoreManager.instance.ProvideInfo("Unable to login. Try again in the settings.");
              }
+
+             ScoreManager.instance.Loading(false);
          });
     }
 
