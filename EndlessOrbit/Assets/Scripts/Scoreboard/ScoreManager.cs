@@ -145,7 +145,7 @@ public class ScoreManager : MonoBehaviour
 
     public void DisplayGlobalLeaderboard()
     {
-        GooglePlayLeaderboard.instance.DisplayLeaderboard();
+        GlobalLeaderboard.instance.DisplayLeaderboard();
     }
 
     #endregion
@@ -237,7 +237,7 @@ public class ScoreManager : MonoBehaviour
         else
             recentNormalScore = score;
 
-        GooglePlayLeaderboard.instance.PostScoreToLeaderboard(score, isUnstable);
+        GlobalLeaderboard.instance.PostScoreToLeaderboard(score, isUnstable);
 
         if (score <= (isUnstable ? unstableScores[0] : normalScores[0]))
         {

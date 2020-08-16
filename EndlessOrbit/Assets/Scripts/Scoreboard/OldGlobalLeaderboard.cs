@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GlobalLeaderboard : MonoBehaviour
+public class OldGlobalLeaderboard : MonoBehaviour
 {
     [SerializeField] GameObject globalBoard;
 

@@ -11,18 +11,18 @@ public class SignInButton : MonoBehaviour
 
     private void OnEnable()
     {
-        buttonText.text = GooglePlayLeaderboard.instance.IsPlayerSignedIn() ? "Log Out" : "Log In";
+        buttonText.text = GlobalLeaderboard.instance.IsPlayerSignedIn() ? "Log Out" : "Log In";
     }
 
     void CheckConnectionToPlayStore()
     {
-        if(GooglePlayLeaderboard.instance.IsPlayerSignedIn())
+        if(GlobalLeaderboard.instance.IsPlayerSignedIn())
         {
-            GooglePlayLeaderboard.instance.SignOut();
+            GlobalLeaderboard.instance.SignOut();
         }
         else
         {
-            GooglePlayLeaderboard.instance.AuthenticateUser();
+            GlobalLeaderboard.instance.AuthenticateUser();
         }
     }
 }

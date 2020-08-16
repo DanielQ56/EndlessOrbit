@@ -9,9 +9,9 @@ using System;
 
 //Uses video by Turbo Makes Games on Youtube as guideline
 
-public class GooglePlayLeaderboard : MonoBehaviour
+public class GlobalLeaderboard : MonoBehaviour
 {
-    public static GooglePlayLeaderboard instance = null;
+    public static GlobalLeaderboard instance = null;
 
     bool isSignedIn = false;
     
