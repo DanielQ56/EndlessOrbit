@@ -224,10 +224,7 @@ public class ScoreManager : MonoBehaviour
             unstableScores = new int[10];
             AudioManager.instance.SetStartingVolume();
         }
-        if(username.Length == 0 && !popupDisabled)
-        {
-            Popup.SetActive(true);
-        }
+
     }
 
     public void RecordScore(int score, bool isUnstable)
