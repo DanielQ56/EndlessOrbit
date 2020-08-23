@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isStartingBody: 0
+  Face: {fileID: 6773660800067254635}
   explosion: {fileID: 1627563358661757682}
   stableTimer: 3
   shakeInc: 0.02
@@ -4839,7 +4840,7 @@ PrefabInstance:
     - target: {fileID: 2619793725376459254, guid: 1beba6d13b22d5b419d8ef04af918d5d,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7272521961996298682, guid: 1beba6d13b22d5b419d8ef04af918d5d,
         type: 3}
@@ -4913,6 +4914,12 @@ GameObject:
 --- !u!4 &5958938346486015291 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7272521961996298686, guid: 1beba6d13b22d5b419d8ef04af918d5d,
+    type: 3}
+  m_PrefabInstance: {fileID: 3917945771689020549}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6773660800067254635 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7520930495593166318, guid: 1beba6d13b22d5b419d8ef04af918d5d,
     type: 3}
   m_PrefabInstance: {fileID: 3917945771689020549}
   m_PrefabAsset: {fileID: 0}

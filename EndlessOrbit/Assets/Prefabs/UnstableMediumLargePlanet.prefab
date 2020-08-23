@@ -4825,6 +4825,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isStartingBody: 0
+  Face: {fileID: 8474909935102965515}
   explosion: {fileID: 7443268414325305375}
   stableTimer: 3
   shakeInc: 0.02
@@ -4836,6 +4837,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 581915630751088765, guid: 8df8f35aba1859346b462937b2772011,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 3895091996629739232, guid: 8df8f35aba1859346b462937b2772011,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4896,6 +4902,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: UnstableMediumLargePlanet
       objectReference: {fileID: 0}
+    - target: {fileID: 4837569205546575197, guid: 8df8f35aba1859346b462937b2772011,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5313667802702691913, guid: 8df8f35aba1859346b462937b2772011,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6798943898497558698, guid: 8df8f35aba1859346b462937b2772011,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3895091996629739239, guid: 8df8f35aba1859346b462937b2772011, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8df8f35aba1859346b462937b2772011, type: 3}
@@ -4908,6 +4929,12 @@ GameObject:
 --- !u!4 &6545755970046732353 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3895091996629739232, guid: 8df8f35aba1859346b462937b2772011,
+    type: 3}
+  m_PrefabInstance: {fileID: 7843326438757502625}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8474909935102965515 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1821137017756432810, guid: 8df8f35aba1859346b462937b2772011,
     type: 3}
   m_PrefabInstance: {fileID: 7843326438757502625}
   m_PrefabAsset: {fileID: 0}

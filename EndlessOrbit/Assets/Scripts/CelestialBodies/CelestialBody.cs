@@ -5,6 +5,7 @@ using UnityEngine;
 public class CelestialBody : MonoBehaviour
 {
     [SerializeField] protected bool isStartingBody = false;
+    [SerializeField] GameObject Face;
 
 
     protected CircleCollider2D m_collider;
@@ -13,10 +14,13 @@ public class CelestialBody : MonoBehaviour
     float height;
     Camera mainCam;
 
+    float FaceDistance;
+
     private void Awake()
     {
         m_collider = GetComponent<CircleCollider2D>();
         mainCam = Camera.main;
+        FaceDistance = (Face == null ? 0 : Mathf.Abs(Face.transform.localPosition.y));
     }
 
     protected virtual void Start()
@@ -28,6 +32,13 @@ public class CelestialBody : MonoBehaviour
     protected virtual void Update()
     {
         CheckOutOfBounds();
+        FollowPlayer();
+    }
+
+    void FollowPlayer()
+    {
+        if(Face != null)
+            Face.transform.localPosition = (PlayerController.instance.transform.position - this.transform.position).normalized * FaceDistance;
     }
 
 

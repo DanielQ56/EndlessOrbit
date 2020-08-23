@@ -6631,6 +6631,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isStartingBody: 1
+  Face: {fileID: 0}
 --- !u!1 &277487439
 GameObject:
   m_ObjectHideFlags: 0
