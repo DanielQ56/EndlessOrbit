@@ -63,7 +63,9 @@ public class GlobalLeaderboard : MonoBehaviour
              }
 
              ScoreManager.instance.Loading(false);
+             ScoreManager.instance.StartProcess();
          });
+
     }
 
     public void SignOut()

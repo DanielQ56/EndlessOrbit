@@ -29,9 +29,8 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    public void StartProcess()
     {
-        //DeletePath();
         LoadScores();
     }
 
@@ -150,23 +149,8 @@ public class ScoreManager : MonoBehaviour
 
     #endregion
 
-    #region Username/Input
-    string username;
-
-    public void DisablePopup(GameObject g)
-    {
-        bool value = g.GetComponent<Toggle>().isOn ;
-        Debug.Log("Popup value: " + value);
-        popupDisabled = value;
-    }
-
-    #endregion
 
     #region local
-    [SerializeField] GameObject Popup;
-
-    bool popupDisabled = false;
-
 
     bool isSaving = false;
 
@@ -205,8 +189,7 @@ public class ScoreManager : MonoBehaviour
             file.Close();
             normalScores = (data.normalScores != null && data.normalScores.Length > 0) ? data.normalScores : new int[10];
             unstableScores = (data.unstableScores != null && data.unstableScores.Length > 0) ? data.unstableScores : new int[10];
-            username = (data.username == null ? "" : data.username);
-            popupDisabled = data.popupDisabled;
+            ShouldDisplay = data.ShouldDisplayHTP;
             PlayerManager.instance.SetNextBonusTime(System.DateTime.Parse(data.nextBonus));
             PlayerManager.instance.Setup(data.silverstars);
             PlayerManager.instance.SetupItems(data.itemsBought, data.selectedItem);
@@ -216,13 +199,17 @@ public class ScoreManager : MonoBehaviour
         }
         else
         {
-            username = "";
             PlayerManager.instance.SetNextBonusTime(default(System.DateTime));
             PlayerManager.instance.Setup();
             PlayerManager.instance.SetupItems();
             normalScores = new int[10];
             unstableScores = new int[10];
             AudioManager.instance.SetStartingVolume();
+        }
+        if(ShouldDisplay)
+        {
+            Debug.Log("Hello!");
+            OpenHowToPlay();
         }
 
     }
@@ -263,9 +250,8 @@ public class ScoreManager : MonoBehaviour
         GameData data = new GameData();
         data.normalScores = normalScores;
         data.unstableScores = unstableScores;
-        data.username = username;
         data.silverstars = PlayerManager.instance.GetSilverStars();
-        data.popupDisabled = popupDisabled;
+        data.ShouldDisplayHTP = ShouldDisplay;
         data.nextBonus = PlayerManager.instance.GetNextBonus().ToString();
         List<PurchasableItem> items = PlayerManager.instance.getAllItems();
         List<bool> bought = new List<bool>();
@@ -337,6 +323,24 @@ public class ScoreManager : MonoBehaviour
         LoadScores();
     }
     #endregion
+
+    #region How To Play
+
+    [SerializeField] GameObject HowToPlay;
+
+    bool ShouldDisplay = true;
+
+    public void OpenHowToPlay()
+    {
+        HowToPlay.SetActive(true);
+    }
+
+    public void DoNotShowAgain(bool b)
+    {
+        ShouldDisplay = !b;
+    }
+
+    #endregion
 }
 #region Custom Classes
 [Serializable] 
@@ -355,13 +359,12 @@ public class Players
 [Serializable] 
 class GameData
 {
-    public string username;
     public int[] normalScores;
     public int[] unstableScores;
     public bool[] itemsBought;
     public int silverstars;
     public int selectedItem;
-    public bool popupDisabled;
+    public bool ShouldDisplayHTP;
     public string nextBonus;
     public float MusicVolume;
     public float EffectsVolume;
