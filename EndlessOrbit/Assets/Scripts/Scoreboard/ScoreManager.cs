@@ -257,7 +257,7 @@ public class ScoreManager : MonoBehaviour
         List<bool> bought = new List<bool>();
         for(int i = 0; i < items.Count; ++i)
         {
-            Debug.Log("Index: " + i + ", Bought: " + items[i].bought + ", Selected: " + items[i].selected);
+            //Debug.Log("Index: " + i + ", Bought: " + items[i].bought + ", Selected: " + items[i].selected);
             bought.Add(items[i].bought);
         }
         data.selectedItem = PlayerManager.instance.GetSelectedIndex();
@@ -338,6 +338,7 @@ public class ScoreManager : MonoBehaviour
     public void DoNotShowAgain(bool b)
     {
         ShouldDisplay = !b;
+        Debug.Log(ShouldDisplay);
     }
 
     #endregion
