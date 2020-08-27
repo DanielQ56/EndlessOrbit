@@ -36,7 +36,7 @@ public class GoogleAds : MonoBehaviour
         }
     }
 
-    private void Start()
+    public void SetupAds()
     {
         if (showAds)
         {
@@ -52,12 +52,21 @@ public class GoogleAds : MonoBehaviour
 
 
             RequestRewardedAd();
-        }      
+        }
+        else
+        {
+            Debug.Log("Ads removed!");
+        }
     }
 
     public bool ShouldShowAds()
     {
         return showAds;
+    }
+
+    public void SetAdBool(bool b)
+    {
+        showAds = b;
     }
 
     #region Reward Ad
@@ -131,17 +140,23 @@ public class GoogleAds : MonoBehaviour
     #region Banner
     public void RequestBanner()
     {
-        bannerView = new BannerView(bannerID, AdSize.Banner, AdPosition.Bottom);
+        if (showAds)
+        {
+            bannerView = new BannerView(bannerID, AdSize.Banner, AdPosition.Bottom);
 
-        AdRequest request = new AdRequest.Builder().Build();
+            AdRequest request = new AdRequest.Builder().Build();
 
-        bannerView.LoadAd(request);
-        bannerView.Show();
+            bannerView.LoadAd(request);
+            bannerView.Show();
+        }
     }
 
     public void HideBanner()
     {
-        bannerView.Hide();
+        if(showAds)
+        {
+            bannerView.Hide();
+        }
     }
 
     #endregion

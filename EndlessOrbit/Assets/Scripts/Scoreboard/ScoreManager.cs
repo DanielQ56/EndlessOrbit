@@ -196,6 +196,7 @@ public class ScoreManager : MonoBehaviour
             recentNormalScore = normalScores[normalScores.Length - 1];
             recentUnstableScore = unstableScores[unstableScores.Length - 1];
             AudioManager.instance.SetStartingVolume(data.MusicVolume, data.EffectsVolume);
+            GoogleAds.instance.SetAdBool(data.ShowAds);
         }
         else
         {
@@ -208,9 +209,10 @@ public class ScoreManager : MonoBehaviour
         }
         if(ShouldDisplay)
         {
-            Debug.Log("Hello!");
             OpenHowToPlay();
         }
+
+        GoogleAds.instance.SetupAds();
 
     }
 
@@ -252,6 +254,7 @@ public class ScoreManager : MonoBehaviour
         data.unstableScores = unstableScores;
         data.silverstars = PlayerManager.instance.GetSilverStars();
         data.ShouldDisplayHTP = ShouldDisplay;
+        data.ShowAds = GoogleAds.instance.ShouldShowAds();
         data.nextBonus = PlayerManager.instance.GetNextBonus().ToString();
         List<PurchasableItem> items = PlayerManager.instance.getAllItems();
         List<bool> bought = new List<bool>();
@@ -369,6 +372,7 @@ class GameData
     public string nextBonus;
     public float MusicVolume;
     public float EffectsVolume;
+    public bool ShowAds;
 }
 
 
