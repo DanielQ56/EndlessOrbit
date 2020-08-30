@@ -52,16 +52,16 @@ public class CelestialBody : MonoBehaviour
             line.useWorldSpace = false;
             line.startWidth = line.endWidth = 0.03f;
             line.positionCount = segments + 1;
-
+            line.SetColors(Color.white, Color.white);
             int pointCount = line.positionCount;
             Vector3[] points = new Vector3[pointCount];
-            line.material.color = Color.white;
             for (int i = 0; i < pointCount; ++i)
             {
                 float rad = Mathf.Deg2Rad * (i * 360f / segments);
                 points[i] = new Vector3(Mathf.Sin(rad) * radius, Mathf.Cos(rad) * radius);
             }
             line.SetPositions(points);
+            line.material = new Material(Shader.Find("Unlit/Texture"));
         }
     }
 
