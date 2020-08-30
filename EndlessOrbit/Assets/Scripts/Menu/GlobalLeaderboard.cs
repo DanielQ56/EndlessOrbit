@@ -50,15 +50,18 @@ public class GlobalLeaderboard : MonoBehaviour
          {
              if(result == SignInStatus.Success)
              {
+                 Debug.Log("Successful!");
                  ScoreManager.instance.ProvideInfo("Successfully signed in!");
                  isSignedIn = true;
              }
              else if(result == SignInStatus.Canceled)
              {
+                 Debug.Log("Cancelled");
                  ScoreManager.instance.ProvideInfo("Log in canceled");
              }
              else
              {
+                 Debug.Log("Failed");
                  ScoreManager.instance.ProvideInfo("Unable to login. Try again in the settings.");
              }
 
