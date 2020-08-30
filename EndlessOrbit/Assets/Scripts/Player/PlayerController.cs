@@ -81,6 +81,8 @@ public class PlayerController : MonoBehaviour
         SpriteRenderer sprite = GetComponent<SpriteRenderer>();
         sprite.sprite = PlayerManager.instance.GetSelectedSprite();
         line = GetComponent<LineRenderer>();
+        line.material = new Material(Shader.Find("Unlit/Texture"));
+        line.SetColors(Color.white, Color.white);
         linesLeft = tutorialAmount;
 
     }
@@ -90,6 +92,7 @@ public class PlayerController : MonoBehaviour
     {
         if (stillAlive && !MainGameManager.instance.IsMovingCamera())
         {
+            DrawLine();
             CheckDetach();
             Move();
             Rotate();
@@ -159,16 +162,11 @@ public class PlayerController : MonoBehaviour
             if(PlayerDetached != null)
                 PlayerDetached.Invoke();
             state = PlayerState.Free;
-            Vector3 relativePosition = new Vector3(this.transform.position.x - BodyToRotateAround.transform.position.x,
-                this.transform.position.y - BodyToRotateAround.transform.position.y, 0);
-            float inverseSlope = (relativePosition.x != 0 ? (-1f / (relativePosition.y / relativePosition.x)) : 0);
-            float b = relativePosition.y - (relativePosition.x * inverseSlope);
-            float x = relativePosition.x + (direction == 1 ? -1 : 1) * Mathf.Sign(relativePosition.y) * 5;
-            posToMoveTowards = new Vector3(x, (inverseSlope * x + b), 0) * 5f;
+            Vector3 relativePosition = CalculatePosToMoveTowards();
             movementAngle = Mathf.Tan(Mathf.Abs((posToMoveTowards.y - relativePosition.y) / (posToMoveTowards.x - relativePosition.x)));
             prevPos = this.transform.position;
             AssignDirection(posToMoveTowards);
-            DrawLine();
+            linesLeft -= 1;
         }
     } 
 
@@ -180,6 +178,17 @@ public class PlayerController : MonoBehaviour
     void MoveAroundBody()
     {
         this.transform.RotateAround(BodyToRotateAround.position, Vector3.forward, rotationAngle * Time.deltaTime);
+    }
+
+    Vector3 CalculatePosToMoveTowards()
+    {
+        Vector3 relativePosition = new Vector3(this.transform.position.x - BodyToRotateAround.transform.position.x,
+this.transform.position.y - BodyToRotateAround.transform.position.y, 0);
+        float inverseSlope = (relativePosition.x != 0 ? (-1f / (relativePosition.y / relativePosition.x)) : 0);
+        float b = relativePosition.y - (relativePosition.x * inverseSlope);
+        float x = relativePosition.x + (direction == 1 ? -1 : 1) * Mathf.Sign(relativePosition.y) * 5;
+        posToMoveTowards = new Vector3(x, (inverseSlope * x + b), 0) * 5f;
+        return relativePosition;
     }
 
 #endregion
@@ -255,15 +264,15 @@ public class PlayerController : MonoBehaviour
 
     void DrawLine()
     {
-        if (linesLeft > 0)
+        if (linesLeft > 0 && state == PlayerState.Tethered)
         {
+            CalculatePosToMoveTowards();
             Vector3[] points = new Vector3[2];
             points[0] = transform.position;
             points[1] = BodyToRotateAround.transform.InverseTransformDirection(posToMoveTowards) * lineLength;
             line.positionCount = 2;
             line.SetPositions(points);
         }
-        linesLeft -= 1;
     }
 
 #region Assigning The New Direction 
