@@ -172,7 +172,8 @@ public class PlayerController : MonoBehaviour
 
     void MoveStraight()
     {
-        transform.Translate( BodyToRotateAround.InverseTransformDirection(Vector3.ClampMagnitude(posToMoveTowards, MaxSpeed)) * Time.deltaTime, BodyToRotateAround.transform);
+        Debug.Log(posToMoveTowards);
+        transform.Translate( Vector3.ClampMagnitude(posToMoveTowards, MaxSpeed) * Time.deltaTime, Space.World);
     }
 
     void MoveAroundBody()
