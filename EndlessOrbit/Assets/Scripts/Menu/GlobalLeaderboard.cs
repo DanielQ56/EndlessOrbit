@@ -46,27 +46,25 @@ public class GlobalLeaderboard : MonoBehaviour
         PlayGamesPlatform.InitializeInstance(config);
         PlayGamesPlatform.DebugLogEnabled = true;
         PlayGamesPlatform.Activate();
-        PlayGamesPlatform.Instance.Authenticate(SignInInteractivity.CanPromptOnce, (result) =>
+        PlayGamesPlatform.Instance.Authenticate(SignInInteractivity.CanPromptAlways, (result) =>
          {
+             Debug.Log("THE RESULT OF SIGNING IN: " + result.ToString());
+
              if(result == SignInStatus.Success)
              {
-                 Debug.Log("Successful!");
                  ScoreManager.instance.ProvideInfo("Successfully signed in!");
                  isSignedIn = true;
              }
              else if(result == SignInStatus.Canceled)
              {
-                 Debug.Log("Cancelled");
                  ScoreManager.instance.ProvideInfo("Log in canceled");
              }
              else
              {
-                 Debug.Log("Failed");
                  ScoreManager.instance.ProvideInfo("Unable to login. Try again in the settings.");
              }
 
              ScoreManager.instance.Loading(false);
-             ScoreManager.instance.StartProcess();
          });
 
     }

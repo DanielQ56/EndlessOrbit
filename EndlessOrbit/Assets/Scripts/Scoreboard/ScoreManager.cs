@@ -29,7 +29,7 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    public void StartProcess()
+    void Start()
     {
         LoadScores();
     }
