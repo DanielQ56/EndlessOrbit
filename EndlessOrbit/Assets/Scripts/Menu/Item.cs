@@ -28,7 +28,7 @@ public class Item : MonoBehaviour
         itemName.text = item.itemName;
         spriteImage.sprite = item.ItemSprite;
         Debug.Log("Item Name: " + item.itemName + ", Bought: " + item.bought + ", Selected: " + item.selected);
-        cost.text = (item.bought ? "Bought!" : item.cost.ToString());
+        cost.text = (item.bought ? "Owned" : item.cost.ToString());
         cost.color = Color.white;
         currentItem = item;
         childIndex = index;
@@ -52,7 +52,7 @@ public class Item : MonoBehaviour
             if(PlayerManager.instance.BuyItem(currentItem.cost))
             {
                 buyingDelegate();
-                cost.text = "Bought!";
+                cost.text = "Owned";
                 currentItem.bought = true;
             }
         }

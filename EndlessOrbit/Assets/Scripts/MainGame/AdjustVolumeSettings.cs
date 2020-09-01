@@ -22,7 +22,7 @@ public class AdjustVolumeSettings : MonoBehaviour
     {
         MusicVolume.value = AudioManager.instance.GetMusicVolume();
         EffectsVolume.value = AudioManager.instance.GetEffectsVolume();
-        this.gameObject.SetActive(false);
+        //this.gameObject.SetActive(false);
     }
 
     public void ChangeMusicVolume(float value)
