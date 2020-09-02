@@ -256,6 +256,10 @@ public class MainGameManager : MonoBehaviour
             RewardPanel.SetActive(true);
             CanContinue = false;
         }
+        else if(pause && Time.timeScale == 0)
+        {
+            PauseGame();
+        }
     }
 
     public void UnableToLoadVideo()
