@@ -57,11 +57,11 @@ public class GlobalLeaderboard : MonoBehaviour
              }
              else if(result == SignInStatus.Canceled)
              {
-                 ScoreManager.instance.ProvideInfo("Log in canceled");
+                 ScoreManager.instance.ProvideInfo("Log in cancelled.");
              }
              else
              {
-                 ScoreManager.instance.ProvideInfo("Unable to login. Try again in the settings.");
+                 ScoreManager.instance.ProvideInfo("Unable to login.");
              }
 
              ScoreManager.instance.Loading(false);
