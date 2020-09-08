@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GoogleMobileAds.Api;
@@ -38,25 +38,26 @@ public class GoogleAds : MonoBehaviour
 
     public void SetupAds()
     {
+        MobileAds.Initialize(appID);
         if (showAds)
         {
-            MobileAds.Initialize(appID);
             RequestFullScreenAd();
-
-            rewardedAd = RewardBasedVideoAd.Instance;
-
-            rewardedAd.OnAdLoaded += HandleRewardBasedVideoLoaded;
-            rewardedAd.OnAdFailedToLoad += HandleRewardBasedVideoFailedToLoad;
-            rewardedAd.OnAdRewarded += HandleRewardBasedVideoRewarded;
-            rewardedAd.OnAdClosed += HandleRewardBasedVideoClosed;
-
-
-            RequestRewardedAd();
         }
         else
         {
             Debug.Log("Ads removed!");
         }
+
+
+        rewardedAd = RewardBasedVideoAd.Instance;
+
+        rewardedAd.OnAdLoaded += HandleRewardBasedVideoLoaded;
+        rewardedAd.OnAdFailedToLoad += HandleRewardBasedVideoFailedToLoad;
+        rewardedAd.OnAdRewarded += HandleRewardBasedVideoRewarded;
+        rewardedAd.OnAdClosed += HandleRewardBasedVideoClosed;
+
+
+        RequestRewardedAd();
     }
 
     public bool ShouldShowAds()
