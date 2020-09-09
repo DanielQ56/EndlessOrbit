@@ -56,7 +56,7 @@ public class BackgroundParallax : MonoBehaviour
             foreach(Transform t in backgrounds)
             {
                 
-                if(t.position.y < (cam.position.y - height))
+                if(t.position.y < (cam.position.y - height * 2))
                 {
                     t.localPosition += Vector3.up * distanceAway * 2;
                 }
