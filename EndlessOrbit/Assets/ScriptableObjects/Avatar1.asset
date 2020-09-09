@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Avatar1
   m_EditorClassIdentifier: 
   ItemSprite: {fileID: 21300000, guid: 5fd910a27f8250543a736b5c27df404f, type: 3}
-  itemName: Circle
+  itemName: 
   cost: 20
   bought: 1
   selected: 0
