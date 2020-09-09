@@ -11,6 +11,7 @@ public class MainGameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI scoreText;
     [SerializeField] bool isUnstable;
     [SerializeField] AudioClip MainMusic;
+    [SerializeField] GameObject TutorialImage;
 
     public delegate void TimeStopped();
     public static TimeStopped StopTime;
@@ -278,6 +279,7 @@ public class MainGameManager : MonoBehaviour
 
     public void AttachedToNewPlanet(Transform newPlanet)
     {
+        TutorialImage.SetActive(false);
         updateCameraPosition(newPlanet);
         UpdateScore(100);
         AddCoins();

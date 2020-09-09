@@ -8103,6 +8103,7 @@ MonoBehaviour:
   scoreText: {fileID: 603962769}
   isUnstable: 0
   MainMusic: {fileID: 0}
+  TutorialImage: {fileID: 1024305744}
   increaseSpeed:
     m_PersistentCalls:
       m_Calls: []
