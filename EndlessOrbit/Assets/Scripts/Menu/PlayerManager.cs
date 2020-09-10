@@ -47,7 +47,7 @@ public class PlayerManager : MonoBehaviour
 
     public void JustReceivedBonus()
     {
-        nextBonus = System.DateTime.Now.AddHours(22);
+        nextBonus = System.DateTime.Now.AddHours(12);
     }
 
     public System.DateTime GetNextBonus()

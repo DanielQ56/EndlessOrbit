@@ -403,10 +403,12 @@ public class MainGameManager : MonoBehaviour
 
     void AddCoins()
     {
+        /*
         if (currentScore > ScoreManager.instance.GetHighScore(isUnstable) && currentScore > 0)
             currentSStars += 5;
         else
-            currentSStars += (currentScore % 300 == 0 && currentScore > 0 ? 1 : 0);
+            currentSStars += (currentScore % 300 == 0 && currentScore > 0 ? 1 : 0);*/
+        currentSStars += 1;
     }
 
     public void PassedHighScore()
