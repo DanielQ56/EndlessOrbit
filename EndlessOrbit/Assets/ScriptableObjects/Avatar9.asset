@@ -15,5 +15,5 @@ MonoBehaviour:
   ItemSprite: {fileID: 21300000, guid: 5fd910a27f8250543a736b5c27df404f, type: 3}
   itemName: 
   cost: 20
-  bought: 1
+  bought: 0
   selected: 0
