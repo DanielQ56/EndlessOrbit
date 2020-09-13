@@ -228,7 +228,7 @@ public class MainGameManager : MonoBehaviour
     public void WatchAdForContinue()
     {
 #if UNITY_EDITOR
-        RewardedContinue();
+        RewardPanel.SetActive(true);
 #else
         GoogleAds.instance.ShowRewardedAd();
 #endif
@@ -243,6 +243,7 @@ public class MainGameManager : MonoBehaviour
         hasUsedContinue = true;
         timer = asteroidTimer;
         playerIsAlive = true;
+        Debug.Log(Time.timeScale);
     }
 
     public void RewardedContinue()
@@ -257,7 +258,7 @@ public class MainGameManager : MonoBehaviour
             RewardPanel.SetActive(true);
             CanContinue = false;
         }
-        else if(pause && Time.timeScale == 0)
+        else if(playerIsAlive && ((pause && Time.timeScale == 1) || (!pause && Time.timeScale == 0)))
         {
             PauseGame();
         }
