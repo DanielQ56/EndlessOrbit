@@ -44,28 +44,36 @@ public class IAPManager : MonoBehaviour, IStoreListener
 
     public void RemoveAds()
     {
-        Debug.Log("Hello!");
         BuyProductID(removeAds);
     }
 
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)
     {
-        if(string.Equals(args.purchasedProduct.definition.id, removeAds, System.StringComparison.Ordinal))
+        ScoreManager.instance.Loading(false);
+#if UNITY_EDITOR
+        GoogleAds.instance.SetAdBool(false);
+        ScoreManager.instance.ProvideInfo("Purchase Successful!");
+#else
+        if (string.Equals(args.purchasedProduct.definition.id, removeAds, System.StringComparison.Ordinal))
         {
-            Debug.Log("Remove Ads Successful");
             GoogleAds.instance.SetAdBool(false);
+            ScoreManager.instance.ProvideInfo("Purchase Successful!");
         }
         else
         {
-            Debug.Log("Unsuccessful");
+            ScoreManager.instance.ProvideInfo("Purchase Unsuccessful, Try Again.");
         }
+#endif
         return PurchaseProcessingResult.Complete;
     }
     
     void BuyProductID(string productId)
     {
+        InitializePurchasing();
+
         if(IsInitialized())
         {
+            ScoreManager.instance.Loading(true);
             Product product = m_StoreController.products.WithID(productId);
             if(product != null && product.availableToPurchase)
             {
@@ -129,6 +137,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
     public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
     {
         Debug.Log(string.Format("OnPurchaseFailed: FAIL. Product: '{0}', PurchaseFailureReason: {1}", product.definition.storeSpecificId, failureReason));
+        ScoreManager.instance.ProvideInfo(string.Format("Purchase Failed: {0}", failureReason));
     }
 
 

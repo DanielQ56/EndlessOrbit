@@ -8203,7 +8203,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCam: {fileID: 519420031}
-  scoreText: {fileID: 0}
+  scoreText: {fileID: 64227637}
   isUnstable: 1
   MainMusic: {fileID: 0}
   TutorialImage: {fileID: 1765774990}

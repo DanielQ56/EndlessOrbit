@@ -67,7 +67,7 @@ public class GoogleAds : MonoBehaviour
 
     public void SetAdBool(bool b)
     {
-        showAds = b;
+        showAds = true;
     }
 
     #region Reward Ad
