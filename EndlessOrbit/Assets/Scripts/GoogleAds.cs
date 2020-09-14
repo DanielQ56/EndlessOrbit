@@ -17,7 +17,7 @@ public class GoogleAds : MonoBehaviour
     private InterstitialAd fullScreenAd;
     private string fullScreenAdID = "ca-app-pub-3940256099942544/1033173712";
 
-    private RewardBasedVideoAd rewardedAd;
+    private RewardBasedVideoAd rewardedAd = null;
     private string rewardedAdID = "ca-app-pub-3940256099942544/5224354917";
 
     bool showAds = true;
@@ -38,18 +38,16 @@ public class GoogleAds : MonoBehaviour
 
         SceneManager.sceneLoaded += OnSceneLoaded;
 
-        SetupRewardedAds();
     }
 
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        Debug.Log("Scene Loaded");
         MobileAds.Initialize(appID);
-        if (scene.buildIndex > 0)
-        {
-            RequestFullScreenAd();
-            RequestRewardedAd();
-        }
+        RequestFullScreenAd();
+        SetupRewardedAds();
+        RequestRewardedAd();
     }
 
     public bool ShouldShowAds()
@@ -65,20 +63,34 @@ public class GoogleAds : MonoBehaviour
     #region Reward Ad
     void SetupRewardedAds()
     {
-        rewardedAd = RewardBasedVideoAd.Instance;
+        if(rewardedAd == null)
+        {
+            rewardedAd = RewardBasedVideoAd.Instance;
 
-        rewardedAd.OnAdLoaded += HandleRewardBasedVideoLoaded;
-        rewardedAd.OnAdFailedToLoad += HandleRewardBasedVideoFailedToLoad;
-        rewardedAd.OnAdRewarded += HandleRewardBasedVideoRewarded;
-        rewardedAd.OnAdClosed += HandleRewardBasedVideoClosed;
+            rewardedAd.OnAdLoaded += HandleRewardBasedVideoLoaded;
+            rewardedAd.OnAdFailedToLoad += HandleRewardBasedVideoFailedToLoad;
+            rewardedAd.OnAdRewarded += HandleRewardBasedVideoRewarded;
+            rewardedAd.OnAdClosed += HandleRewardBasedVideoClosed;
+        }
 
+    }
+
+    private void OnDisable()
+    {
+        rewardedAd.OnAdLoaded -= HandleRewardBasedVideoLoaded;
+        rewardedAd.OnAdFailedToLoad -= HandleRewardBasedVideoFailedToLoad;
+        rewardedAd.OnAdRewarded -= HandleRewardBasedVideoRewarded;
+        rewardedAd.OnAdClosed -= HandleRewardBasedVideoClosed;
     }
 
     public void RequestRewardedAd()
     {
-        Debug.Log("Requesting Rewarded Ad");
-        AdRequest request = new AdRequest.Builder().Build();
-        rewardedAd.LoadAd(request, rewardedAdID);
+        if (!rewardedAd.IsLoaded())
+        {
+            Debug.Log("Requesting Rewarded Ad");
+            AdRequest request = new AdRequest.Builder().Build();
+            rewardedAd.LoadAd(request, rewardedAdID);
+        }
     }
 
     public void ShowRewardedAd()
@@ -160,11 +172,15 @@ public class GoogleAds : MonoBehaviour
     #region Fullscreen
     public void RequestFullScreenAd()
     {
-        fullScreenAd = new InterstitialAd(fullScreenAdID);
-        fullScreenAd.OnAdClosed += OnFullScreenAdClosed;
-        AdRequest request = new AdRequest.Builder().Build();
 
-        fullScreenAd.LoadAd(request);
+        if (!fullScreenAd.IsLoaded())
+        {
+            fullScreenAd = new InterstitialAd(fullScreenAdID);
+            fullScreenAd.OnAdClosed += OnFullScreenAdClosed;
+            AdRequest request = new AdRequest.Builder().Build();
+
+            fullScreenAd.LoadAd(request);
+        }
 
 
     }
