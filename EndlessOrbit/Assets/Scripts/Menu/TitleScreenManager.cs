@@ -17,6 +17,10 @@ public class TitleScreenManager : MonoBehaviour
         {
             instance = this;
         }
+    }
+
+    private void Start()
+    {
         GoogleAds.instance.RequestBanner();
     }
 

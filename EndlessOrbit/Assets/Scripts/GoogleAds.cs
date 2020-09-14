@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using GoogleMobileAds.Api;
 using System;
+using UnityEngine.SceneManagement;
 
 public class GoogleAds : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class GoogleAds : MonoBehaviour
 
     private void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
             DontDestroyOnLoad(this.gameObject);
@@ -34,30 +35,21 @@ public class GoogleAds : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
+        SetupRewardedAds();
     }
 
-    public void SetupAds()
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         MobileAds.Initialize(appID);
-        if (showAds)
+        if (scene.buildIndex > 0)
         {
             RequestFullScreenAd();
+            RequestRewardedAd();
         }
-        else
-        {
-            Debug.Log("Ads removed!");
-        }
-
-
-        rewardedAd = RewardBasedVideoAd.Instance;
-
-        rewardedAd.OnAdLoaded += HandleRewardBasedVideoLoaded;
-        rewardedAd.OnAdFailedToLoad += HandleRewardBasedVideoFailedToLoad;
-        rewardedAd.OnAdRewarded += HandleRewardBasedVideoRewarded;
-        rewardedAd.OnAdClosed += HandleRewardBasedVideoClosed;
-
-
-        RequestRewardedAd();
     }
 
     public bool ShouldShowAds()
@@ -71,6 +63,17 @@ public class GoogleAds : MonoBehaviour
     }
 
     #region Reward Ad
+    void SetupRewardedAds()
+    {
+        rewardedAd = RewardBasedVideoAd.Instance;
+
+        rewardedAd.OnAdLoaded += HandleRewardBasedVideoLoaded;
+        rewardedAd.OnAdFailedToLoad += HandleRewardBasedVideoFailedToLoad;
+        rewardedAd.OnAdRewarded += HandleRewardBasedVideoRewarded;
+        rewardedAd.OnAdClosed += HandleRewardBasedVideoClosed;
+
+    }
+
     public void RequestRewardedAd()
     {
         Debug.Log("Requesting Rewarded Ad");
@@ -87,7 +90,10 @@ public class GoogleAds : MonoBehaviour
         }
         else
         {
-            Debug.Log("Rewarded ad not loaded");
+            if (MainGameManager.instance != null)
+            {
+                MainGameManager.instance.UnableToLoadVideo();
+            }
         }
     }
 
@@ -112,17 +118,6 @@ public class GoogleAds : MonoBehaviour
                 Debug.Log("Rewarding with a continue!");
                 GotRewardsFromVideo = true;
                 MainGameManager.instance.RewardedContinue();
-            }
-            else
-            {
-                Debug.Log("Instance is null :(");
-            }
-        }
-        else
-        {
-            if(MainGameManager.instance != null)
-            {
-                MainGameManager.instance.UnableToLoadVideo();
             }
         }
     }

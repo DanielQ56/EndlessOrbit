@@ -211,9 +211,7 @@ public class ScoreManager : MonoBehaviour
         {
             OpenHowToPlay();
         }
-
-        GoogleAds.instance.SetupAds();
-
+       
     }
 
     public void RecordScore(int score, bool isUnstable)
