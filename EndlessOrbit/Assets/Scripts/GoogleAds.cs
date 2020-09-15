@@ -11,10 +11,10 @@ public class GoogleAds : MonoBehaviour
 
     string appID = "ca-app-pub-8915439303360774~3249557989";
 
-    private BannerView bannerView;
+    private BannerView bannerView = null;
     private string bannerID = "ca-app-pub-3940256099942544/6300978111";
 
-    private InterstitialAd fullScreenAd;
+    private InterstitialAd fullScreenAd = null;
     private string fullScreenAdID = "ca-app-pub-3940256099942544/1033173712";
 
     private RewardBasedVideoAd rewardedAd = null;
@@ -176,7 +176,7 @@ public class GoogleAds : MonoBehaviour
     public void RequestFullScreenAd()
     {
 
-        if (!fullScreenAd.IsLoaded())
+        if (fullScreenAd == null || !fullScreenAd.IsLoaded())
         {
             fullScreenAd = new InterstitialAd(fullScreenAdID);
             fullScreenAd.OnAdClosed += OnFullScreenAdClosed;
