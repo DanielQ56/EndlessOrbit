@@ -23,7 +23,7 @@ public class UnstableCelestialBody : CelestialBody
 
     GameObject player;
 
-    SpriteRenderer rend;
+    LineRenderer line;
 
     Color originalColor;
     Color ogLineColor;
@@ -35,11 +35,12 @@ public class UnstableCelestialBody : CelestialBody
         timer = maxTimer;
         origin = this.transform.position;
         currShakeMult = shakeInc;
-        rend = GetComponent<SpriteRenderer>();
-        originalColor = rend.color;
         transparent = new Color(0f, 0f, 0f, 0f);
-        if(!isStartingBody)
-            ogLineColor = this.GetComponent<LineRenderer>().material.color;
+        if (!isStartingBody)
+        {
+            line = this.GetComponent<LineRenderer>();
+            line.material = new Material(Shader.Find("Unlit/Texture"));
+        }
         MainGameManager.StopTime += this.StopTime;
         PlayerController.PlayerDetached += Detached;
         MainGameManager.ResumeTime += this.Continue;
@@ -91,11 +92,14 @@ public class UnstableCelestialBody : CelestialBody
         timeStopped = false;
         playerAttached = playerWasAttached;
         this.transform.position = origin;
-        rend.color = originalColor;
-        if(!isStartingBody)
-            this.GetComponent<LineRenderer>().material.color = ogLineColor;
+        if (!isStartingBody)
+            line.enabled = true;
         timer = maxTimer;
         currShakeMult = shakeInc;
+        foreach (Transform t in this.transform)
+        {
+            t.gameObject.SetActive(true);
+        }
     }
 
     IEnumerator Shake()
@@ -123,8 +127,7 @@ public class UnstableCelestialBody : CelestialBody
         
         main.startColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
         explosion.Play();
-        rend.color = transparent;
-        this.GetComponent<LineRenderer>().enabled = false;
+        line.enabled = false;
         playerAttached = false;
 
     }

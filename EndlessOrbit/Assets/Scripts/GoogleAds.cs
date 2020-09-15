@@ -77,10 +77,13 @@ public class GoogleAds : MonoBehaviour
 
     private void OnDisable()
     {
-        rewardedAd.OnAdLoaded -= HandleRewardBasedVideoLoaded;
-        rewardedAd.OnAdFailedToLoad -= HandleRewardBasedVideoFailedToLoad;
-        rewardedAd.OnAdRewarded -= HandleRewardBasedVideoRewarded;
-        rewardedAd.OnAdClosed -= HandleRewardBasedVideoClosed;
+        if (rewardedAd != null)
+        {
+            rewardedAd.OnAdLoaded -= HandleRewardBasedVideoLoaded;
+            rewardedAd.OnAdFailedToLoad -= HandleRewardBasedVideoFailedToLoad;
+            rewardedAd.OnAdRewarded -= HandleRewardBasedVideoRewarded;
+            rewardedAd.OnAdClosed -= HandleRewardBasedVideoClosed;
+        }
     }
 
     public void RequestRewardedAd()
