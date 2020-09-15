@@ -22,6 +22,7 @@ public class GoogleAds : MonoBehaviour
 
     bool showAds = true;
     bool GotRewardsFromVideo = false;
+    bool WaitingForRewards = true;
     bool LoadedProperly = false;
 
     private void Awake()
@@ -47,7 +48,6 @@ public class GoogleAds : MonoBehaviour
         MobileAds.Initialize(appID);
         RequestFullScreenAd();
         SetupRewardedAds();
-        RequestRewardedAd();
     }
 
     public bool ShouldShowAds()
@@ -72,6 +72,7 @@ public class GoogleAds : MonoBehaviour
             rewardedAd.OnAdRewarded += HandleRewardBasedVideoRewarded;
             rewardedAd.OnAdClosed += HandleRewardBasedVideoClosed;
         }
+        RequestRewardedAd();
 
     }
 
@@ -88,9 +89,8 @@ public class GoogleAds : MonoBehaviour
 
     public void RequestRewardedAd()
     {
-        if (!rewardedAd.IsLoaded())
+        if (rewardedAd != null && !rewardedAd.IsLoaded())
         {
-            Debug.Log("Requesting Rewarded Ad");
             AdRequest request = new AdRequest.Builder().Build();
             rewardedAd.LoadAd(request, rewardedAdID);
         }
@@ -98,9 +98,8 @@ public class GoogleAds : MonoBehaviour
 
     public void ShowRewardedAd()
     {
-        if(rewardedAd.IsLoaded())
+        if(rewardedAd != null & rewardedAd.IsLoaded())
         {
-            Debug.Log("Showing Ad");
             rewardedAd.Show();
         }
         else
@@ -132,6 +131,7 @@ public class GoogleAds : MonoBehaviour
             {
                 Debug.Log("Rewarding with a continue!");
                 GotRewardsFromVideo = true;
+                WaitingForRewards = false;
                 MainGameManager.instance.RewardedContinue();
             }
         }
@@ -139,11 +139,25 @@ public class GoogleAds : MonoBehaviour
 
     public void HandleRewardBasedVideoClosed(object sender, EventArgs args)
     {
-        Debug.Log("Ad is closed!");
+        StartCoroutine(WaitForReward());
+    }
+
+    IEnumerator WaitForReward()
+    {
+        ScoreManager.instance.Loading(true);
+        while(WaitingForRewards)
+        {
+            yield return null;
+        }
+        ScoreManager.instance.Loading(false);
         if (!GotRewardsFromVideo)
+        {
             MainGameManager.instance.FinalGameOver();
+        }
         GotRewardsFromVideo = false;
+        WaitingForRewards = true;
         RequestRewardedAd();
+        Debug.Log("Done waiting for rewards");
     }
 
     #endregion
@@ -176,14 +190,10 @@ public class GoogleAds : MonoBehaviour
     public void RequestFullScreenAd()
     {
 
-        if (fullScreenAd == null || !fullScreenAd.IsLoaded())
-        {
-            fullScreenAd = new InterstitialAd(fullScreenAdID);
-            fullScreenAd.OnAdClosed += OnFullScreenAdClosed;
-            AdRequest request = new AdRequest.Builder().Build();
-
-            fullScreenAd.LoadAd(request);
-        }
+        fullScreenAd = new InterstitialAd(fullScreenAdID);
+        fullScreenAd.OnAdClosed += OnFullScreenAdClosed;
+        AdRequest request = new AdRequest.Builder().Build();
+        fullScreenAd.LoadAd(request);
 
 
     }
@@ -194,18 +204,18 @@ public class GoogleAds : MonoBehaviour
         if(fullScreenAd.IsLoaded())
         {
             fullScreenAd.Show();
-            RequestFullScreenAd();
         }
         else
         {
             MainGameManager.instance.ShowGameOverPanel();
-            RequestFullScreenAd();
         }
     }
 
     void OnFullScreenAdClosed(object sender, EventArgs args)
     {
         MainGameManager.instance.ShowGameOverPanel();
+
+        RequestFullScreenAd();
     }
     #endregion
 

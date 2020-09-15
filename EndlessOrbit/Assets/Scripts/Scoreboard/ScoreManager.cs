@@ -339,7 +339,6 @@ public class ScoreManager : MonoBehaviour
     public void DoNotShowAgain(bool b)
     {
         ShouldDisplay = !b;
-        Debug.Log(ShouldDisplay);
     }
 
     #endregion
