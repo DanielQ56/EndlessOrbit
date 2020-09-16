@@ -172,7 +172,6 @@ public class PlayerController : MonoBehaviour
 
     void MoveStraight()
     {
-        Debug.Log(posToMoveTowards);
         transform.Translate( Vector3.ClampMagnitude(posToMoveTowards, MaxSpeed) * Time.deltaTime, Space.World);
     }
 

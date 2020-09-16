@@ -19,10 +19,6 @@ public class TitleScreenManager : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        GoogleAds.instance.RequestBanner();
-    }
 
     public void UpdateModeText()
     {

@@ -360,7 +360,6 @@ public class MainGameManager : MonoBehaviour
                 DetermineOffset(clone);
                 if(isUnstable)
                 {
-                    Debug.Log("Creating unstable planet");
                     clone.GetComponent<UnstableCelestialBody>().DecrementStableTimer(currentScore / 1000);
                 }
             }
@@ -371,9 +370,6 @@ public class MainGameManager : MonoBehaviour
     {
 
         CircleCollider2D coll = planet.GetComponent<CircleCollider2D>();
-
-
-        Debug.Log("X is between: " + (-width / 2 + (coll.radius * planet.transform.localScale.x) + PlayerController.instance.GetXWidth()) + " and " + (width / 2 - (coll.radius * planet.transform.localScale.x) - PlayerController.instance.GetXWidth()));
 
         float x = Random.Range(-width / 2 + (coll.radius * planet.transform.localScale.x) + PlayerController.instance.GetXWidth(), width / 2 - (coll.radius * planet.transform.localScale.x) - PlayerController.instance.GetXWidth());
 
