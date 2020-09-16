@@ -17,12 +17,11 @@ public class GoogleAds : MonoBehaviour
     private InterstitialAd fullScreenAd = null;
     private string fullScreenAdID = "ca-app-pub-3940256099942544/1033173712";
 
-    private RewardBasedVideoAd rewardedAd = null;
+    private RewardedAd rewardedAd = null;
     private string rewardedAdID = "ca-app-pub-3940256099942544/5224354917";
 
     bool showAds = true;
     bool GotRewardsFromVideo = false;
-    bool WaitingForRewards = true;
     bool LoadedProperly = false;
 
     private void Awake()
@@ -44,7 +43,6 @@ public class GoogleAds : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("Scene Loaded");
         MobileAds.Initialize(appID);
         RequestFullScreenAd();
         SetupRewardedAds();
@@ -63,16 +61,14 @@ public class GoogleAds : MonoBehaviour
     #region Reward Ad
     void SetupRewardedAds()
     {
-        if(rewardedAd == null)
-        {
-            rewardedAd = RewardBasedVideoAd.Instance;
+        rewardedAd = new RewardedAd(rewardedAdID);
 
-            rewardedAd.OnAdLoaded += HandleRewardBasedVideoLoaded;
-            rewardedAd.OnAdFailedToLoad += HandleRewardBasedVideoFailedToLoad;
-            rewardedAd.OnAdRewarded += HandleRewardBasedVideoRewarded;
-            rewardedAd.OnAdClosed += HandleRewardBasedVideoClosed;
-        }
-        RequestRewardedAd();
+        rewardedAd.OnAdLoaded += HandleRewardBasedVideoLoaded;
+        rewardedAd.OnAdFailedToLoad += HandleRewardBasedVideoFailedToLoad;
+        rewardedAd.OnUserEarnedReward += HandleRewardBasedVideoRewarded;
+        rewardedAd.OnAdClosed += HandleRewardBasedVideoClosed;
+        AdRequest request = new AdRequest.Builder().Build();
+        rewardedAd.LoadAd(request);
 
     }
 
@@ -82,23 +78,14 @@ public class GoogleAds : MonoBehaviour
         {
             rewardedAd.OnAdLoaded -= HandleRewardBasedVideoLoaded;
             rewardedAd.OnAdFailedToLoad -= HandleRewardBasedVideoFailedToLoad;
-            rewardedAd.OnAdRewarded -= HandleRewardBasedVideoRewarded;
+            rewardedAd.OnUserEarnedReward -= HandleRewardBasedVideoRewarded;
             rewardedAd.OnAdClosed -= HandleRewardBasedVideoClosed;
-        }
-    }
-
-    public void RequestRewardedAd()
-    {
-        if (rewardedAd != null && !rewardedAd.IsLoaded())
-        {
-            AdRequest request = new AdRequest.Builder().Build();
-            rewardedAd.LoadAd(request, rewardedAdID);
         }
     }
 
     public void ShowRewardedAd()
     {
-        if(rewardedAd != null & rewardedAd.IsLoaded())
+        if(LoadedProperly)
         {
             rewardedAd.Show();
         }
@@ -117,7 +104,7 @@ public class GoogleAds : MonoBehaviour
         LoadedProperly = true;
     }
 
-    public void HandleRewardBasedVideoFailedToLoad(object sender, AdFailedToLoadEventArgs args)
+    public void HandleRewardBasedVideoFailedToLoad(object sender, AdErrorEventArgs args)
     {
         Debug.Log("Failed to load reward ad video " + args.Message);
         LoadedProperly = false;
@@ -131,7 +118,6 @@ public class GoogleAds : MonoBehaviour
             {
                 Debug.Log("Rewarding with a continue!");
                 GotRewardsFromVideo = true;
-                WaitingForRewards = false;
                 MainGameManager.instance.RewardedContinue();
             }
         }
@@ -145,18 +131,15 @@ public class GoogleAds : MonoBehaviour
     IEnumerator WaitForReward()
     {
         ScoreManager.instance.Loading(true);
-        while(WaitingForRewards)
-        {
-            yield return null;
-        }
+        yield return new WaitForSeconds(1f);
         ScoreManager.instance.Loading(false);
+
         if (!GotRewardsFromVideo)
         {
             MainGameManager.instance.FinalGameOver();
         }
         GotRewardsFromVideo = false;
-        WaitingForRewards = true;
-        RequestRewardedAd();
+        SetupRewardedAds();
         Debug.Log("Done waiting for rewards");
     }
 
