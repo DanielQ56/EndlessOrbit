@@ -55,13 +55,14 @@ public class GameOverScript : MonoBehaviour
     {
         skip = false;
         int tempScore = 0;
+        int incAmount = score / 20;
         scoreAmount.text = tempScore.ToString();
         yield return new WaitForSeconds(0.2f);
         while(tempScore < score && !skip)
         {
             scoreAmount.text = tempScore.ToString();
             yield return null;
-            tempScore += 2;
+            tempScore += incAmount;
         }
         scoreAmount.text = score.ToString();
         highScoreText.gameObject.SetActive(true);

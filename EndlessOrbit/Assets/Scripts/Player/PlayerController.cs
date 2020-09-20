@@ -92,13 +92,14 @@ public class PlayerController : MonoBehaviour
     {
         if (stillAlive && !MainGameManager.instance.IsMovingCamera())
         {
-            DrawLine();
+            //DrawLine();
             CheckDetach();
             Move();
             Rotate();
             CheckOutOfBounds();
         }
     }
+
 
     #region Input
 

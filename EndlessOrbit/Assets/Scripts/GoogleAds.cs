@@ -22,8 +22,8 @@ public class GoogleAds : MonoBehaviour
 
     bool showAds = true;
     bool GotRewardsFromVideo = false;
-    bool RewardLoaded = false;
     bool RewardedContinue = false;
+    bool RewardVideoLoading = false;
 
     bool SceneLoaded = false;
 
@@ -50,7 +50,12 @@ public class GoogleAds : MonoBehaviour
         if(!SceneLoaded)
         {
             SceneLoaded = true;
-            MobileAds.Initialize(initStatus => { });
+            MobileAds.Initialize(initStatus => {
+            });
+            RequestConfiguration childConfig = new RequestConfiguration.Builder().SetTagForChildDirectedTreatment(TagForChildDirectedTreatment.True).build();
+            MobileAds.SetRequestConfiguration(childConfig);
+            RequestConfiguration contentConfig = new RequestConfiguration.Builder().SetMaxAdContentRating(MaxAdContentRating.G).build();
+            MobileAds.SetRequestConfiguration(contentConfig);
             RequestFullScreenAd();
             SetupRewardedAds();
 
@@ -70,7 +75,22 @@ public class GoogleAds : MonoBehaviour
 
     public void SetAdBool(bool b)
     {
-        showAds = true;
+        showAds = b;
+    }
+
+    //Found on Stackoverflow, solution by Maximillian Laumeister
+    IEnumerator CheckInternetConnection(Action<bool> action)
+    {
+        WWW www = new WWW("http://google.com");
+        yield return www;
+        if(www.error != null)
+        {
+            action(false);
+        }
+        else
+        {
+            action(true);
+        }
     }
 
     #region Reward Ad
@@ -79,7 +99,7 @@ public class GoogleAds : MonoBehaviour
         if (rewardedAd == null)
         {
             Debug.Log("Setuping up rewarded ads");
-            RewardLoaded = false;
+            RewardVideoLoading = true;
             rewardedAd = new RewardedAd(rewardedAdID);
 
             rewardedAd.OnAdLoaded += HandleRewardBasedVideoLoaded;
@@ -89,50 +109,65 @@ public class GoogleAds : MonoBehaviour
             AdRequest request = new AdRequest.Builder().Build();
             rewardedAd.LoadAd(request);
         }
+        else
+        {
+            StartCoroutine(CheckInternetConnection((isConnected) =>
+            {
+                Debug.Log("IS CONNECTED IS: " + isConnected);
+                if (isConnected && !rewardedAd.IsLoaded())
+                {
+                    Debug.Log("Setuping up rewarded ads");
+                    RewardVideoLoading = true;
+                    rewardedAd = new RewardedAd(rewardedAdID);
 
+                    rewardedAd.OnAdLoaded += HandleRewardBasedVideoLoaded;
+                    rewardedAd.OnAdFailedToLoad += HandleRewardBasedVideoFailedToLoad;
+                    rewardedAd.OnUserEarnedReward += HandleRewardBasedVideoRewarded;
+                    rewardedAd.OnAdClosed += HandleRewardBasedVideoClosed;
+                    AdRequest request = new AdRequest.Builder().Build();
+                    rewardedAd.LoadAd(request);
+                }
+            }));
+        }
     }
 
 
     public void ShowRewardedAd()
     {
-        StartCoroutine(WaitForRewardedAd());
-    }
-
-    IEnumerator WaitForRewardedAd()
-    {
         ScoreManager.instance.Loading(true);
-        while(!RewardLoaded)
-        {
-            yield return null;
-        }
-        ScoreManager.instance.Loading(false);
 
-        if (rewardedAd.IsLoaded())
-        {
-            Debug.Log("Showing Ad");
-            rewardedAd.Show();
-            rewardedAd = null;
-        }
-        else
-        {
-            if (MainGameManager.instance != null)
+
+        StartCoroutine(CheckInternetConnection((isConnected) => {
+
+            if (isConnected && rewardedAd != null && rewardedAd.IsLoaded())
             {
-                MainGameManager.instance.UnableToLoadVideo();
+                Debug.Log("Showing Ad");
+                ScoreManager.instance.Loading(false);
+                rewardedAd.Show();
+                rewardedAd = null;
+                SetupRewardedAds();
             }
-        }
-        RewardLoaded = false;
+            else
+            {
+                ScoreManager.instance.Loading(false);
+                if (MainGameManager.instance != null)
+                {
+                    MainGameManager.instance.UnableToLoadVideo();
+                }
+                rewardedAd = null;
+                SetupRewardedAds();
+            }
+        }));
     }
 
     public void HandleRewardBasedVideoLoaded(object sender, EventArgs args)
     {
         Debug.Log("Successfully Loaded Ad");
-        RewardLoaded = true;
     }
 
     public void HandleRewardBasedVideoFailedToLoad(object sender, AdErrorEventArgs args)
     {
         Debug.Log("Failed to load reward ad video " + args.Message);
-        RewardLoaded = true;
     }
 
     public void HandleRewardBasedVideoRewarded(object sender, Reward args)
@@ -170,7 +205,6 @@ public class GoogleAds : MonoBehaviour
             MainGameManager.instance.FinalGameOver();
         }
         GotRewardsFromVideo = false;
-        SetupRewardedAds();
         Debug.Log("Done waiting for rewards");
     }
 
@@ -205,10 +239,24 @@ public class GoogleAds : MonoBehaviour
     {
         if (fullScreenAd == null)
         {
+            Debug.Log("Creating new fullScreenAd");
             fullScreenAd = new InterstitialAd(fullScreenAdID);
             fullScreenAd.OnAdClosed += OnFullScreenAdClosed;
             AdRequest request = new AdRequest.Builder().Build();
             fullScreenAd.LoadAd(request);
+        }
+        else
+        {
+            StartCoroutine(CheckInternetConnection((isConnected) =>
+            {
+                if(isConnected && !fullScreenAd.IsLoaded())
+                {
+                    fullScreenAd = new InterstitialAd(fullScreenAdID);
+                    fullScreenAd.OnAdClosed += OnFullScreenAdClosed;
+                    AdRequest request = new AdRequest.Builder().Build();
+                    fullScreenAd.LoadAd(request);
+                }
+            }));
         }
 
 
@@ -217,7 +265,7 @@ public class GoogleAds : MonoBehaviour
     public void ShowFullScreenAd()
     {
 
-        if(fullScreenAd.IsLoaded())
+        if(fullScreenAd != null && fullScreenAd.IsLoaded())
         {
             fullScreenAd.Show();
             fullScreenAd = null;
@@ -225,6 +273,7 @@ public class GoogleAds : MonoBehaviour
         else
         {
             MainGameManager.instance.ShowGameOverPanel();
+            fullScreenAd = null;
         }
     }
 

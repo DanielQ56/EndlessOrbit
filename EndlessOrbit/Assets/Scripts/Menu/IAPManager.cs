@@ -49,7 +49,9 @@ public class IAPManager : MonoBehaviour, IStoreListener
 
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)
     {
+        Debug.Log("Processing the purchase");
         ScoreManager.instance.Loading(false);
+        m_StoreController.ConfirmPendingPurchase(args.purchasedProduct);
 #if UNITY_EDITOR
         GoogleAds.instance.SetAdBool(false);
         ScoreManager.instance.ProvideInfo("Purchase Successful!");
@@ -67,7 +69,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
         return PurchaseProcessingResult.Complete;
     }
     
-    void BuyProductID(string productId)
+    void BuyProductID(string productId)  
     {
         InitializePurchasing();
 
@@ -85,6 +87,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
                     }
                     else
                     {
+                        ScoreManager.instance.Loading(false);
                         Debug.Log("Already bought");
                     }
                 }
@@ -96,6 +99,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
             }
             else
             {
+                ScoreManager.instance.Loading(false);
                 Debug.Log("Failed");
             }
         }
@@ -136,6 +140,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
 
     public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
     {
+        ScoreManager.instance.Loading(false);
         Debug.Log(string.Format("OnPurchaseFailed: FAIL. Product: '{0}', PurchaseFailureReason: {1}", product.definition.storeSpecificId, failureReason));
         ScoreManager.instance.ProvideInfo(string.Format("Purchase Failed: {0}", failureReason));
     }
