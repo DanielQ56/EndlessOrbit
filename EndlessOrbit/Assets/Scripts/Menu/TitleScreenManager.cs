@@ -7,7 +7,6 @@ public class TitleScreenManager : MonoBehaviour
 {
     public static TitleScreenManager instance = null;
 
-    [SerializeField] TextMeshProUGUI currentMode;
 
     string selectedmode = "Normal";
 
@@ -20,17 +19,9 @@ public class TitleScreenManager : MonoBehaviour
     }
 
 
-    public void UpdateModeText()
+    public void UpdateMode(string mode)
     {
-        if(selectedmode == "Normal")
-        {
-            selectedmode = "Unstable";
-        }
-        else
-        {
-            selectedmode = "Normal";
-        }
-        currentMode.text = selectedmode;
+        selectedmode = mode;
     }
 
     public string GetMode()
