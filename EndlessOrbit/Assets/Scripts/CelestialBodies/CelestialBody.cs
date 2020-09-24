@@ -75,7 +75,7 @@ public class CelestialBody : MonoBehaviour
     {
         
         Collider2D coll = Physics2D.OverlapCircle(this.transform.position, m_collider.radius * transform.localScale.x, (1 << LayerMask.NameToLayer("Player")));
-        if(coll != null && !alreadyHadPlayer && CheckDistanceFromPlanet(coll.gameObject.transform.position))
+        if(coll != null && !alreadyHadPlayer && CheckDistanceFromPlanet(coll.gameObject.GetComponent<PlayerController>()))
         {
             coll.transform.position = this.transform.position + (coll.transform.position - this.transform.position).normalized * m_collider.radius * transform.localScale.x;
             coll.gameObject.GetComponent<PlayerController>().NewBodyToOrbit(this.transform);
@@ -84,10 +84,11 @@ public class CelestialBody : MonoBehaviour
         }
     }
 
-    bool CheckDistanceFromPlanet(Vector3 pos)
+    bool CheckDistanceFromPlanet(PlayerController pc)
     {
+        Vector3 pos = pc.gameObject.transform.position;
         Debug.Log(Vector3.Magnitude(pos - this.transform.position) + " " + m_collider.radius * transform.localScale.x);
-        return Vector3.Magnitude(pos - this.transform.position) <= m_collider.radius * transform.localScale.x;
+        return Vector3.Magnitude(pos - this.transform.position) <= m_collider.radius * transform.localScale.x + pc.GetXWidth() / 2;
     }
     /*
     protected virtual void OnTriggerEnter2D(Collider2D collision)
