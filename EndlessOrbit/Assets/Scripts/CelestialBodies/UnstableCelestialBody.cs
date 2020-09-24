@@ -143,11 +143,18 @@ public class UnstableCelestialBody : CelestialBody
         this.player = player;
     }
 
+    protected override void CheckForCollision()
+    {
+        if (!playerAttached)
+            base.CheckForCollision();
+    }
+
+    /*
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
         if(!playerAttached)
             base.OnTriggerEnter2D(collision);
-    }
+    }*/
 
 
     private void OnDestroy()

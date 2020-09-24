@@ -35,6 +35,12 @@ public class CelestialBody : MonoBehaviour
         FollowPlayer();
     }
 
+    private void FixedUpdate()
+    {
+        if(!isStartingBody)
+            CheckForCollision();
+    }
+
     void FollowPlayer()
     {
         if(Face != null)
@@ -65,6 +71,25 @@ public class CelestialBody : MonoBehaviour
         }
     }
 
+    protected virtual void CheckForCollision()
+    {
+        
+        Collider2D coll = Physics2D.OverlapCircle(this.transform.position, m_collider.radius * transform.localScale.x, (1 << LayerMask.NameToLayer("Player")));
+        if(coll != null && !alreadyHadPlayer && CheckDistanceFromPlanet(coll.gameObject.transform.position))
+        {
+            coll.transform.position = this.transform.position + (coll.transform.position - this.transform.position).normalized * m_collider.radius * transform.localScale.x;
+            coll.gameObject.GetComponent<PlayerController>().NewBodyToOrbit(this.transform);
+            alreadyHadPlayer = true;
+            MainGameManager.instance.PassedHighScore();
+        }
+    }
+
+    bool CheckDistanceFromPlanet(Vector3 pos)
+    {
+        Debug.Log(Vector3.Magnitude(pos - this.transform.position) + " " + m_collider.radius * transform.localScale.x);
+        return Vector3.Magnitude(pos - this.transform.position) <= m_collider.radius * transform.localScale.x;
+    }
+    /*
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.CompareTag("Player") && !alreadyHadPlayer)
@@ -73,7 +98,7 @@ public class CelestialBody : MonoBehaviour
             alreadyHadPlayer = true;
             MainGameManager.instance.PassedHighScore();
         }
-    }
+    }*/
     
     void CheckOutOfBounds()
     {

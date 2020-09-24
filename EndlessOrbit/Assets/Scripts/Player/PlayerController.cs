@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
 public enum PlayerState
 {
@@ -42,6 +45,7 @@ public class PlayerController : MonoBehaviour
     bool tethered = true;
 
     LineRenderer line;
+    TrailRenderer trail;
 
     Transform BodyToRotateAround;
 
@@ -60,8 +64,10 @@ public class PlayerController : MonoBehaviour
     {
         instance = this;
         coll = this.GetComponent<CircleCollider2D>();
+        trail = this.GetComponentInChildren<TrailRenderer>();
         mainCam = Camera.main;
         SetBounds();
+        this.gameObject.layer = LayerMask.NameToLayer("Player");
     }
 
     void SetBounds()
@@ -225,6 +231,14 @@ this.transform.position.y - BodyToRotateAround.transform.position.y, 0);
         {
             linesLeft += 1;
         }
+        StartCoroutine(EnableTrail());
+    }
+
+    IEnumerator EnableTrail()
+    {
+        trail.Clear();
+        yield return null;
+        trail.emitting = true;
     }
 
     void CheckOutOfBounds()
@@ -243,6 +257,7 @@ this.transform.position.y - BodyToRotateAround.transform.position.y, 0);
             stillAlive = false;
             line.positionCount = 0;
             MainGameManager.instance.GameOver();
+            trail.emitting = false;
         }
     }
 
