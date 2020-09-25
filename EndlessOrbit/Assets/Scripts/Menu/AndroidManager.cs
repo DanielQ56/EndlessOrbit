@@ -9,7 +9,7 @@ public class AndroidManager : MonoBehaviour
 
     List<BackGestureComponent> components = new List<BackGestureComponent>();
     
-    void Start()
+    void Awake()
     {
         instance = this;
     }
@@ -19,7 +19,7 @@ public class AndroidManager : MonoBehaviour
 #if UNITY_ANDROID
         if (Input.GetKey(KeyCode.Escape))
         {
-
+            TriggerBackGesture();
         }
 #endif
     }

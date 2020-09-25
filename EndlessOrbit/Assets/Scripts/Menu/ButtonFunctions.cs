@@ -23,6 +23,11 @@ public class ButtonFunctions : MonoBehaviour
         Time.timeScale = 1f;
     }
 
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
     public void OpenShopInventory()
     {
         PlayerManager.instance.OpenShopInventory();

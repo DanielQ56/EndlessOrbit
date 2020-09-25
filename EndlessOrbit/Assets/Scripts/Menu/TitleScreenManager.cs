@@ -7,6 +7,8 @@ public class TitleScreenManager : MonoBehaviour
 {
     public static TitleScreenManager instance = null;
 
+    [SerializeField] GameObject ExitPanel;
+
 
     string selectedmode = "Normal";
 
@@ -27,5 +29,10 @@ public class TitleScreenManager : MonoBehaviour
     public string GetMode()
     {
         return selectedmode;
+    }
+
+    public void TryToExit()
+    {
+        ExitPanel.SetActive(true);
     }
 }

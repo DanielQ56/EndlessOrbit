@@ -34,6 +34,7 @@ public class BackGestureComponent : MonoBehaviour
                 this.GetComponent<ButtonFunctions>().LoadMenu();
                 break;
             case BackGesture.Menu:
+                TitleScreenManager.instance.TryToExit();
                 break;
         }
     }
