@@ -12703,6 +12703,7 @@ GameObject:
   - component: {fileID: 1176365932}
   - component: {fileID: 1176365931}
   - component: {fileID: 1176365930}
+  - component: {fileID: 1176365933}
   m_Layer: 5
   m_Name: NormalSelect
   m_TagString: Untagged
@@ -12831,6 +12832,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1176365928}
   m_CullTransparentMesh: 0
+--- !u!114 &1176365933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1176365928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b35474296965e0d4c87c2ab2bf0990ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SelectedOverlay: {fileID: 0}
 --- !u!1 &1178069217
 GameObject:
   m_ObjectHideFlags: 0
@@ -15690,6 +15704,7 @@ GameObject:
   - component: {fileID: 1342554997}
   - component: {fileID: 1342554999}
   - component: {fileID: 1342554998}
+  - component: {fileID: 1342555000}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -15755,6 +15770,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1342554996}
   m_CullTransparentMesh: 0
+--- !u!114 &1342555000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1342554996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 015a5d4505e2da14c93b870e5735585a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sel: []
 --- !u!1 &1345832943
 GameObject:
   m_ObjectHideFlags: 0
@@ -27948,6 +27976,7 @@ GameObject:
   - component: {fileID: 1990720814}
   - component: {fileID: 1990720813}
   - component: {fileID: 1990720812}
+  - component: {fileID: 1990720815}
   m_Layer: 5
   m_Name: UnstableSelect
   m_TagString: Untagged
@@ -28076,6 +28105,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1990720810}
   m_CullTransparentMesh: 0
+--- !u!114 &1990720815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1990720810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b35474296965e0d4c87c2ab2bf0990ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SelectedOverlay: {fileID: 0}
 --- !u!1 &2003010556
 GameObject:
   m_ObjectHideFlags: 0
