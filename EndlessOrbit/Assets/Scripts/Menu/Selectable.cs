@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class Selectable : MonoBehaviour
+using System;
+
+public class Selectable: MonoBehaviour
 {
     [SerializeField] GameObject SelectedOverlay;
 
@@ -14,6 +16,7 @@ public class Selectable : MonoBehaviour
     {
         b = this.GetComponent<Button>();
         sp = GetComponentInParent<SelectableParent>();
+        SelectedOverlay.SetActive(false);
         b.onClick.AddListener(Clicked);
     }
 
