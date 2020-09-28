@@ -149,6 +149,12 @@ public class UnstableCelestialBody : CelestialBody
             base.CheckForCollision();
     }
 
+    public override void MakeEasier()
+    {
+        base.MakeEasier();
+        timer = maxTimer * 1.7f;
+    }
+
     /*
     protected override void OnTriggerEnter2D(Collider2D collision)
     {

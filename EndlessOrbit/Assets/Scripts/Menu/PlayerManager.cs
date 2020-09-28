@@ -151,7 +151,7 @@ public class PlayerManager : MonoBehaviour
             silverStars -= cost;
             return true;
         }
-
+        ScoreManager.instance.ProvideInfo("Not enough stars!");
         return false;
     }
     #endregion

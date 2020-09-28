@@ -54,7 +54,10 @@ public class CelestialBody : MonoBehaviour
         {
             float radius = m_collider.radius;
             int segments = 360;
-            LineRenderer line = gameObject.AddComponent<LineRenderer>();
+
+            LineRenderer line;
+            if((line = gameObject.GetComponent<LineRenderer>()) == null)
+                line = gameObject.AddComponent<LineRenderer>();
             line.useWorldSpace = false;
             line.startWidth = line.endWidth = 0.03f;
             line.positionCount = segments + 1;
@@ -84,10 +87,15 @@ public class CelestialBody : MonoBehaviour
         }
     }
 
+    public virtual void MakeEasier()
+    {
+        m_collider.radius *= 1.3f;
+        DrawColliderCircle();
+    }
+
     bool CheckDistanceFromPlanet(PlayerController pc)
     {
         Vector3 pos = pc.gameObject.transform.position;
-        Debug.Log(Vector3.Magnitude(pos - this.transform.position) + " " + m_collider.radius * transform.localScale.x);
         return Vector3.Magnitude(pos - this.transform.position) <= m_collider.radius * transform.localScale.x + pc.GetXWidth() / 2;
     }
     /*

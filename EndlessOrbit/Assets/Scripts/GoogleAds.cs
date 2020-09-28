@@ -25,6 +25,7 @@ public class GoogleAds : MonoBehaviour
     bool RewardedContinue = false;
     bool RewardVideoLoading = false;
 
+
     bool SceneLoaded = false;
 
     private void Awake()
@@ -37,7 +38,6 @@ public class GoogleAds : MonoBehaviour
         }
         else
         {
-            Debug.Log("DESTROYING COPY OF GAME ADS OBJECT");
             Destroy(this.gameObject);
         }
 

@@ -37,23 +37,23 @@ public class AndroidManager : MonoBehaviour
     public void AddComponentToList(BackGestureComponent c)
     {
 
-        Debug.Log("ADDING: There are " + components.Count + " components in the list before adding");
+        //Debug.Log("ADDING: There are " + components.Count + " components in the list before adding");
         components.Add(c);
-        Debug.Log("ADDING: There are " + components.Count + " components in the list after adding");
+        //Debug.Log("ADDING: There are " + components.Count + " components in the list after adding");
     }
 
     void TriggerBackGesture()
     {
-        Debug.Log("THERE ARE CURRENTLY " + components.Count + " COMPONENTS IN THE LIST");
+        //Debug.Log("THERE ARE CURRENTLY " + components.Count + " COMPONENTS IN THE LIST");
         BackGestureComponent c = components[components.Count - 1];
         c.GoBack();
     }
 
     public void RemoveComponentFromList(BackGestureComponent c)
     {
-        Debug.Log("REMOVING: There are " + components.Count + " components in the list before removing");
+        //Debug.Log("REMOVING: There are " + components.Count + " components in the list before removing");
         components.Remove(c);
-        Debug.Log("REMOVING: There are " + components.Count + " components in the list after removing");
+        //Debug.Log("REMOVING: There are " + components.Count + " components in the list after removing");
     }
 
 

@@ -185,6 +185,9 @@ public class MainGameManager : MonoBehaviour
 
     bool CanContinue = false;
 
+    bool ShouldShowAd = false;
+    int TimesBeforeShowAd = 0;
+
     public void PauseGame()
     {
         Time.timeScale = 1 - Time.timeScale;
@@ -208,12 +211,41 @@ public class MainGameManager : MonoBehaviour
 
     public void FinalGameOver()
     {
+       
+
 #if UNITY_EDITOR
         ShowGameOverPanel();
 #else
-        if(GoogleAds.instance.ShouldShowAds())
+        if (GoogleAds.instance.ShouldShowAds())
         {
-            GoogleAds.instance.ShowFullScreenAd();
+            if (currentScore > 2000)
+            {
+                GoogleAds.instance.ShowFullScreenAd();
+            }
+            else if (currentScore > 500)
+            {
+                if (TimesBeforeShowAd <= 0)
+                {
+                    GoogleAds.instance.ShowFullScreenAd();
+                    TimesBeforeShowAd = 1;
+                }
+                else
+                {
+                    TimesBeforeShowAd -= 1;
+                }
+            }
+            else
+            {
+                if (TimesBeforeShowAd <= 0)
+                {
+                    GoogleAds.instance.ShowFullScreenAd();
+                    TimesBeforeShowAd = 2;
+                }
+                else
+                {
+                    TimesBeforeShowAd -= 1;
+                }
+            }
         }
         else
         {
@@ -221,6 +253,7 @@ public class MainGameManager : MonoBehaviour
         }
 #endif
     }
+
 
     public void ShowGameOverPanel()
     {
@@ -360,6 +393,17 @@ public class MainGameManager : MonoBehaviour
             for (int i = 0; i < numPlanetsToSpawn; ++i)
             {
                 GameObject clone = Instantiate((isUnstable ? unstablePlanets[Random.Range(0, planets.Count)] : planets[Random.Range(0, planets.Count)]), planetParent);
+
+                if (currentScore < 500)
+                {
+                    if (isUnstable)
+                        clone.GetComponent<UnstableCelestialBody>().MakeEasier();
+                    else
+                        clone.GetComponent<CelestialBody>().MakeEasier();
+                }
+
+
+
                 DetermineOffset(clone);
                 if(isUnstable)
                 {
@@ -368,6 +412,7 @@ public class MainGameManager : MonoBehaviour
             }
         }
     }
+
 
     void DetermineOffset(GameObject planet)
     {

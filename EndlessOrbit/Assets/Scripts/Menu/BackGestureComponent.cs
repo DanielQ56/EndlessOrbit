@@ -17,7 +17,7 @@ public class BackGestureComponent : MonoBehaviour
 
     private void OnEnable()
     {
-        Debug.Log("Adding " + this.gameObject.name + " to Android Manager List");
+        //Debug.Log("Adding " + this.gameObject.name + " to Android Manager List");
         AndroidManager.instance.AddComponentToList(this);
     }
 

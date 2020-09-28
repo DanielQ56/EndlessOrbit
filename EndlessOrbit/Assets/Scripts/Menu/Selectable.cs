@@ -16,7 +16,6 @@ public class Selectable: MonoBehaviour
     {
         b = this.GetComponent<Button>();
         sp = GetComponentInParent<SelectableParent>();
-        SelectedOverlay.SetActive(false);
         b.onClick.AddListener(Clicked);
     }
 
