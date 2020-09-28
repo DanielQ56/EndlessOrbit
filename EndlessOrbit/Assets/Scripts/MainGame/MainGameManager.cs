@@ -353,8 +353,7 @@ public class MainGameManager : MonoBehaviour
     {
         timerPaused = true;
         movingCamera = true;
-        float botY = mainCam.ScreenToWorldPoint(Vector2.zero).y;
-        Vector3 pos = new Vector3(0, newPlanet.position.y - PlayerController.instance.GetXWidth() + height, -10);
+        Vector3 pos = new Vector3(0, newPlanet.position.y - PlayerController.instance.GetXWidth() * 2 + height, -10);
         while (Mathf.Abs(mainCam.transform.position.y - pos.y) > 3)
         {
             mainCam.transform.position = Vector3.Lerp(mainCam.transform.position, pos, 3 * Time.deltaTime);
@@ -363,7 +362,7 @@ public class MainGameManager : MonoBehaviour
         GenerateNextPlanet(newPlanet);
         if(isUnstable)
         {
-            newPlanet.GetComponent<UnstableCelestialBody>().Attached(player);
+            newPlanet.GetComponent<UnstableCelestialBody>().Attached(player.gameObject);
         }
         movingCamera = false;
         timerPaused = false;
@@ -419,11 +418,19 @@ public class MainGameManager : MonoBehaviour
 
         CircleCollider2D coll = planet.GetComponent<CircleCollider2D>();
 
-        float x = Random.Range(-width / 2 + (coll.radius * planet.transform.localScale.x) + PlayerController.instance.GetXWidth(), width / 2 - (coll.radius * planet.transform.localScale.x) - PlayerController.instance.GetXWidth());
+        float x = Random.Range(-width + (coll.radius * planet.transform.localScale.x) + PlayerController.instance.GetXWidth() * 2, width - (coll.radius * planet.transform.localScale.x) - PlayerController.instance.GetXWidth() * 2);
 
 
-        float y = Random.Range(mainCam.transform.position.y + height / 3, mainCam.transform.position.y + height - (coll.radius * planet.transform.localScale.x));
+        float y = Random.Range(mainCam.transform.position.y + PlayerController.instance.GetXWidth() * 2 +  height / 2, mainCam.transform.position.y + height - (coll.radius * planet.transform.localScale.x ));
 
+        if(x - (coll.radius * planet.transform.localScale.x) < -width / 2)
+        {
+            x = -width / 2 + (coll.radius * planet.transform.localScale.x) + PlayerController.instance.GetXWidth() * 2;
+        }
+        else if(x + (coll.radius * planet.transform.localScale.x) > width / 2)
+        {
+            x = width / 2 - (coll.radius * planet.transform.localScale.x) - PlayerController.instance.GetXWidth() * 2;
+        }
 
 
         planet.transform.position = new Vector3(x, y, 0);
