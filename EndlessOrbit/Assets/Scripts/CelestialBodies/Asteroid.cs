@@ -14,7 +14,6 @@ public class Asteroid : MonoBehaviour
 
     public void CreateAsteroid(Vector3 startPos, Vector3 endPos)
     {
-        Debug.Log("Creating Asteroid");
         this.transform.position = startPos;
         end = endPos - startPos;
         speed = Random.Range(minSpeed, maxSpeed);

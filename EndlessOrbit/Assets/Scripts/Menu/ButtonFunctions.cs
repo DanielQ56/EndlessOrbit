@@ -19,7 +19,8 @@ public class ButtonFunctions : MonoBehaviour
 
     public void LoadMenu()
     {
-        SceneManager.LoadScene("Menu");
+        Debug.Log("Loading Menu");
+        SceneManager.LoadScene(0);
         Time.timeScale = 1f;
     }
 

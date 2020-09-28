@@ -17,6 +17,7 @@ public class BackGestureComponent : MonoBehaviour
 
     private void OnEnable()
     {
+        Debug.Log("Adding " + this.gameObject.name + " to Android Manager List");
         AndroidManager.instance.AddComponentToList(this);
     }
 
@@ -31,6 +32,7 @@ public class BackGestureComponent : MonoBehaviour
                 this.gameObject.SetActive(false);
                 break;
             case BackGesture.Game:
+                Debug.Log("Back gesture type GAME");
                 this.GetComponent<ButtonFunctions>().LoadMenu();
                 break;
             case BackGesture.Menu:
@@ -41,6 +43,7 @@ public class BackGestureComponent : MonoBehaviour
 
     private void OnDisable()
     {
+        Debug.Log("Removing " + this.gameObject.name + " to Android Manager List");
         AndroidManager.instance.RemoveComponentFromList(this);
     }
 }

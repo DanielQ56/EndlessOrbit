@@ -86,10 +86,13 @@ public class MainGameManager : MonoBehaviour
     {
         if (playerIsAlive)
         {
-            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P))
+#if UNITY_EDITOR
+
+            if (Input.GetKeyDown(KeyCode.P))
             {
                 PauseGame();
             }
+#endif
             AsteroidCycle();
 
         }

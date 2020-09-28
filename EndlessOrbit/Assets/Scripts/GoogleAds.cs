@@ -76,6 +76,10 @@ public class GoogleAds : MonoBehaviour
     public void SetAdBool(bool b)
     {
         showAds = b;
+        if(!showAds)
+        {
+            HideBanner();
+        }
     }
 
     //Found on Stackoverflow, solution by Maximillian Laumeister
@@ -98,7 +102,6 @@ public class GoogleAds : MonoBehaviour
     {
         if (rewardedAd == null)
         {
-            Debug.Log("Setuping up rewarded ads");
             RewardVideoLoading = true;
             rewardedAd = new RewardedAd(rewardedAdID);
 
@@ -113,10 +116,8 @@ public class GoogleAds : MonoBehaviour
         {
             StartCoroutine(CheckInternetConnection((isConnected) =>
             {
-                Debug.Log("IS CONNECTED IS: " + isConnected);
                 if (isConnected && !rewardedAd.IsLoaded())
                 {
-                    Debug.Log("Setuping up rewarded ads");
                     RewardVideoLoading = true;
                     rewardedAd = new RewardedAd(rewardedAdID);
 
@@ -226,7 +227,7 @@ public class GoogleAds : MonoBehaviour
 
     public void HideBanner()
     {
-        if(showAds)
+        if(showAds || (!showAds && bannerView != null))
         {
             bannerView.Hide();
         }

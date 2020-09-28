@@ -49,6 +49,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
 
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)
     {
+
         Debug.Log("Processing the purchase");
         ScoreManager.instance.Loading(false);
         m_StoreController.ConfirmPendingPurchase(args.purchasedProduct);
@@ -58,8 +59,15 @@ public class IAPManager : MonoBehaviour, IStoreListener
 #else
         if (string.Equals(args.purchasedProduct.definition.id, removeAds, System.StringComparison.Ordinal))
         {
-            GoogleAds.instance.SetAdBool(false);
-            ScoreManager.instance.ProvideInfo("Purchase Successful!");
+            if(GoogleAds.instance.ShouldShowAds())
+            {
+                GoogleAds.instance.SetAdBool(false);
+                ScoreManager.instance.ProvideInfo("Purchase Successful!");
+            }
+            else
+            {
+                ScoreManager.instance.ProvideInfo("Purchase Restored!");
+            }
         }
         else
         {
