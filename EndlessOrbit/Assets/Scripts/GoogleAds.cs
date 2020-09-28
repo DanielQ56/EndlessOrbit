@@ -25,6 +25,8 @@ public class GoogleAds : MonoBehaviour
     bool RewardedContinue = false;
     bool RewardVideoLoading = false;
 
+    int RoundsUntilFullscreen = 0;
+
 
     bool SceneLoaded = false;
 
@@ -284,6 +286,44 @@ public class GoogleAds : MonoBehaviour
 
         RequestFullScreenAd();
     }
+
+    public bool CheckForFullscreen(int currentScore)
+    {
+        if (currentScore > 2000)
+        {
+            ShowFullScreenAd();
+            return true;
+        }
+        else if (currentScore > 500)
+        {
+            if (RoundsUntilFullscreen <= 0)
+            {
+                ShowFullScreenAd();
+                RoundsUntilFullscreen = 1;
+                return true;
+            }
+            else
+            {
+                RoundsUntilFullscreen -= 1;
+                return false;
+            }
+        }
+        else
+        {
+            if (RoundsUntilFullscreen <= 0)
+            {
+                ShowFullScreenAd();
+                RoundsUntilFullscreen = 2;
+                return true;
+            }
+            else
+            {
+                RoundsUntilFullscreen -= 1;
+                return false;
+            }
+        }
+    }
+
     #endregion
 
 }

@@ -211,41 +211,14 @@ public class MainGameManager : MonoBehaviour
 
     public void FinalGameOver()
     {
-       
 
 #if UNITY_EDITOR
         ShowGameOverPanel();
 #else
         if (GoogleAds.instance.ShouldShowAds())
         {
-            if (currentScore > 2000)
-            {
-                GoogleAds.instance.ShowFullScreenAd();
-            }
-            else if (currentScore > 500)
-            {
-                if (TimesBeforeShowAd <= 0)
-                {
-                    GoogleAds.instance.ShowFullScreenAd();
-                    TimesBeforeShowAd = 1;
-                }
-                else
-                {
-                    TimesBeforeShowAd -= 1;
-                }
-            }
-            else
-            {
-                if (TimesBeforeShowAd <= 0)
-                {
-                    GoogleAds.instance.ShowFullScreenAd();
-                    TimesBeforeShowAd = 2;
-                }
-                else
-                {
-                    TimesBeforeShowAd -= 1;
-                }
-            }
+            if(!GoogleAds.instance.CheckForFullscreen(currentScore))
+                ShowGameOverPanel();
         }
         else
         {
