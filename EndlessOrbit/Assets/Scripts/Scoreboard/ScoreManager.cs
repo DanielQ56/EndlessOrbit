@@ -160,6 +160,8 @@ public class ScoreManager : MonoBehaviour
     int[] normalScores;
     int[] unstableScores;
 
+    bool PlayingUnstable = false;
+
     List<int> tempScores = new List<int>();
 
     public void ChangeLeaderboards(bool isUnstable = false)
@@ -216,6 +218,7 @@ public class ScoreManager : MonoBehaviour
 
     public void RecordScore(int score, bool isUnstable)
     {
+        PlayingUnstable = isUnstable;
         if (isUnstable)
             recentUnstableScore = score;
         else
@@ -322,6 +325,11 @@ public class ScoreManager : MonoBehaviour
             File.Delete(path);
         }
         LoadScores();
+    }
+
+    public bool GetMode()
+    {
+        return PlayingUnstable;
     }
     #endregion
 

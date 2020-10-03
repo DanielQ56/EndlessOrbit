@@ -15,6 +15,8 @@ public class BackGestureComponent : MonoBehaviour
 {
     [SerializeField] BackGesture GestureType;
 
+    bool CanGoBack = true;
+
     private void OnEnable()
     {
         //Debug.Log("Adding " + this.gameObject.name + " to Android Manager List");
@@ -23,22 +25,30 @@ public class BackGestureComponent : MonoBehaviour
 
     public void GoBack()
     {
-        switch(GestureType)
+        if (CanGoBack)
         {
-            case BackGesture.Pause:
-                MainGameManager.instance.PauseGame();
-                break;
-            case BackGesture.PopupPanel:
-                this.gameObject.SetActive(false);
-                break;
-            case BackGesture.Game:
-                Debug.Log("Back gesture type GAME");
-                this.GetComponent<ButtonFunctions>().LoadMenu();
-                break;
-            case BackGesture.Menu:
-                TitleScreenManager.instance.TryToExit();
-                break;
+            switch (GestureType)
+            {
+                case BackGesture.Pause:
+                    MainGameManager.instance.PauseGame();
+                    break;
+                case BackGesture.PopupPanel:
+                    this.gameObject.SetActive(false);
+                    break;
+                case BackGesture.Game:
+                    Debug.Log("Back gesture type GAME");
+                    this.GetComponent<ButtonFunctions>().LoadMenu();
+                    break;
+                case BackGesture.Menu:
+                    TitleScreenManager.instance.TryToExit();
+                    break;
+            }
         }
+    }
+
+    public void CanUseBackGesture(bool b)
+    {
+        CanGoBack = b;
     }
 
     private void OnDisable()

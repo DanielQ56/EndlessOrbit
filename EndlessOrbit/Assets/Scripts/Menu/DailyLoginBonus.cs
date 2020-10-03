@@ -35,11 +35,13 @@ public class DailyLoginBonus : MonoBehaviour
         RewardText.text = "Spin for Rewards!";
         startingAngle = Random.Range(0, 360);
         SpinWheel.rotation = Quaternion.Euler(new Vector3(0, 0, startingAngle));
-        RandomizeAndAssignRewardValues();
+        if(PlayerManager.instance.DailyLoginValuesEmpty())
+            RandomizeAndAssignRewardValues();
     }
 
     private void Update()
     {
+
         if(!PlayerManager.instance.BonusAvailable())
         {
             if(SpinButton.interactable)
@@ -75,6 +77,8 @@ public class DailyLoginBonus : MonoBehaviour
             }
         } while (rewardValues.Count < 8);
 
+        PlayerManager.instance.SetLoginValues(rewardValues);
+
         for(int i = 0; i < 8; ++i)
         {
             PartsOfWheel[i].text = rewardValues[i].ToString();
@@ -94,6 +98,7 @@ public class DailyLoginBonus : MonoBehaviour
     {
         float spinAngle = Random.Range(MinSpinAngle, MaxSpinAngle);
         spinning = true;
+        this.GetComponent<BackGestureComponent>().CanUseBackGesture(false);
         BackButton.interactable = false;
         float timer = 0f;
         while(timer < spinTimer/3f)
@@ -125,6 +130,7 @@ public class DailyLoginBonus : MonoBehaviour
         PlayerManager.instance.JustReceivedBonus();
         SpinButton.interactable = PlayerManager.instance.BonusAvailable();
         BackButton.interactable = true;
+        this.GetComponent<BackGestureComponent>().CanUseBackGesture(true);
         spinning = false;
     }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SelectableParent : MonoBehaviour
+public class ChangeMode : MonoBehaviour
 {
     [SerializeField] GameObject[] sel;
     private void Awake()
@@ -12,11 +12,11 @@ public class SelectableParent : MonoBehaviour
         {
             selected.GetComponent<Selectable>().Deselected();
         }
+    }
 
-        if(sel.Length > 0)
-        {
-            sel[0].GetComponent<Selectable>().Selected();
-        }
+    private void OnEnable()
+    {
+        sel[ScoreManager.instance.GetMode() ? 1 : 0].GetComponent<Selectable>().Selected();
     }
 
     public void ButtonSelected(Selectable s)

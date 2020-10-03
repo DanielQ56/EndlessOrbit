@@ -10,6 +10,8 @@ public class PlayerManager : MonoBehaviour
 
     [SerializeField] GameObject ShopPanel;
 
+    List<int> DailyLoginValues = new List<int>();
+
 
     int silverStars;
 
@@ -54,6 +56,18 @@ public class PlayerManager : MonoBehaviour
     {
         return nextBonus;
     }
+
+    public bool DailyLoginValuesEmpty()
+    {
+        return DailyLoginValues.Count == 0;
+    }
+
+    public void SetLoginValues(List<int> values)
+    {
+        DailyLoginValues.Clear();
+        DailyLoginValues.AddRange(values);
+    }
+
     #endregion
 
     #region Shop/Items

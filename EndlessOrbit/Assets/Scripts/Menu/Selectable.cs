@@ -10,18 +10,18 @@ public class Selectable: MonoBehaviour
 
     Button b;
 
-    SelectableParent sp;
+    ChangeMode cm;
 
     private void Awake()
     {
         b = this.GetComponent<Button>();
-        sp = GetComponentInParent<SelectableParent>();
+        cm = GetComponentInParent<ChangeMode>();
         b.onClick.AddListener(Clicked);
     }
 
     void Clicked()
     {
-        sp.ButtonSelected(this);
+        cm.ButtonSelected(this);
     }
 
     public void Selected()
