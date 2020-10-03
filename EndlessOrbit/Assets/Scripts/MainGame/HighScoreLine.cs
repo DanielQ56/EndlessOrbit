@@ -16,6 +16,7 @@ public class HighScoreLine : MonoBehaviour
     private void OnEnable()
     {
         text.gameObject.SetActive(true);
+        HighScoreImage.SetActive(true);
     }
 
     private void OnDisable()
