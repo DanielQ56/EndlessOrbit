@@ -15,8 +15,8 @@ MonoBehaviour:
   isStartingBody: 0
   Face: {fileID: 7187427092168164254}
   explosion: {fileID: 7292065726088132734}
-  stableTimer: 3
-  shakeInc: 0.02
+  stableTimer: 4
+  shakeInc: 0.01
   timerDec: 0.8
 --- !u!1 &7194893087716140624
 GameObject:
@@ -4921,7 +4921,7 @@ PrefabInstance:
     - target: {fileID: 746195940563650845, guid: 71a1a55f587fc264d9571029de937a73,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 758310231495252721, guid: 71a1a55f587fc264d9571029de937a73,
         type: 3}
@@ -4996,7 +4996,7 @@ PrefabInstance:
     - target: {fileID: 8484902019057638515, guid: 71a1a55f587fc264d9571029de937a73,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 758310231495252720, guid: 71a1a55f587fc264d9571029de937a73, type: 3}

@@ -369,9 +369,9 @@ public class MainGameManager : MonoBehaviour
                 if (currentScore < 500)
                 {
                     if (isUnstable)
-                        clone.GetComponent<UnstableCelestialBody>().MakeEasier();
+                        clone.GetComponent<UnstableCelestialBody>().MakeEasier(currentScore);
                     else
-                        clone.GetComponent<CelestialBody>().MakeEasier();
+                        clone.GetComponent<CelestialBody>().MakeEasier(currentScore);
                 }
 
 

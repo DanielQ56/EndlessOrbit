@@ -4908,8 +4908,8 @@ MonoBehaviour:
   isStartingBody: 0
   Face: {fileID: 4995873507895775570}
   explosion: {fileID: 4911262612815547877}
-  stableTimer: 3
-  shakeInc: 0.02
+  stableTimer: 4
+  shakeInc: 0.01
   timerDec: 0.8
 --- !u!1001 &8760631231281274530
 PrefabInstance:

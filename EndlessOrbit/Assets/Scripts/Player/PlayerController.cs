@@ -216,6 +216,7 @@ this.transform.position.y - BodyToRotateAround.transform.position.y, 0);
     public void IncreaseSpeedListener()
     {
         rotationAngle += (Mathf.Sign(rotationAngle) * angleIncreaseValue);
+        angleIncreaseValue *= 0.9f;
     }
 #endregion
 

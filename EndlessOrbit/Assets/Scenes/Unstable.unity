@@ -21532,7 +21532,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fff90096c0d47fc4fadc8853f04749f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationAngle: 190
+  rotationAngle: 150
   spinAngle: 200
   initialBody: {fileID: 236341213}
   MaxSpeed: 30

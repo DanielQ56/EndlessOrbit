@@ -23,6 +23,7 @@ public class HighScoreLine : MonoBehaviour
     {
         if (text != null)
         {
+            Debug.Log("High Score Image Active: " + HighScoreImage.activeInHierarchy);
             text.gameObject.SetActive(false);
             HighScoreImage.SetActive(false);
         }

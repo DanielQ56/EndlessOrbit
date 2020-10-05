@@ -12,6 +12,7 @@ public class UnstableCelestialBody : CelestialBody
     Vector2 origin;
 
     float maxTimer;
+    float easierTimer;
     float timer;
     float currShakeMult;
 
@@ -29,21 +30,27 @@ public class UnstableCelestialBody : CelestialBody
     Color ogLineColor;
     Color transparent;
 
-    protected override void Start()
+
+    protected override void Awake()
     {
-        base.Start();
-        timer = maxTimer;
-        origin = this.transform.position;
-        currShakeMult = shakeInc;
-        transparent = new Color(0f, 0f, 0f, 0f);
-        if (!isStartingBody)
-        {
-            line = this.GetComponent<LineRenderer>();
-            line.material = new Material(Shader.Find("Unlit/Texture"));
-        }
+        base.Awake();
         MainGameManager.StopTime += this.StopTime;
         PlayerController.PlayerDetached += Detached;
         MainGameManager.ResumeTime += this.Continue;
+        currShakeMult = shakeInc;
+        maxTimer = stableTimer;
+        easierTimer = maxTimer * 2;
+        timer = maxTimer;
+    }
+
+    private void Start()
+    {
+        origin = this.transform.position;
+
+        if(!isStartingBody)
+        {
+            line = this.GetComponent<LineRenderer>();
+        }
     }
 
     protected override void Update()
@@ -149,10 +156,11 @@ public class UnstableCelestialBody : CelestialBody
             base.CheckForCollision();
     }
 
-    public override void MakeEasier()
+    public override void MakeEasier(int score)
     {
-        base.MakeEasier();
-        timer = maxTimer * 1.7f;
+        base.MakeEasier(score);
+        timer = easierTimer - ((maxTimer / 5) * (score / 100));
+        Debug.Log("Timer is: " + timer);
     }
 
     /*

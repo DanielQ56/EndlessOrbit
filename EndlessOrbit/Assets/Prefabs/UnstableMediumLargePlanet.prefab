@@ -4827,8 +4827,8 @@ MonoBehaviour:
   isStartingBody: 0
   Face: {fileID: 8474909935102965515}
   explosion: {fileID: 3269767872585661806}
-  stableTimer: 3
-  shakeInc: 0.02
+  stableTimer: 4
+  shakeInc: 0.01
   timerDec: 0.8
 --- !u!1 &8608450010602448309
 GameObject:

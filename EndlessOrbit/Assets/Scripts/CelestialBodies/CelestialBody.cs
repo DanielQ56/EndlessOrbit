@@ -16,18 +16,17 @@ public class CelestialBody : MonoBehaviour
 
     float FaceDistance;
 
-    private void Awake()
+    float radiusMultiplier = 1.3f;
+
+    protected virtual void Awake()
     {
         m_collider = GetComponent<CircleCollider2D>();
         mainCam = Camera.main;
         FaceDistance = (Face == null ? 0 : Mathf.Abs(Face.transform.localPosition.y));
-    }
-
-    protected virtual void Start()
-    {
         DrawColliderCircle();
         height = (mainCam.ScreenToWorldPoint(new Vector2(mainCam.pixelWidth, mainCam.pixelHeight)).y - mainCam.ScreenToWorldPoint(Vector2.zero).y) / 2;
     }
+
 
     protected virtual void Update()
     {
@@ -87,9 +86,9 @@ public class CelestialBody : MonoBehaviour
         }
     }
 
-    public virtual void MakeEasier()
+    public virtual void MakeEasier(int score)
     {
-        m_collider.radius *= 1.3f;
+        m_collider.radius *= radiusMultiplier - (((radiusMultiplier - 1f) / 5f) * (score / 100));
         DrawColliderCircle();
     }
 
