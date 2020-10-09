@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 46bb92a4de5c9ef408606399253201bb, type: 3}
-  m_Name: Avatar10
+  m_Name: Avatar13
   m_EditorClassIdentifier: 
-  ItemSprite: {fileID: 21300000, guid: 616223ff5872c4f47b943c6004535d6d, type: 3}
-  itemName: Earth
-  cost: 300
+  ItemSprite: {fileID: 21300000, guid: 6a520267d77419d45b77f20603421142, type: 3}
+  itemName: Black Hole
+  cost: 999
   bought: 0
   selected: 0

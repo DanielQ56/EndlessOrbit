@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46bb92a4de5c9ef408606399253201bb, type: 3}
   m_Name: Avatar11
   m_EditorClassIdentifier: 
-  ItemSprite: {fileID: 21300000, guid: 5fd910a27f8250543a736b5c27df404f, type: 3}
-  itemName: 
-  cost: 20
+  ItemSprite: {fileID: 21300000, guid: ee5013b851ed56544adf284b1d0a172e, type: 3}
+  itemName: Sun
+  cost: 400
   bought: 0
   selected: 0

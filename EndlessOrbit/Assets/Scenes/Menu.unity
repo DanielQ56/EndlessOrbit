@@ -8703,6 +8703,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5aa718a3990d75443904f1f888d26ff6, type: 2}
   - {fileID: 11400000, guid: 1a0bfb98070862843b57761c39a970b5, type: 2}
   - {fileID: 11400000, guid: 98846f68e7624e14f8a9d040c85ec00b, type: 2}
+  - {fileID: 11400000, guid: f22d0bda685678f45a17341da0f3cf4a, type: 2}
+  - {fileID: 11400000, guid: a066d544290de3744a4ae14e2a5a3641, type: 2}
+  - {fileID: 11400000, guid: 5fabce9f8f55ff64cb5439a423620d36, type: 2}
+  - {fileID: 11400000, guid: f6039e8d04092af4aae8ff31146eb6a4, type: 2}
+  - {fileID: 11400000, guid: a84c64d1c565d4640b0398fc5f4d954c, type: 2}
   ShopPanel: {fileID: 1893652055}
   rewardValues: 
 --- !u!4 &939667038
