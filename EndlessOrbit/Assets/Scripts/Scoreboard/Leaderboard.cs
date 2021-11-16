@@ -29,7 +29,7 @@ public class Leaderboard : MonoBehaviour
         localBoard.SetActive(true);
         globalBoard.SetActive(false);
         recentScoreIdentified = false;
-        for (int i = 0; i < 10; ++i)
+        for (int i = 0; i < 3; ++i)
         {
             if (i < scores.Count && scores[i] > 0)
             {
@@ -52,7 +52,7 @@ public class Leaderboard : MonoBehaviour
         localBoard.SetActive(false);
         globalBoard.SetActive(true);
         recentScoreIdentified = false;
-        for (int i = 0; i < 10; ++i)
+        for (int i = 0; i < 3; ++i)
         {
             if (i < players.Length && players[i].score > 0)
             {

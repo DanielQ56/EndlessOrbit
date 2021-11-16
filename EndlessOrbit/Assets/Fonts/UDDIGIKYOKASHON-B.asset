@@ -94,9 +94,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
   m_Name: UDDIGIKYOKASHON-B
   m_EditorClassIdentifier: 
-  hashCode: 0
+  hashCode: 1969339600
   material: {fileID: -8596282917453020999}
-  materialHashCode: 0
+  materialHashCode: -907467685
   m_Version: 1.1.0
   m_SourceFontFileGUID: 46a646a212b49544b9a35f291cfe8f4a
   m_SourceFontFile_EditorRef: {fileID: 0}
