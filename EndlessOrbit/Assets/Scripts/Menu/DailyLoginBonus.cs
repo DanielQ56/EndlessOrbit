@@ -11,6 +11,8 @@ public class DailyLoginBonus : MonoBehaviour
     [SerializeField] TextMeshProUGUI SpinButtonText;
     [SerializeField] Button BackButton;
     [SerializeField] TextMeshProUGUI RewardText;
+    [SerializeField] TextMeshProUGUI StarsAmount;
+    [SerializeField] RectTransform StarImage;
 
     [SerializeField] float spinTimer;
     [SerializeField] float MaxSpinAngle;
@@ -19,6 +21,8 @@ public class DailyLoginBonus : MonoBehaviour
     [SerializeField] int MinRewardAmount;
     [SerializeField] int MaxRewardAmount;
     [SerializeField] List<TextMeshProUGUI> PartsOfWheel;
+
+    [SerializeField] List<GameObject> PooledStars;
 
     bool spinning = false;
 
@@ -126,12 +130,41 @@ public class DailyLoginBonus : MonoBehaviour
         int value = int.Parse(PartsOfWheel[index].text);
         Debug.Log("Index: " + index);
         RewardText.text = string.Format("Earned {0} stars!", value);
+        StartCoroutine(TallyStars(value));
         PlayerManager.instance.AddStars(value);
         PlayerManager.instance.JustReceivedBonus();
         SpinButton.interactable = PlayerManager.instance.BonusAvailable();
         BackButton.interactable = true;
         this.GetComponent<BackGestureComponent>().CanUseBackGesture(true);
         spinning = false;
+    }
+
+    IEnumerator TallyStars(int collectedStars)
+    {
+        int currStars = PlayerManager.instance.GetSilverStars();
+        int newAmount = currStars + collectedStars;
+        int count = 0;
+        Vector2 startingPosition = new Vector2(PooledStars[0].GetComponent<RectTransform>().position.x, PooledStars[0].GetComponent<RectTransform>().position.y);
+        RectTransform imageTransform = PooledStars[0].GetComponent<RectTransform>();
+        Vector2 velocity = new Vector2(0, 0);
+        StarsAmount.text = currStars.ToString();
+        while (currStars < newAmount)
+        {        
+            float timer = 0f;
+            while (timer < .1f)
+            {
+                PooledStars[count].SetActive(true);
+                Debug.Log("test: " + count);
+                PooledStars[count].GetComponent<RectTransform>().position = Vector2.Lerp(PooledStars[count].GetComponent<RectTransform>().position, StarImage.position, timer / .1f);
+                yield return null;
+                timer += Time.deltaTime;
+            }
+            PooledStars[count].SetActive(false);
+            PooledStars[count++].GetComponent<RectTransform>().position = startingPosition;
+            StarsAmount.text = (++currStars).ToString();
+            yield return null;
+        }
+        StarsAmount.text = newAmount.ToString();
     }
 
     private void OnDestroy()

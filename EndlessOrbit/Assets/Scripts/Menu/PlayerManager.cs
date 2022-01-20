@@ -15,7 +15,13 @@ public class PlayerManager : MonoBehaviour
 
     int silverStars;
 
+    int silverStarsTotal;
+
     int selectedIndex = 0;
+
+    int totalGamesPlayed;
+
+    int orbitsTraversed;
 
 
 
@@ -138,24 +144,28 @@ public class PlayerManager : MonoBehaviour
         SetDefaultItems();
         selectedIndex = 0;
         silverStars = 0;
+        silverStarsTotal = 0;
+        totalGamesPlayed = 0;
+        orbitsTraversed = 0;
     }
     #endregion
 
 
     #region Stars
-    public void Setup(int s = 0)
-    {
-        silverStars = s;
-    }
-
     public void AddStars(int s)
     {
         silverStars += s;
+        silverStarsTotal += s;
     }
 
     public int GetSilverStars()
     {
         return silverStars;
+    }
+
+    public int GetSilverStarsTotal()
+    {
+        return silverStarsTotal;
     }
 
     public bool BuyItem(int cost)
@@ -169,5 +179,36 @@ public class PlayerManager : MonoBehaviour
         return false;
     }
     #endregion
+
+    #region Stats    
+    public void SetupStats(int s = 0, int t = 0, int g = 0, int o = 0)
+    {
+        silverStars = s;
+        silverStarsTotal = t;
+        totalGamesPlayed = g;
+        orbitsTraversed = o;
+    }
+
+    public void AddGamesPlayed()
+    {
+        ++totalGamesPlayed;
+    }
+
+    public void AddOrbitsTraversed(int o)
+    {
+        orbitsTraversed += o;
+    }
+
+    public int GetGamesPlayed()
+    {
+        return totalGamesPlayed;
+    }
+
+    public int GetOrbitsTraversed()
+    {
+        return orbitsTraversed;
+    }
+    #endregion
+
 
 }

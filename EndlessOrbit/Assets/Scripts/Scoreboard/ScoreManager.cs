@@ -193,17 +193,17 @@ public class ScoreManager : MonoBehaviour
             unstableScores = (data.unstableScores != null && data.unstableScores.Length > 0) ? data.unstableScores : new int[10];
             ShouldDisplay = data.ShouldDisplayHTP;
             PlayerManager.instance.SetNextBonusTime(System.DateTime.Parse(data.nextBonus));
-            PlayerManager.instance.Setup(data.silverstars);
+            PlayerManager.instance.SetupStats(data.silverStars, data.silverStarsTotal, data.totalGamesPlayed, data.orbitsTraversed);
             PlayerManager.instance.SetupItems(data.itemsBought, data.selectedItem);
             recentNormalScore = normalScores[normalScores.Length - 1];
             recentUnstableScore = unstableScores[unstableScores.Length - 1];
-            AudioManager.instance.SetStartingVolume(data.MusicVolume, data.EffectsVolume);
+            AudioManager.instance.SetStartingVolume(data.musicVolume, data.effectsVolume);
             GoogleAds.instance.SetAdBool(data.ShowAds);
         }
         else
         {
             PlayerManager.instance.SetNextBonusTime(default(System.DateTime));
-            PlayerManager.instance.Setup();
+            PlayerManager.instance.SetupStats();
             PlayerManager.instance.SetupItems();
             normalScores = new int[10];
             unstableScores = new int[10];
@@ -253,7 +253,10 @@ public class ScoreManager : MonoBehaviour
         GameData data = new GameData();
         data.normalScores = normalScores;
         data.unstableScores = unstableScores;
-        data.silverstars = PlayerManager.instance.GetSilverStars();
+        data.silverStars = PlayerManager.instance.GetSilverStars();
+        data.silverStarsTotal = PlayerManager.instance.GetSilverStarsTotal();
+        data.totalGamesPlayed = PlayerManager.instance.GetGamesPlayed();
+        data.orbitsTraversed = PlayerManager.instance.GetOrbitsTraversed();
         data.ShouldDisplayHTP = ShouldDisplay;
         data.ShowAds = GoogleAds.instance.ShouldShowAds();
         data.nextBonus = PlayerManager.instance.GetNextBonus().ToString();
@@ -267,8 +270,8 @@ public class ScoreManager : MonoBehaviour
         data.selectedItem = PlayerManager.instance.GetSelectedIndex();
 
         data.itemsBought = bought.ToArray();
-        data.MusicVolume = AudioManager.instance.GetMusicVolume();
-        data.EffectsVolume = AudioManager.instance.GetEffectsVolume();
+        data.musicVolume = AudioManager.instance.GetMusicVolume();
+        data.effectsVolume = AudioManager.instance.GetEffectsVolume();
 
 
         bf.Serialize(file, data);
@@ -371,12 +374,15 @@ class GameData
     public int[] normalScores;
     public int[] unstableScores;
     public bool[] itemsBought;
-    public int silverstars;
+    public int silverStars;
+    public int silverStarsTotal;
+    public int totalGamesPlayed;
+    public int orbitsTraversed;
     public int selectedItem;
     public bool ShouldDisplayHTP;
     public string nextBonus;
-    public float MusicVolume;
-    public float EffectsVolume;
+    public float musicVolume;
+    public float effectsVolume;
     public bool ShowAds;
 }
 

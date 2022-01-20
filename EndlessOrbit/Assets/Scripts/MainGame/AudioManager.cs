@@ -26,8 +26,8 @@ public class AudioManager : MonoBehaviour
 
     public void SetStartingVolume(float mv = 0.5f, float ev = 0.5f)
     {
-        EffectsSource.volume = ev;
         MusicSource.volume = mv;
+        EffectsSource.volume = ev;
     }
 
     public void PlayMusic(AudioClip clip)
@@ -54,16 +54,20 @@ public class AudioManager : MonoBehaviour
         MusicSource.UnPause();
     }
 
-    public void AdjustMusicVolume(float value)
+    public void ToggleMusicVolume()
     {
-        MusicSource.volume = value;
+        if (IsMusicOn()) MuteMusic();
+        else UnmuteMusic();
     }
 
-    public void AdjustEffectsVolume(float value)
+    public void ToggleEffectsVolume()
     {
-        EffectsSource.volume = value;
+        if (IsEffectsOn()) MuteEffects();
+        else UnmuteEffects();
     }
 
+
+    #region Mute/Unmute
     public void MuteMusic()
     {
         MusicSource.volume = 0f;
@@ -74,13 +78,37 @@ public class AudioManager : MonoBehaviour
         EffectsSource.volume = 0f;
     }
 
+    public void UnmuteMusic(float mv = 0.5f)
+    {
+        MusicSource.volume = mv;
+    }
+
+    public void UnmuteEffects(float ev = 0.5f)
+    {
+        EffectsSource.volume = ev;
+    }
+
+    #endregion
+
+    #region Get Functions
     public float GetMusicVolume()
     {
         return MusicSource.volume;
+    }
+
+    public bool IsMusicOn()
+    {
+        return MusicSource.volume == 0.5f;
     }
 
     public float GetEffectsVolume()
     {
         return EffectsSource.volume;
     }
+
+    public bool IsEffectsOn()
+    {
+        return EffectsSource.volume == 0.5f;
+    }
+    #endregion
 }

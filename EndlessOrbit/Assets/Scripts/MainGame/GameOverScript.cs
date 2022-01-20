@@ -10,7 +10,6 @@ public class GameOverScript : MonoBehaviour
     [SerializeField] TextMeshProUGUI scoreHeader;
     [SerializeField] TextMeshProUGUI highScoreText;
     [SerializeField] TextMeshProUGUI starsAmount;
-    [SerializeField] TextMeshProUGUI starsHeader;
     [SerializeField] GameObject StarIcon;
     [SerializeField] GameObject gameOverPanel;
     [SerializeField] GameObject otherUI;
@@ -25,17 +24,16 @@ public class GameOverScript : MonoBehaviour
         gameOverPanel.gameObject.SetActive(false);
     }
 
-    public void GameOver(int score, int collectedStars, bool isUnstable)
+    public void GameOver(int score, int collectedStars, int orbitsTraversed, bool isUnstable)
     {
         AudioManager.instance.PlayEffect(GameoverEffect);
+        PlayerManager.instance.AddOrbitsTraversed(orbitsTraversed);
 
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
             StarIcon.SetActive(false);
-            highScoreText.gameObject.SetActive(false);
             starsAmount.gameObject.SetActive(false);
-            starsHeader.gameObject.SetActive(false);
             otherUI.SetActive(false);
             StartCoroutine(TallyScore(score, collectedStars,isUnstable));
         }
@@ -65,7 +63,6 @@ public class GameOverScript : MonoBehaviour
             tempScore += incAmount;
         }
         scoreAmount.text = score.ToString();
-        highScoreText.gameObject.SetActive(true);
         if (score > ScoreManager.instance.GetHighScore(isUnstable))
         {
             scoreHeader.text = "New High Score!";
@@ -75,7 +72,7 @@ public class GameOverScript : MonoBehaviour
             scoreHeader.text = "Score:";
         }
         ScoreManager.instance.RecordScore(score, isUnstable);
-        highScoreText.text = "Highest Score: " + ScoreManager.instance.GetHighScore(isUnstable).ToString();
+        highScoreText.text = "High Score: " + ScoreManager.instance.GetHighScore(isUnstable).ToString();
         StartCoroutine(TallyStars(collectedStars));
     }
 
@@ -83,12 +80,11 @@ public class GameOverScript : MonoBehaviour
     {
         skip = false;
         starsAmount.gameObject.SetActive(true);
-        starsHeader.gameObject.SetActive(true);
         StarIcon.SetActive(true);
         int currStars = PlayerManager.instance.GetSilverStars();
         int newAmount = currStars + collectedStars;
         starsAmount.text = currStars.ToString();
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.5f);
         while(currStars < newAmount && !skip)
         {
             starsAmount.text = (++currStars).ToString();

@@ -93,7 +93,7 @@ public class MainGameManager : MonoBehaviour
                 PauseGame();
             }
 #endif
-            AsteroidCycle();
+            //AsteroidCycle();
 
         }
 
@@ -231,7 +231,7 @@ public class MainGameManager : MonoBehaviour
     public void ShowGameOverPanel()
     {
         if (gameOver != null)
-            gameOver.GameOver(currentScore, currentSStars, isUnstable);
+            gameOver.GameOver(currentScore, currentSStars, currentScore/100, isUnstable);
     }
 
     public void WatchAdForContinue()
@@ -428,13 +428,9 @@ public class MainGameManager : MonoBehaviour
 
     void AddCoins()
     {
-        /*
-        if (currentScore > ScoreManager.instance.GetHighScore(isUnstable) && currentScore > 0)
-            currentSStars += 5;
-        else
-            currentSStars += (currentScore % 300 == 0 && currentScore > 0 ? 1 : 0);*/
         currentSStars += 1;
     }
+
 
     public void PassedHighScore()
     {

@@ -8,12 +8,14 @@ public class ButtonFunctions : MonoBehaviour
     public void ReloadScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        PlayerManager.instance.AddGamesPlayed();
         Time.timeScale = 1f;
     }
 
     public void LoadScene()
     {
         SceneManager.LoadScene(TitleScreenManager.instance.GetMode());
+        PlayerManager.instance.AddGamesPlayed();
         Time.timeScale = 1f;
     }
 

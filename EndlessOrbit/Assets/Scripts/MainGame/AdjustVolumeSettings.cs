@@ -5,53 +5,28 @@ using UnityEngine.UI;
 
 public class AdjustVolumeSettings : MonoBehaviour
 {
-    [SerializeField] Slider MusicVolume;
-    [SerializeField] Slider EffectsVolume;
-    [SerializeField] Button Mute;
-    [SerializeField] Button RestoreDefaults;
+    [SerializeField] Button MusicVolume;
+    [SerializeField] Button EffectsVolume;
 
     private void Awake()
     {
-        MusicVolume.onValueChanged.AddListener(ChangeMusicVolume);
-        EffectsVolume.onValueChanged.AddListener(ChangeEffectsVolume);
-        Mute.onClick.AddListener(MuteAll);
-        RestoreDefaults.onClick.AddListener(RestoreDefaultVolume);
+        MusicVolume.onClick.AddListener(ChangeMusicVolume);
+        EffectsVolume.onClick.AddListener(ChangeEffectsVolume);
     }
 
-    private void Start()
+    public void ChangeMusicVolume()
     {
-        MusicVolume.value = AudioManager.instance.GetMusicVolume();
-        EffectsVolume.value = AudioManager.instance.GetEffectsVolume();
-        //this.gameObject.SetActive(false);
+        AudioManager.instance.ToggleMusicVolume();
     }
 
-    public void ChangeMusicVolume(float value)
+    public void ChangeEffectsVolume()
     {
-        AudioManager.instance.AdjustMusicVolume(value);
+        AudioManager.instance.ToggleEffectsVolume();
     }
-
-    public void ChangeEffectsVolume(float value)
-    {
-        AudioManager.instance.AdjustEffectsVolume(value);
-    }
-
-    public void MuteAll()
-    {
-        MusicVolume.value = 0f;
-        EffectsVolume.value = 0f;
-    }
-
-    public void RestoreDefaultVolume()
-    {
-        MusicVolume.value = 0.5f;
-        EffectsVolume.value = 0.5f;
-    }
-
+    
     private void OnDestroy()
     {
-        MusicVolume.onValueChanged.RemoveListener(ChangeMusicVolume);
-        EffectsVolume.onValueChanged.RemoveListener(ChangeEffectsVolume);
-        Mute.onClick.RemoveListener(MuteAll);
-        RestoreDefaults.onClick.RemoveListener(RestoreDefaultVolume);
+        MusicVolume.onClick.RemoveListener(ChangeMusicVolume);
+        EffectsVolume.onClick.RemoveListener(ChangeEffectsVolume);
     }
 }
