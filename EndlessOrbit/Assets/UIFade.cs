@@ -15,7 +15,10 @@ public class UIFade : MonoBehaviour
 
     void OnEnable()
     {
-        cover.SetActive(true);
+        if (cover != null)
+        {
+            cover.SetActive(true);
+        }
         canvas.alpha = 0.0f;
         StartCoroutine(FadeTo(1.0f, 0.25f));
     }
@@ -31,10 +34,14 @@ public class UIFade : MonoBehaviour
             yield return null;
             timer += Time.deltaTime;
         }
+        canvas.alpha = v;
     }
 
     void OnDisable()
     {
-        cover.SetActive(false);
+        if (cover != null)
+        {
+            cover.SetActive(false);
+        }
     }
 }
