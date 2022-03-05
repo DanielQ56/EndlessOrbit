@@ -99,6 +99,7 @@ public class MainGameManager : MonoBehaviour
 
     }
 
+    /***
     void AsteroidCycle()
     {
         if (timer >= 2f)
@@ -114,6 +115,7 @@ public class MainGameManager : MonoBehaviour
             }
         }
     }
+    ***/
 
     IEnumerator IndicateSpawn()
     {
@@ -196,7 +198,11 @@ public class MainGameManager : MonoBehaviour
 
     public void GameOver()
     {
-        if(StopTime != null)
+        playerParticles.gameObject.transform.position = player.transform.position - new Vector3(0, 0.2f, 0);
+        ParticleSystem.MainModule main = playerParticles.main;
+        main.startColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+        playerParticles.Play();
+        if (StopTime != null)
             StopTime.Invoke();
         playerIsAlive = false;
         if(!hasUsedContinue)
@@ -293,6 +299,10 @@ public class MainGameManager : MonoBehaviour
         updateCameraPosition(newPlanet);
         UpdateScore(100);
         AddCoins();
+        playerParticles.gameObject.transform.position = player.transform.position - new Vector3(0, 0.2f, 0);
+        ParticleSystem.MainModule main = playerParticles.main;
+        main.startColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+        playerParticles.Play();
         IncreasePlayerSpeed();
     }
 
@@ -302,10 +312,12 @@ public class MainGameManager : MonoBehaviour
         if(currentScore > 0 && currentScore % 1000 == 0)
         {
             increaseSpeed.Invoke();
+            /***
             playerParticles.gameObject.transform.position = player.transform.position - new Vector3(0, 0.2f, 0);
             ParticleSystem.MainModule main = playerParticles.main;
             main.startColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
             playerParticles.Play();
+            ***/
         }
     }
 #endregion

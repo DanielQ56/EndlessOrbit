@@ -25,7 +25,7 @@ public class GoogleAds : MonoBehaviour
     bool RewardedContinue = false;
     bool RewardVideoLoading = false;
 
-    int RoundsUntilFullscreen = 0;
+    int RoundsUntilFullscreen = 10;
 
 
     bool SceneLoaded = false;
@@ -289,9 +289,10 @@ public class GoogleAds : MonoBehaviour
 
     public bool CheckForFullscreen(int currentScore)
     {
-        if (currentScore > 2000)
+        if (currentScore > 2500)
         {
             ShowFullScreenAd();
+            RoundsUntilFullscreen = 10;
             return true;
         }
         else if (currentScore > 500)
@@ -299,12 +300,12 @@ public class GoogleAds : MonoBehaviour
             if (RoundsUntilFullscreen <= 0)
             {
                 ShowFullScreenAd();
-                RoundsUntilFullscreen = 1;
+                RoundsUntilFullscreen = 10;
                 return true;
             }
             else
             {
-                RoundsUntilFullscreen -= 1;
+                RoundsUntilFullscreen -= 2;
                 return false;
             }
         }
@@ -313,7 +314,7 @@ public class GoogleAds : MonoBehaviour
             if (RoundsUntilFullscreen <= 0)
             {
                 ShowFullScreenAd();
-                RoundsUntilFullscreen = 2;
+                RoundsUntilFullscreen = 10;
                 return true;
             }
             else

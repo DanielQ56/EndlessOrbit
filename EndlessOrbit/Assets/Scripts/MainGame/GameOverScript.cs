@@ -41,6 +41,11 @@ public class GameOverScript : MonoBehaviour
             scoreLine.SetActive(false);
     }
 
+    public void RewardedAdTallyStars(int collectedStars)
+    {
+        StartCoroutine(TallyStars(collectedStars));
+    }
+
     private void Update()
     {
         if((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) || Input.GetKeyDown(KeyCode.Mouse0))

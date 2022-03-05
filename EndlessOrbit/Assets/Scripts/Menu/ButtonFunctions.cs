@@ -35,4 +35,15 @@ public class ButtonFunctions : MonoBehaviour
         PlayerManager.instance.OpenShopInventory();
     }
 
+    /***
+    public void WatchAdForContinue()
+    {
+#if UNITY_EDITOR
+        //RewardPanel.SetActive(true);
+#else
+        GoogleAds.instance.ShowRewardedAd();
+#endif
+    }
+    ***/
+
 }

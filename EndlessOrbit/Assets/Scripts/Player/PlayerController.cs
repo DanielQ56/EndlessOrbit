@@ -31,6 +31,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] int tutorialAmount;
     [SerializeField] AudioClip detached;
     [SerializeField] AudioClip hit;
+    [SerializeField] GameObject playerSprite;
+    [SerializeField] GameObject tutorialLine;
 
     public delegate void Detached();
     public static Detached PlayerDetached;
@@ -43,6 +45,7 @@ public class PlayerController : MonoBehaviour
     float movementAngle;
 
     bool tethered = true;
+    bool showLine;
 
     LineRenderer line;
     TrailRenderer trail;
@@ -84,12 +87,13 @@ public class PlayerController : MonoBehaviour
         MainGameManager.ResumeTime += Continue;
         BodyToRotateAround = initialBody;
         state = PlayerState.Tethered;
-        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+        SpriteRenderer sprite = playerSprite.GetComponent<SpriteRenderer>();
         sprite.sprite = PlayerManager.instance.GetSelectedSprite();
         line = GetComponent<LineRenderer>();
         line.material = new Material(Shader.Find("Unlit/Texture"));
         line.SetColors(Color.white, Color.white);
         linesLeft = tutorialAmount;
+        showLine = true;
 
     }
 
@@ -143,7 +147,7 @@ public class PlayerController : MonoBehaviour
 
     void Rotate()
     {
-        transform.Rotate(Vector3.forward, spinAngle * direction * Time.deltaTime);
+        playerSprite.transform.Rotate(Vector3.forward, spinAngle * direction * Time.deltaTime);
     }
 
     void Move()
@@ -173,7 +177,12 @@ public class PlayerController : MonoBehaviour
             movementAngle = Mathf.Tan(Mathf.Abs((posToMoveTowards.y - relativePosition.y) / (posToMoveTowards.x - relativePosition.x)));
             prevPos = this.transform.position;
             AssignDirection(posToMoveTowards);
-            linesLeft -= 1;
+            if (showLine)
+            {
+                showLine = false;
+                //tutorialLine.SetActive(false);
+                StartCoroutine(FadeLine(0.1f));
+            }
         }
     } 
 
@@ -290,6 +299,22 @@ this.transform.position.y - BodyToRotateAround.transform.position.y, 0);
             line.positionCount = 2;
             line.SetPositions(points);
         }
+
+    }
+
+    IEnumerator FadeLine (float time)
+    {
+        SpriteRenderer tutorialLineSprite = tutorialLine.GetComponent<SpriteRenderer>();
+        Color tutorialLineColor = tutorialLine.GetComponent<SpriteRenderer>().color;
+        for (float i = 0f; i < time; i += Time.deltaTime)
+        {
+            tutorialLineColor.a -= Time.deltaTime / time;
+            tutorialLineSprite.color = tutorialLineColor;
+            yield return null;
+        }
+        tutorialLine.SetActive(false);
+        tutorialLineColor.a = 1f;
+        tutorialLineSprite.color = tutorialLineColor;
     }
 
 #region Assigning The New Direction 
