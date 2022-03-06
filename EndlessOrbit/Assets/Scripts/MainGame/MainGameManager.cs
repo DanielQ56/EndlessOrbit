@@ -96,6 +96,13 @@ public class MainGameManager : MonoBehaviour
             //AsteroidCycle();
 
         }
+        /***
+        if (CanContinue)
+        {
+            CanContinue = false;
+            RewardPanel.SetActive(true);
+        }
+        ***/
 
     }
 
@@ -181,14 +188,20 @@ public class MainGameManager : MonoBehaviour
     [SerializeField] GameObject PausePanel;
     [SerializeField] GameObject ContinuePanel;
     [SerializeField] GameObject RewardPanel;
+    [SerializeField] GameObject RewardStarsPanel;
     [SerializeField] GameObject UnableToLoadPanel;
+    [SerializeField] GameObject UnableToLoadStarsPanel;
+    [SerializeField] GameObject AdCancelledPanel;
 
     bool hasUsedContinue = false;
 
     bool CanContinue = false;
+    bool CanReceiveStars = false;
 
     bool ShouldShowAd = false;
     int TimesBeforeShowAd = 0;
+
+    bool inGameOver = false;
 
     public void PauseGame()
     {
@@ -217,7 +230,7 @@ public class MainGameManager : MonoBehaviour
 
     public void FinalGameOver()
     {
-
+        inGameOver = true;
 #if UNITY_EDITOR
         ShowGameOverPanel();
 #else
@@ -249,6 +262,15 @@ public class MainGameManager : MonoBehaviour
 #endif
     }
 
+    public void WatchAdForStars()
+    {
+#if UNITY_EDITOR
+        RewardStarsPanel.SetActive(true);
+#else
+        GoogleAds.instance.ShowRewardedStars();
+#endif
+    }
+
     public void Continue()
     {
         if(ResumeTime != null)
@@ -266,9 +288,18 @@ public class MainGameManager : MonoBehaviour
         CanContinue = true;
     }
 
+    public void RewardedStars()
+    {
+        CanReceiveStars = true;
+    }
+
     private void OnApplicationPause(bool pause)
     {
-        if(!pause && CanContinue)
+        if(inGameOver && CanReceiveStars)
+        {
+            RewardStarsPanel.SetActive(true);
+        }
+        else if(!pause && CanContinue)
         {
             RewardPanel.SetActive(true);
             CanContinue = false;
@@ -283,6 +314,18 @@ public class MainGameManager : MonoBehaviour
     {
         UnableToLoadPanel.SetActive(true);
     }
+
+    public void UnableToLoadVideoStars()
+    {
+        UnableToLoadStarsPanel.SetActive(true);
+    }
+
+    public void CancelRewardedAd()
+    {
+        RewardStarsPanel.SetActive(false);
+        AdCancelledPanel.SetActive(true);
+    }
+
 
     public void ForceDetach()
     {

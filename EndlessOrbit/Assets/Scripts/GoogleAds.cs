@@ -20,8 +20,12 @@ public class GoogleAds : MonoBehaviour
     private RewardedAd rewardedAd = null;
     private string rewardedAdID = "ca-app-pub-3940256099942544/5224354917";
 
+    private RewardedAd rewardedStars = null;
+    private string rewardedStarsID = "ca-app-pub-8915439303360774/5585364988";
+
     bool showAds = true;
     bool GotRewardsFromVideo = false;
+    bool GotStarsFromVideo = false;
     bool RewardedContinue = false;
     bool RewardVideoLoading = false;
 
@@ -60,8 +64,9 @@ public class GoogleAds : MonoBehaviour
             MobileAds.SetRequestConfiguration(contentConfig);
             RequestFullScreenAd();
             SetupRewardedAds();
+            SetupRewardedStars();
 
-            if(scene.buildIndex == 0)
+            if (scene.buildIndex == 0)
             {
                 RequestBanner();
             }
@@ -134,7 +139,6 @@ public class GoogleAds : MonoBehaviour
         }
     }
 
-
     public void ShowRewardedAd()
     {
         ScoreManager.instance.Loading(true);
@@ -163,6 +167,68 @@ public class GoogleAds : MonoBehaviour
         }));
     }
 
+
+    void SetupRewardedStars()
+    {
+        if (rewardedStars == null)
+        {
+            RewardVideoLoading = true;
+            rewardedStars = new RewardedAd(rewardedStarsID);
+
+            rewardedStars.OnAdLoaded += HandleRewardBasedVideoLoaded;
+            rewardedStars.OnAdFailedToLoad += HandleRewardBasedVideoFailedToLoad;
+            rewardedStars.OnUserEarnedReward += HandleRewardBasedVideoRewardedStars;
+            rewardedStars.OnAdClosed += HandleRewardBasedVideoClosedStars;
+            AdRequest request = new AdRequest.Builder().Build();
+            rewardedStars.LoadAd(request);
+        }
+        else
+        {
+            StartCoroutine(CheckInternetConnection((isConnected) =>
+            {
+                if (isConnected && !rewardedStars.IsLoaded())
+                {
+                    RewardVideoLoading = true;
+                    rewardedStars = new RewardedAd(rewardedStarsID);
+
+                    rewardedStars.OnAdLoaded += HandleRewardBasedVideoLoaded;
+                    rewardedStars.OnAdFailedToLoad += HandleRewardBasedVideoFailedToLoad;
+                    rewardedStars.OnUserEarnedReward += HandleRewardBasedVideoRewardedStars;
+                    rewardedStars.OnAdClosed += HandleRewardBasedVideoClosedStars;
+                    AdRequest request = new AdRequest.Builder().Build();
+                    rewardedStars.LoadAd(request);
+                }
+            }));
+        }
+    }
+
+    public void ShowRewardedStars()
+    {
+        ScoreManager.instance.Loading(true);
+
+        StartCoroutine(CheckInternetConnection((isConnected) => {
+
+            if (isConnected && rewardedStars != null && rewardedStars.IsLoaded())
+            {
+                Debug.Log("Showing Ad");
+                ScoreManager.instance.Loading(false);
+                rewardedStars.Show();
+                rewardedStars = null;
+                SetupRewardedStars();
+            }
+            else
+            {
+                ScoreManager.instance.Loading(false);
+                if (MainGameManager.instance != null)
+                {
+                    MainGameManager.instance.UnableToLoadVideoStars();
+                }
+                rewardedStars = null;
+                SetupRewardedStars();
+            }
+        }));
+    }
+
     public void HandleRewardBasedVideoLoaded(object sender, EventArgs args)
     {
         Debug.Log("Successfully Loaded Ad");
@@ -184,9 +250,24 @@ public class GoogleAds : MonoBehaviour
         }
     }
 
+    public void HandleRewardBasedVideoRewardedStars(object sender, Reward args)
+    {
+        if (MainGameManager.instance != null)
+        {
+            Debug.Log("Rewarding with stars!");
+            GotStarsFromVideo = true;
+            MainGameManager.instance.RewardedStars();
+        }
+    }
+
     public void HandleRewardBasedVideoClosed(object sender, EventArgs args)
     {
         StartCoroutine(WaitForReward());
+    }
+
+    public void HandleRewardBasedVideoClosedStars(object sender, EventArgs args)
+    {
+        StartCoroutine(WaitForRewardStars());
     }
 
     IEnumerator WaitForReward()
@@ -208,6 +289,23 @@ public class GoogleAds : MonoBehaviour
             MainGameManager.instance.FinalGameOver();
         }
         GotRewardsFromVideo = false;
+        Debug.Log("Done waiting for rewards");
+    }
+
+    IEnumerator WaitForRewardStars()
+    {
+        ScoreManager.instance.Loading(true);
+        for (int i = 0; i < 10; ++i)
+        {
+            yield return new WaitForSeconds(0.05f);
+        }
+        ScoreManager.instance.Loading(false);
+        
+        if (!GotStarsFromVideo)
+        {
+            MainGameManager.instance.CancelRewardedAd();
+        }
+        GotStarsFromVideo = false;
         Debug.Log("Done waiting for rewards");
     }
 

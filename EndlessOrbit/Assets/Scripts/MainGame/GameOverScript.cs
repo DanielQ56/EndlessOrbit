@@ -41,10 +41,12 @@ public class GameOverScript : MonoBehaviour
             scoreLine.SetActive(false);
     }
 
+    
     public void RewardedAdTallyStars(int collectedStars)
     {
         StartCoroutine(TallyStars(collectedStars));
     }
+    
 
     private void Update()
     {
@@ -93,7 +95,7 @@ public class GameOverScript : MonoBehaviour
         while(currStars < newAmount && !skip)
         {
             starsAmount.text = (++currStars).ToString();
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.05f);
         }
         starsAmount.text = newAmount.ToString();
         PlayerManager.instance.AddStars(collectedStars);
