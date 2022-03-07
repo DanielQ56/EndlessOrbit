@@ -156,6 +156,7 @@ public class PlayerManager : MonoBehaviour
     {
         silverStars += s;
         silverStarsTotal += s;
+        Achievements.instance.IncrementCollectedStars(s);
     }
 
     public int GetSilverStars()
@@ -173,6 +174,7 @@ public class PlayerManager : MonoBehaviour
         if (silverStars >= cost)
         {
             silverStars -= cost;
+            Achievements.instance.IncrementSpentStars(cost);
             return true;
         }
         ScoreManager.instance.ProvideInfo("Not enough stars!");
@@ -192,11 +194,13 @@ public class PlayerManager : MonoBehaviour
     public void AddGamesPlayed()
     {
         ++totalGamesPlayed;
+        Achievements.instance.IncrementGames();
     }
 
     public void AddOrbitsTraversed(int o)
     {
         orbitsTraversed += o;
+        Achievements.instance.IncrementOrbits(o);
     }
 
     public int GetGamesPlayed()

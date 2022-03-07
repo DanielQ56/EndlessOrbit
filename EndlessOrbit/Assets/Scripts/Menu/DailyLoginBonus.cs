@@ -94,6 +94,7 @@ public class DailyLoginBonus : MonoBehaviour
     public void Spin()
     {
         SpinButton.interactable = false;
+        Achievements.instance.Spin();
         StartCoroutine(SpinRoutine());
     }
 
@@ -128,7 +129,7 @@ public class DailyLoginBonus : MonoBehaviour
         Debug.Log(SpinWheel.eulerAngles.z);
         int index = Mathf.FloorToInt((Mathf.Abs(SpinWheel.eulerAngles.z) + (SpinWheel.eulerAngles.z < 0 ? 180f : 0f)) / 45f);
         int value = int.Parse(PartsOfWheel[index].text);
-        Debug.Log("Index: " + index);
+        //Debug.Log("Index: " + index);
         RewardText.text = string.Format("Earned {0} stars!", value);
         StartCoroutine(TallyStars(value));
         PlayerManager.instance.AddStars(value);
@@ -154,7 +155,7 @@ public class DailyLoginBonus : MonoBehaviour
             while (timer < .1f)
             {
                 PooledStars[count].SetActive(true);
-                Debug.Log("test: " + count);
+                //Debug.Log("test: " + count);
                 PooledStars[count].GetComponent<RectTransform>().position = Vector2.Lerp(PooledStars[count].GetComponent<RectTransform>().position, StarImage.position, timer / .1f);
                 yield return null;
                 timer += Time.deltaTime;

@@ -280,6 +280,7 @@ public class MainGameManager : MonoBehaviour
         hasUsedContinue = true;
         timer = asteroidTimer;
         playerIsAlive = true;
+        Achievements.instance.Continue();
         Debug.Log(Time.timeScale);
     }
 

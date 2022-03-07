@@ -25,8 +25,26 @@ namespace EndlessOrbit
 {
 public static class GPGSIds
 {
-        public const string leaderboard_endlessorbitunstable = "CgkIg7v6uKIbEAIQAQ"; // <GPGSID>
+        public const string achievement_antimatter_generator = "CgkIg7v6uKIbEAIQEw"; // <GPGSID>
+        public const string achievement_first_mission = "CgkIg7v6uKIbEAIQBA"; // <GPGSID>
+        public const string achievement_star_collector = "CgkIg7v6uKIbEAIQDw"; // <GPGSID>
+        public const string achievement_frequent_flyer = "CgkIg7v6uKIbEAIQBg"; // <GPGSID>
+        public const string achievement_constellation_collector = "CgkIg7v6uKIbEAIQEA"; // <GPGSID>
+        public const string achievement_stylish_spacefarer = "CgkIg7v6uKIbEAIQEQ"; // <GPGSID>
+        public const string achievement_meeting_the_milky_way = "CgkIg7v6uKIbEAIQCg"; // <GPGSID>
+        public const string achievement_deep_space_pockets = "CgkIg7v6uKIbEAIQEg"; // <GPGSID>
+        public const string achievement_voyager = "CgkIg7v6uKIbEAIQBw"; // <GPGSID>
+        public const string achievement_feedback_loop = "CgkIg7v6uKIbEAIQFA"; // <GPGSID>
+        public const string achievement_space_racer = "CgkIg7v6uKIbEAIQBQ"; // <GPGSID>
+        public const string achievement_a_little_extra_cant_hurt = "CgkIg7v6uKIbEAIQFg"; // <GPGSID>
+        public const string achievement_beyond_the_observable_universe = "CgkIg7v6uKIbEAIQDA"; // <GPGSID>
+        public const string achievement_star_dust_collector = "CgkIg7v6uKIbEAIQDQ"; // <GPGSID>
+        public const string achievement_star_bit_collector = "CgkIg7v6uKIbEAIQDg"; // <GPGSID>
+        public const string achievement_the_outer_world = "CgkIg7v6uKIbEAIQCw"; // <GPGSID>
+        public const string achievement_low_orbit = "CgkIg7v6uKIbEAIQCQ"; // <GPGSID>
+        public const string achievement_run_it_back = "CgkIg7v6uKIbEAIQFw"; // <GPGSID>
         public const string leaderboard_endlessorbitnormal = "CgkIg7v6uKIbEAIQAA"; // <GPGSID>
+        public const string leaderboard_endlessorbitunstable = "CgkIg7v6uKIbEAIQAQ"; // <GPGSID>
 
 }
 }

@@ -90,6 +90,7 @@ public class GameOverScript : MonoBehaviour
         StarIcon.SetActive(true);
         int currStars = PlayerManager.instance.GetSilverStars();
         int newAmount = currStars + collectedStars;
+        PlayerManager.instance.AddStars(collectedStars);
         starsAmount.text = currStars.ToString();
         yield return new WaitForSeconds(0.5f);
         while(currStars < newAmount && !skip)
@@ -98,7 +99,6 @@ public class GameOverScript : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
         starsAmount.text = newAmount.ToString();
-        PlayerManager.instance.AddStars(collectedStars);
         otherUI.SetActive(true);
     }
 
