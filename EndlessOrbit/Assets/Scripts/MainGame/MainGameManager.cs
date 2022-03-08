@@ -57,6 +57,7 @@ public class MainGameManager : MonoBehaviour
 
     void Start()
     {
+        Achievements.instance.FirstGame();
         updateCameraPosition(startingPlanet);
         currentSStars = 0;
         timer = asteroidTimer;

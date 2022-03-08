@@ -192,6 +192,7 @@ public class ScoreManager : MonoBehaviour
             normalScores = (data.normalScores != null && data.normalScores.Length > 0) ? data.normalScores : new int[10];
             unstableScores = (data.unstableScores != null && data.unstableScores.Length > 0) ? data.unstableScores : new int[10];
             ShouldDisplay = data.ShouldDisplayHTP;
+            ShouldDisplayRate = data.ShouldDisplayRating;
             PlayerManager.instance.SetNextBonusTime(System.DateTime.Parse(data.nextBonus));
             PlayerManager.instance.SetupStats(data.silverStars, data.silverStarsTotal, data.totalGamesPlayed, data.orbitsTraversed);
             PlayerManager.instance.SetupItems(data.itemsBought, data.selectedItem);
@@ -209,10 +210,12 @@ public class ScoreManager : MonoBehaviour
             unstableScores = new int[10];
             AudioManager.instance.SetStartingVolume();
         }
+        /***
         if(ShouldDisplay)
         {
             OpenHowToPlay();
         }
+        ***/
        
     }
 
@@ -258,6 +261,7 @@ public class ScoreManager : MonoBehaviour
         data.totalGamesPlayed = PlayerManager.instance.GetGamesPlayed();
         data.orbitsTraversed = PlayerManager.instance.GetOrbitsTraversed();
         data.ShouldDisplayHTP = ShouldDisplay;
+        data.ShouldDisplayRating = ShouldDisplayRate;
         data.ShowAds = GoogleAds.instance.ShouldShowAds();
         data.nextBonus = PlayerManager.instance.GetNextBonus().ToString();
         List<PurchasableItem> items = PlayerManager.instance.getAllItems();
@@ -297,6 +301,7 @@ public class ScoreManager : MonoBehaviour
         PlayerManager.instance.SetToDefault();
         recentNormalScore = 0;
         recentUnstableScore = 0;
+        //ShouldDisplayRate = true;
     }
 
     private void OnApplicationPause(bool pause)
@@ -353,6 +358,20 @@ public class ScoreManager : MonoBehaviour
     }
 
     #endregion
+
+    #region Ratings
+    bool ShouldDisplayRate = true;
+
+    public void SwapRatings()
+    {
+        ShouldDisplayRate = false;
+    }
+
+    public bool HasNotRated()
+    {
+        return ShouldDisplayRate;
+    }
+    #endregion
 }
 #region Custom Classes
 [Serializable] 
@@ -380,6 +399,7 @@ class GameData
     public int orbitsTraversed;
     public int selectedItem;
     public bool ShouldDisplayHTP;
+    public bool ShouldDisplayRating;
     public string nextBonus;
     public float musicVolume;
     public float effectsVolume;

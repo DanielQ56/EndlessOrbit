@@ -70,7 +70,6 @@ public class Achievements : MonoBehaviour
     //Game Based Achievements
     public void IncrementGames()
     {
-        UnlockAchievement(gameAchievements[0]);
         for(int i = 1; i < gameAchievements.Length; ++i)
         {
             IncrementAchievement(gameAchievements[i], 1);
@@ -102,6 +101,12 @@ public class Achievements : MonoBehaviour
     }
 
     //Unlock Based Achievements
+    //First Game
+    public void FirstGame()
+    {
+        UnlockAchievement(gameAchievements[0]);
+    }
+
     //Rating
     public void Rate()
     {
