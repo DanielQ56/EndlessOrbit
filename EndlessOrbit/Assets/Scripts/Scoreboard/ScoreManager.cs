@@ -196,6 +196,7 @@ public class ScoreManager : MonoBehaviour
             PlayerManager.instance.SetNextBonusTime(System.DateTime.Parse(data.nextBonus));
             PlayerManager.instance.SetupStats(data.silverStars, data.silverStarsTotal, data.totalGamesPlayed, data.orbitsTraversed);
             PlayerManager.instance.SetupItems(data.itemsBought, data.selectedItem);
+            PlayerManager.instance.SetupParticles(data.particlesBought, data.selectedParticle);
             recentNormalScore = normalScores[normalScores.Length - 1];
             recentUnstableScore = unstableScores[unstableScores.Length - 1];
             AudioManager.instance.SetStartingVolume(data.musicVolume, data.effectsVolume);
@@ -206,6 +207,7 @@ public class ScoreManager : MonoBehaviour
             PlayerManager.instance.SetNextBonusTime(default(System.DateTime));
             PlayerManager.instance.SetupStats();
             PlayerManager.instance.SetupItems();
+            //PlayerManager.instance.SetupParticles();
             normalScores = new int[10];
             unstableScores = new int[10];
             AudioManager.instance.SetStartingVolume();
@@ -265,15 +267,24 @@ public class ScoreManager : MonoBehaviour
         data.ShowAds = GoogleAds.instance.ShouldShowAds();
         data.nextBonus = PlayerManager.instance.GetNextBonus().ToString();
         List<PurchasableItem> items = PlayerManager.instance.getAllItems();
-        List<bool> bought = new List<bool>();
-        for(int i = 0; i < items.Count; ++i)
+        List<PurchasableItem> particles = PlayerManager.instance.getAllParticles();
+        List<bool> boughtItems = new List<bool>();
+        List<bool> boughtParticles = new List<bool>();
+        for (int i = 0; i < items.Count; ++i)
         {
             //Debug.Log("Index: " + i + ", Bought: " + items[i].bought + ", Selected: " + items[i].selected);
-            bought.Add(items[i].bought);
+            boughtItems.Add(items[i].bought);
+        }
+        for (int i = 0; i < particles.Count; ++i)
+        {
+            //Debug.Log("Index: " + i + ", Bought: " + items[i].bought + ", Selected: " + items[i].selected);
+            boughtParticles.Add(particles[i].bought);
         }
         data.selectedItem = PlayerManager.instance.GetSelectedIndex();
+        data.selectedParticle = PlayerManager.instance.GetSelectedParticleIndex();
 
-        data.itemsBought = bought.ToArray();
+        data.itemsBought = boughtItems.ToArray();
+        data.particlesBought = boughtParticles.ToArray();
         data.musicVolume = AudioManager.instance.GetMusicVolume();
         data.effectsVolume = AudioManager.instance.GetEffectsVolume();
 
@@ -393,11 +404,13 @@ class GameData
     public int[] normalScores;
     public int[] unstableScores;
     public bool[] itemsBought;
+    public bool[] particlesBought;
     public int silverStars;
     public int silverStarsTotal;
     public int totalGamesPlayed;
     public int orbitsTraversed;
     public int selectedItem;
+    public int selectedParticle;
     public bool ShouldDisplayHTP;
     public bool ShouldDisplayRating;
     public string nextBonus;

@@ -4901,11 +4901,11 @@ ParticleSystemRenderer:
   m_RenderAlignment: 0
   m_Pivot: {x: 0, y: 0, z: 0}
   m_Flip: {x: 0, y: 0, z: 0}
-  m_UseCustomVertexStreams: 0
+  m_UseCustomVertexStreams: 1
   m_EnableGPUInstancing: 1
   m_ApplyActiveColorSpace: 1
   m_AllowRoll: 1
-  m_VertexStreams: 00010304
+  m_VertexStreams: 000304
   m_Mesh: {fileID: 0}
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
@@ -4921,7 +4921,7 @@ PrefabInstance:
     - target: {fileID: 746195940563650845, guid: 71a1a55f587fc264d9571029de937a73,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 758310231495252721, guid: 71a1a55f587fc264d9571029de937a73,
         type: 3}
@@ -4996,7 +4996,7 @@ PrefabInstance:
     - target: {fileID: 8484902019057638515, guid: 71a1a55f587fc264d9571029de937a73,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 758310231495252720, guid: 71a1a55f587fc264d9571029de937a73, type: 3}

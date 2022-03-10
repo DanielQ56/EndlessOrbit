@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] AudioClip detached;
     [SerializeField] AudioClip hit;
     [SerializeField] GameObject playerSprite;
+    [SerializeField] GameObject playerParticles;
     [SerializeField] GameObject tutorialLine;
 
     public delegate void Detached();
@@ -49,6 +50,7 @@ public class PlayerController : MonoBehaviour
 
     LineRenderer line;
     TrailRenderer trail;
+    ParticleSystemRenderer particles;
 
     Transform BodyToRotateAround;
 
@@ -68,6 +70,7 @@ public class PlayerController : MonoBehaviour
         instance = this;
         coll = this.GetComponent<CircleCollider2D>();
         trail = this.GetComponentInChildren<TrailRenderer>();
+        particles = this.GetComponentInChildren<ParticleSystemRenderer>();
         mainCam = Camera.main;
         SetBounds();
         this.gameObject.layer = LayerMask.NameToLayer("Player");
@@ -89,6 +92,16 @@ public class PlayerController : MonoBehaviour
         state = PlayerState.Tethered;
         SpriteRenderer sprite = playerSprite.GetComponent<SpriteRenderer>();
         sprite.sprite = PlayerManager.instance.GetSelectedSprite();
+        if (PlayerManager.instance.GetSelectedParticleIndex() != 0)
+        {
+            playerParticles.SetActive(true);
+            particles.material = PlayerManager.instance.GetSelectedParticle();
+        }
+        else
+        {
+            playerParticles.SetActive(false);
+        }
+       
         line = GetComponent<LineRenderer>();
         line.material = new Material(Shader.Find("Unlit/Texture"));
         line.SetColors(Color.white, Color.white);
@@ -286,8 +299,9 @@ this.transform.position.y - BodyToRotateAround.transform.position.y, 0);
         MainGameManager.instance.increaseSpeed.RemoveListener(IncreaseSpeedListener);
     }
 
-#endregion
+    #endregion
 
+    #region Tutorial Line
     void DrawLine()
     {
         if (linesLeft > 0 && state == PlayerState.Tethered)
@@ -316,8 +330,9 @@ this.transform.position.y - BodyToRotateAround.transform.position.y, 0);
         tutorialLineColor.a = 1f;
         tutorialLineSprite.color = tutorialLineColor;
     }
+    #endregion
 
-#region Assigning The New Direction 
+    #region Assigning The New Direction 
     void AssignNewAngleAndDirection(Transform body)
     {
         float posX = body.position.x - transform.position.x;

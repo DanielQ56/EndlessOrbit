@@ -8608,6 +8608,18 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5fabce9f8f55ff64cb5439a423620d36, type: 2}
   - {fileID: 11400000, guid: f6039e8d04092af4aae8ff31146eb6a4, type: 2}
   - {fileID: 11400000, guid: a84c64d1c565d4640b0398fc5f4d954c, type: 2}
+  allParticles:
+  - {fileID: 11400000, guid: 96805d37e3b44e54f9cb304269891950, type: 2}
+  - {fileID: 11400000, guid: 15e1f2a1a9be4a24fbe71174c387e3f3, type: 2}
+  - {fileID: 11400000, guid: 1809b2e7c6015904a9fecddc2240d9bf, type: 2}
+  - {fileID: 11400000, guid: fc407f5f30057a04b8d9e8634748ce61, type: 2}
+  - {fileID: 11400000, guid: 8e2666190bcdb564e88174552761c12b, type: 2}
+  - {fileID: 11400000, guid: f237ff6da83138a439923e1d2791681d, type: 2}
+  - {fileID: 11400000, guid: 143baf581ac9d584798ec94c9a9152c3, type: 2}
+  - {fileID: 11400000, guid: b40eb36fa3c1f264d962a3b8680f61c9, type: 2}
+  - {fileID: 11400000, guid: db6ba8fce9bd3a34686a128d99247595, type: 2}
+  - {fileID: 11400000, guid: 7df648b9a17ba36468093399a0653b28, type: 2}
+  - {fileID: 11400000, guid: 062c7f576b748cd4485175bf986f07a9, type: 2}
   ShopPanel: {fileID: 1893652055}
   rewardValues: 
 --- !u!4 &939667038

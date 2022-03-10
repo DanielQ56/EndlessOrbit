@@ -8,6 +8,8 @@ public class PlayerManager : MonoBehaviour
 
     [SerializeField] List<PurchasableItem> allItems;
 
+    [SerializeField] List<PurchasableItem> allParticles;
+
     [SerializeField] GameObject ShopPanel;
 
     List<int> DailyLoginValues = new List<int>();
@@ -18,6 +20,8 @@ public class PlayerManager : MonoBehaviour
     int silverStarsTotal;
 
     int selectedIndex = 0;
+
+    int selectedParticleIndex = 0;
 
     int totalGamesPlayed;
 
@@ -107,9 +111,38 @@ public class PlayerManager : MonoBehaviour
         selectedIndex = selected;
     }
 
+    public void SetupParticles(bool[] bought = null, int selected = 0)
+    {
+        Debug.Log(bought == null);
+        Debug.Log("Selected is: " + selected);
+        if (bought != null)
+        {
+            for (int i = 0; i < allParticles.Count; ++i)
+            {
+                if (i < bought.Length)
+                    allParticles[i].bought = bought[i];
+                else
+                    allParticles[i].bought = false;
+                allParticles[i].selected = (i == selected);
+            }
+        }
+        else
+        {
+            Debug.Log("Default");
+            SetToDefault();
+        }
+        selectedParticleIndex = selected;
+    }
+
+
     public Sprite GetSelectedSprite()
     {
         return allItems[selectedIndex].ItemSprite;
+    }
+
+    public Material GetSelectedParticle()
+    {
+        return allParticles[selectedParticleIndex].ItemMaterial;
     }
 
     public int GetSelectedIndex()
@@ -117,9 +150,19 @@ public class PlayerManager : MonoBehaviour
         return selectedIndex;
     }
 
+    public int GetSelectedParticleIndex()
+    {
+        return selectedParticleIndex;
+    }
+
     public void UpdatedSelectedIndex(int i)
     {
         selectedIndex = i;
+    }
+
+    public void UpdatedSelectedParticleIndex(int i)
+    {
+        selectedParticleIndex = i;
     }
 
     public ref List<PurchasableItem> getAllItems()
@@ -127,15 +170,28 @@ public class PlayerManager : MonoBehaviour
         return ref allItems;
     }
 
+    public ref List<PurchasableItem> getAllParticles()
+    {
+        return ref allParticles;
+    }
+
     public void SetDefaultItems()
     {
         allItems[0].bought = true;
         allItems[0].selected = true;
+        allParticles[0].bought = true;
+        allParticles[0].selected = true;
         for (int i = 1; i < allItems.Count; ++i)
         {
             allItems[i].bought = false;
             allItems[i].selected = false;
         }
+        for (int j = 1; j < allParticles.Count; ++j)
+        {
+            allParticles[j].bought = false;
+            allParticles[j].selected = false;
+        }
+        
     }
 
 
@@ -143,6 +199,7 @@ public class PlayerManager : MonoBehaviour
     {
         SetDefaultItems();
         selectedIndex = 0;
+        selectedParticleIndex = 0;
         silverStars = 0;
         silverStarsTotal = 0;
         totalGamesPlayed = 0;

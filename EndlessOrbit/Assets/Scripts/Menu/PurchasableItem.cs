@@ -6,6 +6,7 @@ using UnityEngine;
 public class PurchasableItem : ScriptableObject
 {
     public Sprite ItemSprite;
+    public Material ItemMaterial;
     public string itemName;
     public int cost;
     public bool bought;

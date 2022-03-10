@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 46bb92a4de5c9ef408606399253201bb, type: 3}
-  m_Name: Avatar6
+  m_Name: Particle7
   m_EditorClassIdentifier: 
-  ItemSprite: {fileID: 21300000, guid: b4b0e5c2ee713984e81e488152adeb7f, type: 3}
-  itemName: UwU
-  cost: 100
+  ItemSprite: {fileID: 0}
+  ItemMaterial: {fileID: 2100000, guid: fe761d07f4dcce244b5993652e4d7dbf, type: 2}
+  itemName: 
+  cost: 1000
   bought: 0
   selected: 0

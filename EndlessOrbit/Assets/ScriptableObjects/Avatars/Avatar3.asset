@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 46bb92a4de5c9ef408606399253201bb, type: 3}
-  m_Name: Avatar5
+  m_Name: Avatar3
   m_EditorClassIdentifier: 
-  ItemSprite: {fileID: 21300000, guid: a4f57d09ea6aabd47a10ad5a9838fa27, type: 3}
-  itemName: Asteroid
-  cost: 70
+  ItemSprite: {fileID: 21300000, guid: 222d59d18b172b148ac7c174c6e1a3fb, type: 3}
+  ItemMaterial: {fileID: 0}
+  itemName: 
+  cost: 40
   bought: 0
   selected: 0

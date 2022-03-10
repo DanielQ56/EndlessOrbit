@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 46bb92a4de5c9ef408606399253201bb, type: 3}
-  m_Name: Avatar12
+  m_Name: Avatar9
   m_EditorClassIdentifier: 
-  ItemSprite: {fileID: 21300000, guid: 910e444ed383c804eb4831db8279a375, type: 3}
-  itemName: White Dwarf
-  cost: 750
+  ItemSprite: {fileID: 21300000, guid: bf8931ab0fb87b94dab1b7cb937454e7, type: 3}
+  ItemMaterial: {fileID: 0}
+  itemName: 
+  cost: 250
   bought: 0
   selected: 0
